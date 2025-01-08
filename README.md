@@ -50,7 +50,7 @@
 
 
 
-5. reviews 
+5. reviews (one to many with apartments)
 - ID | INT - primary_key - auto_increment 
 - author_name | VARCHAR(30) - NN
 - description | TEXT(500) - NN
@@ -59,7 +59,7 @@
 - ID_apartment | foreign_key - NN
 
 
-6. messages (one to many)
+6. messages (one to many with apartments)
 - ID | INT - primary_key - auto_increment 
 - sender_email | VARCHAR(50) - NN
 - text | TEXT(500) - NN
