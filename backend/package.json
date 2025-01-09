@@ -6,7 +6,7 @@
   },
   "name": "boolbnb-project-work",
   "version": "1.0.0",
-  "description": "- Schema delle tabelle per il database di Boolbnb",
+  "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
