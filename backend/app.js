@@ -11,6 +11,8 @@ server.listen(PORT, () => {
 
 })
 
+server.use(express.json())
+
 server.get('/', (req, res) => {
     res.send('Server is running')
 })
@@ -18,3 +20,7 @@ server.get('/', (req, res) => {
 server.get('/apartments', controller.index)
 
 server.get('/apartments/:id', controller.show)
+
+server.post('/apartments/:id/review', controller.review)
+
+server.post('/apartments/:id/addapartment', controller.apartment)
