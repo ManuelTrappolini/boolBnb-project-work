@@ -1,6 +1,6 @@
 const express = require('express')
 const server = express()
-const controller = require('./Controllers/ApartmentsController')
+const ApartmentsRouter = require('./routes/routes')
 
 
 const PORT = process.env.PORT
@@ -17,10 +17,4 @@ server.get('/', (req, res) => {
     res.send('Server is running')
 })
 
-server.get('/apartments', controller.index)
-
-server.get('/apartments/:id', controller.show)
-
-server.post('/apartments/:id/review', controller.addReview)
-
-server.post('/apartments/addapartment', controller.addApartment)
+server.use('/apartments', ApartmentsRouter)
