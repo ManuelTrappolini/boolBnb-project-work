@@ -35,43 +35,53 @@ function show(req, res) {
 
 }
 
-function review(req, res) {
-
-    const apartment_id = Number(req.params.id)
-
-    const { author_name, description, date, days_of_stay, id_apartment } = req.body
-
-    const sql = "INSERT INTO 'reviews' SET author_name=? , description=?, date=?, days_of_stay=?, id_apartment=?"
-
-    connection.query(sql, [author_name, description, date, days_of_stay, id_apartment], (err, result) => {
-        if (err) return res.status(500).json({ err: err })
-
-        return res.status(201).json({ success: true })
-    })
 
 
+function addReview(req, res) {
+    const { author_name, description, date, days_of_stay } = req.body;
+    const apartment_id = req.params.id;
 
+
+    const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
+    connection.query(checkApartmentExistence, [apartment_id], (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Apartment not found' });
+        }
+
+
+        const sql = 'INSERT INTO reviews (author_name, description, date, days_of_stay, ID_apartment) VALUES (?, ?, ?, ?, ?)';
+        const reviewData = [author_name, description, date, days_of_stay, apartment_id];
+
+        connection.query(sql, reviewData, (err, result) => {
+            if (err) return res.status(500).json({ error: err });
+            res.status(201).json({ success: true, reviewId: result.insertId });
+        });
+    });
 }
 
-function apartment(req, res) {
-    const apartment_id = Number(req.params.id)
+function addApartment(req, res) {
+    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote } = req.body;
+    const apartment_id = req.params.id;
+    const owner_id = 3
 
-    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote } = req.body
-
-    const sql = "INSERT INTO 'apartments' SET title=? , rooms_number=?, beds=?, bathrooms=?, square_meters=?, address=?, picture_url=?, description=?, vote=? "
-
-    connection.query(sql, [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote], (err, result) => {
-        if (err) return res.status(500).json({ err: err })
-
-        return res.status(201).json({ success: true })
-    })
-
-    console.log(id_apartment);
-
-}
+    const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
 
 
 
+    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const reviewData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote, owner_id];
+
+    connection.query(sql, reviewData, (err, result) => {
+        if (err) return res.status(500).json({ error: err });
+        res.status(201).json({ success: true, reviewId: result.insertId });
+    });
+};
 
 
-module.exports = { index, show, review, apartment }
+
+
+
+
+module.exports = { index, show, addReview, addApartment }

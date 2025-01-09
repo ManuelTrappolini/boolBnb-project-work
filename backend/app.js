@@ -21,6 +21,6 @@ server.get('/apartments', controller.index)
 
 server.get('/apartments/:id', controller.show)
 
-server.post('/apartments/:id/review', controller.review)
+server.post('/apartments/:id/review', controller.addReview)
 
-server.post('/apartments/:id/addapartment', controller.apartment)
+server.post('/apartments/addapartment', controller.addApartment)
