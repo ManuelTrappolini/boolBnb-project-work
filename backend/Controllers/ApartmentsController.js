@@ -64,11 +64,7 @@ function addReview(req, res) {
 function addApartment(req, res) {
     const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote } = req.body;
     const apartment_id = req.params.id;
-    const owner_id = 3
-
-    const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
-
-
+    const owner_id = req.user.userId;
 
     const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const reviewData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote, owner_id];
@@ -78,10 +74,6 @@ function addApartment(req, res) {
         res.status(201).json({ success: true, reviewId: result.insertId });
     });
 };
-
-
-
-
 
 
 module.exports = { index, show, addReview, addApartment }
