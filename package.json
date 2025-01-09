@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0"
+  },
+  "name": "boolbnb-project-work",
+  "version": "1.0.0",
+  "description": "- Schema delle tabelle per il database di Boolbnb",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch --env-file=.env app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ManuelTrappolini/boolBnb-project-work.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ManuelTrappolini/boolBnb-project-work/issues"
+  },
+  "homepage": "https://github.com/ManuelTrappolini/boolBnb-project-work#readme"
+}
