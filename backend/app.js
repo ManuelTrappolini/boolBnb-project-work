@@ -1,5 +1,6 @@
 const express = require('express')
 const server = express()
+const controller = require('./Controllers/ApartmentsController')
 
 
 const PORT = process.env.PORT
@@ -13,3 +14,7 @@ server.listen(PORT, () => {
 server.get('/', (req, res) => {
     res.send('Server is running')
 })
+
+server.get('/apartments', controller.index)
+
+server.get('/apartments/:id', controller.show)
