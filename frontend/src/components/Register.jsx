@@ -12,7 +12,7 @@ const Register = () => {
     setMessage('');
 
     try {
-      const response = await fetch('http://localhost:5000/users/register', {
+      const response = await fetch('http://localhost:3002/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password, name, email }),
@@ -22,7 +22,7 @@ const Register = () => {
       if (response.ok) {
         setMessage('Registration successful! You can now log in.');
       } else {
-        setMessage(data.error || 'Registration failed.');
+        setMessage('Registration failed.');
       }
     } catch (err) {
       setMessage('Error connecting to the server.');

@@ -13,8 +13,11 @@ router.post('/:id/review', ApartmentsController.addReview)
 
 router.post('/addapartment', authenticateToken, ApartmentsController.addApartment)
 
-router.post('/')
+router.put('/:id', ApartmentsController.updateApartment)
 
+router.post('/login', UserController.login)
+
+router.post('/register', UserController.register)
 
 
 module.exports = router
