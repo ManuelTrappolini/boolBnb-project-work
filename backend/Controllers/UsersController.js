@@ -2,20 +2,20 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const connection = require('../database/connection')
 
-// registrazione dell'utente
+// user registration
 function register(req, res) {
   const { username, password, name, email } = req.body;
 
-  // Validazione dei dati
+  // Data validation
   if (!username || !password || !name || !email) {
-    return res.status(400).json({ error: 'Tutti i campi sono obbligatori.' });
+    return res.status(400).json({ error: 'All fields are mandatory.' });
   }
 
-  //hash della password
+  //Password hash
   bcrypt.hash(password, 10, (err, hashedPassword) => {
-    if (err) return res.status(500).json({ error: 'Errore durante l’hashing della password' });
+    if (err) return res.status(500).json({ error: 'Error hashing the password' });
 
-    // Inserimento dei dati nella tabella
+    // Inserting data into the table
     const sql = 'INSERT INTO owners (name, email, username, password) VALUES (?, ?, ?, ?)';
     connection.query(sql, [name, email, username, hashedPassword], (err, result) => {
       if (err) return res.status(500).json({ error: err });
@@ -25,11 +25,11 @@ function register(req, res) {
 
 }
 
-// Login dell'utente
+// User login
 function login(req, res) {
   const { username, password } = req.body;
 
-  // recupera dati relativi a questo username
+  // retrieve data related to this username
   const sql = 'SELECT * FROM owners WHERE username = ?';
   connection.query(sql, [username], (err, results) => {
     if (err) return res.status(500).json({ error: err });
@@ -37,12 +37,12 @@ function login(req, res) {
 
     const user = results[0];
 
-    // confronta password  
+    // compare passwords  
     bcrypt.compare(password, user.password, (err, isMatch) => {
       if (err) return res.status(500).json({ error: err });
       if (!isMatch) return res.status(401).json({ error: 'Invalid username or password' });
 
-      // genera token temporaneo
+      // generate temporary token
       const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
       res.json({ token });
     });

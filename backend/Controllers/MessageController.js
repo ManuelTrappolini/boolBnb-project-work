@@ -2,79 +2,80 @@ const connection = require('../database/connection');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-// Controller per inviare il messaggio e salvarlo nel database
+// Controller to send the message and save it in the database
 const MessageController = {
     sendMessage: async (req, res) => {
         const { name, applicant_email, subject, text } = req.body;
         const apartmentId = req.params.id;
 
-        // Validazione dei dati in ingresso
+        // Validation of input data
         if (!applicant_email || !subject || !text || !name) {
-            return res.status(400).json({ error: 'Tutti i campi sono obbligatori.' });
+            return res.status(400).json({ error: 'All fields are mandatory.' });
         }
 
         try {
-            // 1. Recuperare l'ID del proprietario dell'appartamento
+            // 1. Retrieve the apartment owner's ID
             const queryGetOwnerId = 'SELECT owner_id FROM apartments WHERE id = ?';
 
             connection.query(queryGetOwnerId, [apartmentId], (err, results) => {
                 if (err) {
-                    console.error('Errore nel recupero del proprietario dell\'appartamento:', err);
-                    return res.status(500).json({ error: 'Errore nel recupero del proprietario dell\'appartamento.' });
+                    console.error('Error in apartment owner recovery:', err);
+                    return res.status(500).json({ error: 'Error in recovering the apartment owner.' });
                 }
 
                 if (results.length === 0) {
-                    return res.status(404).json({ error: 'Appartamento non trovato.' });
+                    return res.status(404).json({ error: 'Apartment not found.' });
                 }
 
                 const ownerId = results[0].owner_id;
 
-                // 2. Recuperare l'email del proprietario
+                // 2. Retrieve the owner's email
+
                 const queryGetOwnerEmail = 'SELECT email FROM owners WHERE id = ?';
 
                 connection.query(queryGetOwnerEmail, [ownerId], (err, results) => {
                     if (err) {
-                        console.error('Errore nel recupero dell\'email del proprietario:', err);
-                        return res.status(500).json({ error: 'Errore nel recupero dell\'email del proprietario.' });
+                        console.error('Error retrieving owner email:', err);
+                        return res.status(500).json({ error: 'Error retrieving owner email.' });
                     }
                     if (results.length === 0) {
-                        return res.status(404).json({ error: 'Proprietario non trovato.' });
+                        return res.status(404).json({ error: 'Owner not found.' });
                     }
 
                     const ownerEmail = results[0].email;
 
-                    // 3. Salva il messaggio nel database
+                    // 3. Save the message to the database
                     const queryInsertMessage = 'INSERT INTO messages (applicant_email, text, id_apartment, recipient, subject) VALUES (?, ?, ?, ?, ?)';
                     connection.query(queryInsertMessage, [applicant_email, text, apartmentId, ownerEmail, subject], (err, results) => {
                         if (err) {
-                            console.error('Errore durante il salvataggio del messaggio nel database:', err);
-                            return res.status(500).json({ error: 'Errore nel salvataggio del messaggio nel database.' });
+                            console.error('Error saving message to database:', err);
+                            return res.status(500).json({ error: 'Error saving message to database.' });
                         }
 
-                        // 4. Configura l'email da inviare
+                        // 4. Configure the email to send
                         const mailOptions = {
                             to: ownerEmail,
                             from: process.env.EMAIL_USER,
-                            subject: `${subject} from a ${name}`,
+                            subject: `${subject} from ${name}`,
                             text: `${text} by ${applicant_email}`,
                         };
 
-                        // 5. Invio dell'email tramite SendGrid
+                        // 5. Sending the email via SendGrid
                         sgMail.send(mailOptions)
                             .then(() => {
-                                // 6. Risposta positiva
-                                res.status(200).json({ message: 'Email inviata con successo e messaggio salvato nel database!' });
+                                // 6. Positive response
+                                res.status(200).json({ message: 'Email sent successfully and message saved in database!' });
                             })
                             .catch((error) => {
-                                console.error('Errore nell\'invio dell\'email:', error);
-                                res.status(500).json({ error: 'Errore nell\'invio dell\'email.' });
+                                console.error('Error sending email:', error);
+                                res.status(500).json({ error: 'Error sending email.' });
                             });
                     });
                 });
             });
         } catch (error) {
-            console.error('Errore nel controller:', error);
-            res.status(500).json({ error: 'Errore nel processare la richiesta.' });
+            console.error('Controller error:', error);
+            res.status(500).json({ error: 'Error processing the request.' });
         }
     },
 };

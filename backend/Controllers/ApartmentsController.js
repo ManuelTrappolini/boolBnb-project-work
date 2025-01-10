@@ -77,18 +77,18 @@ function addApartment(req, res) {
 
 /* registered user update the apartment */
 function updateApartment(req, res) {
-    const apartment_id = req.params.id; // id dell'appartamento da aggiornare
+    const apartment_id = req.params.id;
     const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote } = req.body;
 
-    // Verifica che l'appartamento esista prima di eseguire l'aggiornamento
+    // Let's check if apartments already exist before update
     const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
     connection.query(checkApartmentExistence, [apartment_id], (err, results) => {
         if (err) return res.status(500).json({ error: err });
         if (results.length === 0) {
-            return res.status(404).json({ error: 'Appartamento non trovato' });
+            return res.status(404).json({ error: 'Apartment not found' });
         }
 
-        // Query per aggiornare i dati dell'appartamento
+        // Query to update apartment's data
         const updateSql = `
             UPDATE apartments 
             SET 
@@ -105,12 +105,12 @@ function updateApartment(req, res) {
         `;
         const updateData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote, apartment_id];
 
-        // Esegui l'aggiornamento nel database
+        // Perform the update in the database
         connection.query(updateSql, updateData, (err, result) => {
             if (err) return res.status(500).json({ error: err });
 
-            // Risposta di successo
-            res.json({ success: true, message: 'Appartamento aggiornato con successo' });
+            // Successful response
+            res.json({ success: true, message: 'Apartment successfully updated' });
         });
     });
 }
