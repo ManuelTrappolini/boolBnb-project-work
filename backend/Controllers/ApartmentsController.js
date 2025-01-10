@@ -1,7 +1,7 @@
 
 const connection = require('../database/connection')
 
-
+/* show apartments */
 function index(req, res) {
     connection.query('SELECT * FROM apartments', (err, results) => {
         if (err) return res.status(500).json({ err: err })
@@ -10,7 +10,7 @@ function index(req, res) {
     })
 }
 
-
+/* show a specific apartment */
 function show(req, res) {
     const id = req.params.id
     const sql = 'SELECT * FROM apartments WHERE id = ? '
@@ -35,8 +35,7 @@ function show(req, res) {
 
 }
 
-
-
+/* add a review */
 function addReview(req, res) {
     const { author_name, description, date, days_of_stay } = req.body;
     const apartment_id = req.params.id;
@@ -61,6 +60,7 @@ function addReview(req, res) {
     });
 }
 
+/* registered user add an apartment */
 function addApartment(req, res) {
     const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote } = req.body;
     const apartment_id = req.params.id;
@@ -75,5 +75,45 @@ function addApartment(req, res) {
     });
 };
 
+/* registered user update the apartment */
+function updateApartment(req, res) {
+    const apartment_id = req.params.id; // id dell'appartamento da aggiornare
+    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote } = req.body;
 
-module.exports = { index, show, addReview, addApartment }
+    // Verifica che l'appartamento esista prima di eseguire l'aggiornamento
+    const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
+    connection.query(checkApartmentExistence, [apartment_id], (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Appartamento non trovato' });
+        }
+
+        // Query per aggiornare i dati dell'appartamento
+        const updateSql = `
+            UPDATE apartments 
+            SET 
+                title = ?, 
+                rooms_number = ?, 
+                beds = ?, 
+                bathrooms = ?, 
+                square_meters = ?, 
+                address = ?, 
+                picture_url = ?, 
+                description = ?, 
+                vote = ? 
+            WHERE id = ?
+        `;
+        const updateData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote, apartment_id];
+
+        // Esegui l'aggiornamento nel database
+        connection.query(updateSql, updateData, (err, result) => {
+            if (err) return res.status(500).json({ error: err });
+
+            // Risposta di successo
+            res.json({ success: true, message: 'Appartamento aggiornato con successo' });
+        });
+    });
+}
+
+
+module.exports = { index, show, addReview, addApartment, updateApartment }
