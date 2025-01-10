@@ -1,6 +1,6 @@
 const connection = require('../database/connection');
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY); 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Controller per inviare il messaggio e salvarlo nel database
 const MessageController = {
@@ -45,7 +45,7 @@ const MessageController = {
 
                     // 3. Salva il messaggio nel database
                     const queryInsertMessage = 'INSERT INTO messages (applicant_email, text, id_apartment, recipient, subject) VALUES (?, ?, ?, ?, ?)';
-                    connection.query(queryInsertMessage, [ownerEmail, applicant_email, apartmentId, subject, text], (err, results) => {
+                    connection.query(queryInsertMessage, [applicant_email, text, apartmentId, ownerEmail, subject], (err, results) => {
                         if (err) {
                             console.error('Errore durante il salvataggio del messaggio nel database:', err);
                             return res.status(500).json({ error: 'Errore nel salvataggio del messaggio nel database.' });
@@ -55,7 +55,7 @@ const MessageController = {
                         const mailOptions = {
                             to: ownerEmail,
                             from: process.env.EMAIL_USER,
-                            subject: `${subject} from a ${name}`,  
+                            subject: `${subject} from a ${name}`,
                             text: `${text} by ${applicant_email}`,
                         };
 
