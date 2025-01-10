@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const secret = process.env.JWT_SECRET
 
-// Middleware per autenticare il token
+// Middleware to authenticate the token
 function authenticateToken(req, res, next) {
   const token = req.header('Authorization')?.split(' ')[1];
 
@@ -10,7 +10,7 @@ function authenticateToken(req, res, next) {
   jwt.verify(token, secret, (err, user) => {
     if (err) return res.status(403).json({ error: 'Invalid token' });
 
-    req.user = user; // Aggiungi l'utente decodificato alla richiesta
+    req.user = user; // Add the decoded user to the request
     next();
   });
 }
