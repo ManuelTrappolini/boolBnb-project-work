@@ -1,7 +1,7 @@
 
 const connection = require('../database/connection')
 
-
+/* show apartments */
 function index(req, res) {
     connection.query('SELECT * FROM apartments', (err, results) => {
         if (err) return res.status(500).json({ err: err })
@@ -10,7 +10,7 @@ function index(req, res) {
     })
 }
 
-
+/* show a specific apartment */
 function show(req, res) {
     const id = req.params.id
     const sql = 'SELECT * FROM apartments WHERE id = ? '
@@ -35,8 +35,7 @@ function show(req, res) {
 
 }
 
-
-
+/* add a review */
 function addReview(req, res) {
     const { author_name, description, date, days_of_stay } = req.body;
     const apartment_id = req.params.id;
@@ -61,6 +60,7 @@ function addReview(req, res) {
     });
 }
 
+/* registered user add an apartment */
 function addApartment(req, res) {
     const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote } = req.body;
     const apartment_id = req.params.id;
@@ -75,6 +75,7 @@ function addApartment(req, res) {
     });
 };
 
+/* registered user update the apartment */
 function updateApartment(req, res) {
     const apartment_id = req.params.id; // id dell'appartamento da aggiornare
     const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote } = req.body;
