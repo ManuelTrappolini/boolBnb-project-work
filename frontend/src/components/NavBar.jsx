@@ -15,9 +15,6 @@ export default function NavBar() {
 
             <ul style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', listStyleType: 'none' }}>
 
-                <li style={styles.navItem}>
-                    <a href="/about" style={styles.navLink}>About</a>
-                </li>
                 <li style={{ ...styles.navItem, position: 'relative' }} onClick={toggleDropdown}>
                     <a href="#" style={styles.navLink}><i className="bi bi-person" style={{ fontSize: '25px' }}></i></a>
                     {isDropdownOpen && (
@@ -28,6 +25,11 @@ export default function NavBar() {
                         </ul>
                     )}
                 </li>
+
+                <li style={styles.navItem}>
+                    <a href="/about" style={styles.navLink}>About</a>
+                </li>
+
                 <li style={styles.navItem}>
                     <a href="/contact" style={styles.navLink}>Contact</a>
                 </li>
