@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export default function AddApartment() {
     const [title, setTitle] = useState('');
-    const [rooms, setRooms] = useState('');
+    const [rooms_number, setRooms_number] = useState('');
     const [beds, setBeds] = useState('');
     const [bathrooms, setBathrooms] = useState('');
     const [square_meters, setSquare_meters] = useState('');
@@ -10,20 +10,23 @@ export default function AddApartment() {
     const [picture_url, setPicture_url] = useState('');
     const [description, setDescription] = useState('');
 
-    // Funzione per gestire i cambiamenti nei campi
-
-
     // Funzione per inviare i dati al backend
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Converto i valori numerici per evitare invalidi vuoti
+        const roomsNumber = parseInt(rooms_number);
+        const bedsNumber = parseInt(beds);
+        const bathroomsNumber = parseInt(bathrooms);
+        const squareMeters = parseInt(square_meters);
+
         // Aggiungi la validazione per tutti i campi
         if (
             title.length < 5 ||
-            rooms === '' ||
-            beds === '' ||
-            bathrooms === '' ||
-            square_meters === '' ||
+            isNaN(roomsNumber) || roomsNumber <= 0 ||
+            isNaN(bedsNumber) || bedsNumber <= 0 ||
+            isNaN(bathroomsNumber) || bathroomsNumber <= 0 ||
+            isNaN(squareMeters) || squareMeters <= 0 ||
             address.length < 5 ||
             picture_url === '' ||
             description.length < 5
@@ -35,15 +38,17 @@ export default function AddApartment() {
         // Crea un oggetto con tutti i dati del form
         const formData = {
             title,
-            rooms: parseInt(rooms),
-            beds: parseInt(beds),
-            bathrooms: parseInt(bathrooms),
-            square_meters: parseInt(square_meters),
+            rooms_number: roomsNumber,  // Assicuriamo che il valore sia un numero valido
+            beds: bedsNumber,
+            bathrooms: bathroomsNumber,
+            square_meters: squareMeters,
             address,
             picture_url,
             description,
         };
-        console.log("Dati inviati al server:", formData);
+
+        // Log dei dati prima dell'invio
+        console.log("Form Data in Submit: ", formData);
 
         // Usando .then() per gestire la promise
         fetch('http://localhost:3004/apartments/addapartment', {
@@ -51,20 +56,21 @@ export default function AddApartment() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(formData),  // Serializza l'oggetto in formato JSON
         })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();  // Se la risposta è ok, parsifica la risposta come JSON
-                } else {
-                    throw new Error('Errore nell\'aggiunta dell\'appartamento');
+            .then((res) => {
+                if (!res.ok) {
+                    return res.text().then(text => {
+                        throw new Error(text);
+                    });
                 }
+                return res.json();
             })
-            .then(data => {
+            .then((data) => {
                 console.log('Appartamento aggiunto:', data);
                 alert('Appartamento aggiunto con successo!');
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Errore:', error);
                 alert('Errore nella comunicazione con il server');
             });
@@ -90,8 +96,8 @@ export default function AddApartment() {
                     className="form-control"
                     id="rooms"
                     name="rooms"
-                    value={rooms}
-                    onChange={(e) => setRooms(e.target.value)}
+                    value={rooms_number}
+                    onChange={(e) => setRooms_number(e.target.value)}
                 />
             </div>
             <div className="col-md-4">
