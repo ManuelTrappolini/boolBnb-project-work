@@ -64,9 +64,8 @@ function addReview(req, res) {
 
 /* registered user add an apartment */
 function addApartment(req, res) {
-    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id } = req.body;
-    const apartment_id = req.params.id;
-    /* const owner_id = req.user.userId; */
+    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description } = req.body;
+    const owner_id = req.user.userId;
 
     const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description,  owner_id ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const reviewData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id];
