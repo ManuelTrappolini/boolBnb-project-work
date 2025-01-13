@@ -19,6 +19,8 @@ function show(req, res) {
     connection.query(sql, [id], (err, results) => {
         if (err) return res.status(500).json({ err: err })
 
+        if (results.length == 0) return res.status(404).json({ err: 'Apartment not found' })
+
         connection.query(reviewsSql, [id], (err, reviewsResults) => {
             if (err) return res.status(500).json({ err: err })
 
