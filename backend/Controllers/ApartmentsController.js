@@ -3,7 +3,7 @@ const connection = require('../database/connection')
 
 /* show apartments */
 function index(req, res) {
-    connection.query('SELECT * FROM apartments', (err, results) => {
+    connection.query('SELECT * FROM apartments ORDER BY vote DESC', (err, results) => {
         if (err) return res.status(500).json({ err: err })
         console.log(results);
         res.json({ apartments: results })
@@ -62,12 +62,12 @@ function addReview(req, res) {
 
 /* registered user add an apartment */
 function addApartment(req, res) {
-    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote } = req.body;
+    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id } = req.body;
     const apartment_id = req.params.id;
-    const owner_id = req.user.userId;
+    /* const owner_id = req.user.userId; */
 
-    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    const reviewData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote, owner_id];
+    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description,  owner_id ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const reviewData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id];
 
     connection.query(sql, reviewData, (err, result) => {
         if (err) return res.status(500).json({ error: err });
@@ -78,7 +78,7 @@ function addApartment(req, res) {
 /* registered user update the apartment */
 function updateApartment(req, res) {
     const apartment_id = req.params.id;
-    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote } = req.body;
+    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, } = req.body;
 
     // Let's check if apartments already exist before update
     const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
@@ -99,11 +99,10 @@ function updateApartment(req, res) {
                 square_meters = ?, 
                 address = ?, 
                 picture_url = ?, 
-                description = ?, 
-                vote = ? 
-            WHERE id = ?
+                description = ?
+             WHERE id = ?
         `;
-        const updateData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, vote, apartment_id];
+        const updateData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, apartment_id];
 
         // Perform the update in the database
         connection.query(updateSql, updateData, (err, result) => {

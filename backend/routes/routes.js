@@ -14,7 +14,7 @@ router.post('/:id/review', ApartmentsController.addReview)
 
 router.post('/addapartment', authenticateToken, ApartmentsController.addApartment)
 
-router.put('/:id', authenticateToken,ApartmentsController.updateApartment)
+router.put('/:id', authenticateToken, ApartmentsController.updateApartment)
 
 /* users routes */
 
