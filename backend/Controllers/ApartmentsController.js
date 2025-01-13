@@ -44,7 +44,7 @@ function addReview(req, res) {
     const date = new Date();
 
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
 
     const formattedDate = `${year}-${month}-${day}`
@@ -72,10 +72,10 @@ function addReview(req, res) {
 /* registered user add an apartment */
 function addApartment(req, res) {
     const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description } = req.body;
-    const owner_id = req.user.userId;
+    /* const owner_id = req.user.userId; */
 
-    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description,  owner_id ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    const reviewData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id];
+    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const reviewData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description];
 
     connection.query(sql, reviewData, (err, result) => {
         if (err) return res.status(500).json({ error: err });
