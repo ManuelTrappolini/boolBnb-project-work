@@ -74,6 +74,7 @@ export default function AddApartment() {
                 console.error('Errore:', error);
                 alert('Errore nella comunicazione con il server');
             });
+
     };
 
     return (
