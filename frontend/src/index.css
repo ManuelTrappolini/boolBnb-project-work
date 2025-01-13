@@ -1,0 +1,83 @@
+h1{
+    font-size: 40px;
+    line-height: 1.2px;
+}
+
+h2{
+    font-size: 32px;
+    line-height: 1.4px;
+}
+
+h3{
+    font-size: 24px;
+    line-height: 1.5px;
+}
+
+p{
+    font-size: 18px;
+    line-height: 1.6px;
+}
+
+.p_secondary{
+    font-size: 16px;
+    line-height: 1.5px;
+}
+
+.menu_txt{
+    font-size: 16px;
+    line-height: 1.5px;
+}
+
+.button{
+    font-size: 16px;
+    line-height: 1.5px;
+    padding: 12px 24px;
+}
+
+.label, .input_form{
+    font-size: 14px;
+    line-height: 1.5px;
+}
+
+@media screen and (max-width: 768px) {
+    h1{
+        font-size: 32px;
+        line-height: 1.2px;
+    }
+    
+    h2{
+        font-size: 26px;
+        line-height: 1.4px;
+    }
+    
+    h3{
+        font-size: 20px;
+        line-height: 1.5px;
+    }
+    
+    p{
+        font-size: 16px;
+        line-height: 1.6px;
+    }
+    
+    .p_secondary{
+        font-size: 14px;
+        line-height: 1.5px;
+    }
+
+    .menu_txt{
+        font-size: 14px;
+        line-height: 1.5px;
+    }
+    
+    .button{
+        font-size: 16px;
+        line-height: 1.5px;
+        padding: 12px 24px;
+    }
+    
+    .label, .input_form{
+        font-size: 14px;
+        line-height: 1.5px;
+    }
+}
