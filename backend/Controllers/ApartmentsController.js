@@ -39,8 +39,15 @@ function show(req, res) {
 
 /* add a review */
 function addReview(req, res) {
-    const { author_name, description, date, days_of_stay } = req.body;
+    const { author_name, description, days_of_stay, author_email } = req.body;
     const apartment_id = req.params.id;
+    const date = new Date();
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`
 
 
     const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
@@ -52,8 +59,8 @@ function addReview(req, res) {
         }
 
 
-        const sql = 'INSERT INTO reviews (author_name, description, date, days_of_stay, ID_apartment) VALUES (?, ?, ?, ?, ?)';
-        const reviewData = [author_name, description, date, days_of_stay, apartment_id];
+        const sql = 'INSERT INTO reviews (author_name, author_email, description, date, days_of_stay, ID_apartment) VALUES (?, ?, ?, ?, ?, ?)';
+        const reviewData = [author_name, author_email, description, formattedDate, days_of_stay, apartment_id];
 
         connection.query(sql, reviewData, (err, result) => {
             if (err) return res.status(500).json({ error: err });
