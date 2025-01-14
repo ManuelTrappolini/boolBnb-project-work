@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import AppHeader from "../components/AppHeader";
+import AppHeader from "../components/Header/AppHeader";
 import AppFooter from "../components/AppFooter";
 
 export default function Layout() {

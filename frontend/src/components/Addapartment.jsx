@@ -106,8 +106,9 @@ export default function AddApartment() {
 
     return (
         <div className="container py-5">
-            <h1 className="mb-4 text-center text-primary">Aggiungi il tuo appartamento</h1>
+
             <form className="row g-4 shadow-lg p-4 rounded" onSubmit={handleSubmit}>
+                <h1>Aggiungi il tuo appartamento</h1>
                 <div className="col-12">
                     <label htmlFor="title" className="form-label">Titolo riepilogativo che descriva l’appartamento</label>
                     <input
@@ -120,7 +121,7 @@ export default function AddApartment() {
                         required
                     />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-6">
                     <label htmlFor="rooms" className="form-label">Numero di stanze</label>
                     <input
                         type="number"
@@ -132,7 +133,7 @@ export default function AddApartment() {
                         required
                     />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-6">
                     <label htmlFor="beds" className="form-label">Numero di letti</label>
                     <input
                         type="number"
@@ -144,7 +145,7 @@ export default function AddApartment() {
                         required
                     />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-6">
                     <label htmlFor="bathrooms" className="form-label">Numero di bagni</label>
                     <input
                         type="number"
@@ -156,7 +157,7 @@ export default function AddApartment() {
                         required
                     />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-6">
                     <label htmlFor="square_meters" className="form-label">Metri quadrati</label>
                     <input
                         type="number"
@@ -226,8 +227,8 @@ export default function AddApartment() {
                     </div>
                 </div>
 
-                <div className="col-12 text-center">
-                    <button type="submit" className="btn btn-primary btn-lg px-5 py-3">Invia</button>
+                <div className="col-12">
+                    <button type="submit" className="btn btn-primary">Add Apartment</button>
                 </div>
             </form>
         </div>
