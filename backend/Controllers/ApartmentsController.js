@@ -95,7 +95,7 @@ function addReview(req, res) {
     /* formatted date */
     const date = new Date();
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}`
 
@@ -123,16 +123,19 @@ function addReview(req, res) {
 function addApartment(req, res) {
     const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, services } = req.body;
 
+
     /* validation data */
     const errors = validateApartmentData({ title, rooms_number, beds, bathrooms, square_meters, address, description, services });
     if (errors.length > 0) {
         return res.status(400).json({ success: false, errors });
     }
 
+
     const owner_id = req.user.userId;
 
     const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id];
+
 
     // add apartment
     connection.query(sql, apartmentData, (err, result) => {
@@ -146,12 +149,16 @@ function addApartment(req, res) {
             
             const bridgeData = services.map(serviceId => [apartmentId, serviceId]);
 
+
             connection.query(bridgeSql, [bridgeData], (bridgeErr) => {
                 if (bridgeErr) return res.status(500).json({ error: bridgeErr });
                 res.status(201).json({ success: true, apartmentId });
             });
         } else {
+
+
             // if there are not the services
+
             res.status(201).json({ success: true, apartmentId });
         }
     });
