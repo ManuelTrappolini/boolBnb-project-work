@@ -19,7 +19,7 @@ export default function HomePage() {
                 <div className="row">
                     {cards.slice(0, 5).map((card) => (
                         <div key={card.id} className="col-md-2 mb-4">
-                            <div className="card" style={{ width: '100%' }}>
+                            <div className="card" style={{ width: '100%', height: '400px' }}>
                                 <img
                                     src={card.picture_url || "https://www.classcountryhomes.it/wp-content/uploads/2021/07/appartamento-roma-centro-storico-con-terrazzo.jpg"}
                                     className="card-img-top"
@@ -29,7 +29,7 @@ export default function HomePage() {
                                         height: '200px',
                                     }}
                                 />
-                                <div className="card-body">
+                                <div className="card-body" style={{ height: '200px' }}>
                                     <h5 className="card-title">{card.title}</h5>
                                     <p>Indirizzo: {card.address}</p>
                                     <p>Voto: {card.vote}</p>
@@ -43,7 +43,7 @@ export default function HomePage() {
                 <div className="row">
                     {cards.slice(5, 10).map((card) => (
                         <div key={card.id} className="col-md-2 mb-4">
-                            <div className="card" style={{ width: '100%' }}>
+                            <div className="card" style={{ width: '100%', height: '400px' }}>
                                 <img
                                     src={card.picture_url || "https://via.placeholder.com/150"}
                                     className="card-img-top"
@@ -53,7 +53,7 @@ export default function HomePage() {
                                         height: '200px',
                                     }}
                                 />
-                                <div className="card-body">
+                                <div className="card-body" style={{ height: '200px' }}>
                                     <h5 className="card-title">{card.title}</h5>
                                     <p>Indirizzo: {card.address}</p>
                                     <p>Voto: {card.vote}</p>
@@ -66,3 +66,4 @@ export default function HomePage() {
         </>
     );
 }
+
