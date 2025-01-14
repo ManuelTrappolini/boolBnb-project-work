@@ -116,7 +116,7 @@ export default function AddReview() {
                         <label htmlFor="description" className="form-label">Description</label>
                         <textarea
                             className="form-control"
-                            placeholder="describe your apartment..."
+                            placeholder="describe your journey..."
                             type="text"
                             id="description"
                             value={description}
