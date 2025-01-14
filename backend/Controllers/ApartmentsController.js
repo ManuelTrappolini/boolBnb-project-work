@@ -71,17 +71,36 @@ function addReview(req, res) {
 
 /* registered user add an apartment */
 function addApartment(req, res) {
-    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description } = req.body;
-    /* const owner_id = req.user.userId; */
+    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, services } = req.body;
+    const owner_id = 2
 
-    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    const reviewData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description];
+    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id];
 
-    connection.query(sql, reviewData, (err, result) => {
+    // Inserimento dell'appartamento
+    connection.query(sql, apartmentData, (err, result) => {
         if (err) return res.status(500).json({ error: err });
-        res.status(201).json({ success: true, reviewId: result.insertId });
+
+        const apartmentId = result.insertId; // Recuperiamo l'id dell'appartamento appena creato
+
+        // Verifica se ci sono servizi
+        if (services && Array.isArray(services) && services.length > 0) {
+            const bridgeSql = 'INSERT INTO apartment_service (id_apartment, id_service) VALUES ?';
+
+            // Prepariamo i valori da inserire nella tabella ponte
+            const bridgeData = services.map(serviceId => [apartmentId, serviceId]);
+
+            // Inseriamo i dati nella tabella ponte
+            connection.query(bridgeSql, [bridgeData], (bridgeErr) => {
+                if (bridgeErr) return res.status(500).json({ error: bridgeErr });
+                res.status(201).json({ success: true, apartmentId });
+            });
+        } else {
+            // Se non ci sono servizi, restituiamo comunque la risposta
+            res.status(201).json({ success: true, apartmentId });
+        }
     });
-};
+}
 
 /* registered user update the apartment */
 function updateApartment(req, res) {

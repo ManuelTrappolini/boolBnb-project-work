@@ -32,7 +32,7 @@ export default function AddApartment() {
                 ? [...prevSelectedServices, serviceId]
                 : prevSelectedServices.filter(id => id !== serviceId)
         )
-        console.log(selectedServices);
+        console.log(setSelectedServices);
 
     }
     // Funzione per inviare i dati al backend
@@ -115,6 +115,7 @@ export default function AddApartment() {
                         name="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="col-md-4">
@@ -126,6 +127,7 @@ export default function AddApartment() {
                         name="rooms"
                         value={rooms_number}
                         onChange={(e) => setRooms_number(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="col-md-4">
@@ -137,6 +139,7 @@ export default function AddApartment() {
                         name="beds"
                         value={beds}
                         onChange={(e) => setBeds(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="col-md-4">
@@ -148,6 +151,7 @@ export default function AddApartment() {
                         name="bathrooms"
                         value={bathrooms}
                         onChange={(e) => setBathrooms(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="col-md-4">
@@ -159,6 +163,7 @@ export default function AddApartment() {
                         name="square_meters"
                         value={square_meters}
                         onChange={(e) => setSquare_meters(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="col-12">
@@ -170,6 +175,7 @@ export default function AddApartment() {
                         name="address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="col-12">
@@ -181,6 +187,7 @@ export default function AddApartment() {
                         name="description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="col-12">
@@ -193,20 +200,22 @@ export default function AddApartment() {
                         value={picture_url}
                         onChange={(e) => setPicture_url(e.target.value)}
                         placeholder="Inserisci l'URL dell'immagine"
+                        required
                     />
                 </div>
 
                 <div className="col-12">
                     <label className="form-label">Servizi:</label>
-                    <div>
+                    <div className="d-flex flex-wrap"> {/* Usa flexbox per disporre i checkbox in riga */}
                         {servicesList.map(service => (
-                            <div key={service.id} className="form-check">
+                            <div key={service.id} className="form-check me-3 mb-2"> {/* Aggiungi margine per separare i checkbox */}
                                 <input
                                     className="form-check-input"
                                     type="checkbox"
                                     value={service.id}
                                     id={`service-${service.id}`}
                                     onChange={handleCheckboxChange}
+                                    required
                                 />
                                 <label className="form-check-label" htmlFor={`service-${service.id}`}>
                                     {service.name}
@@ -215,6 +224,7 @@ export default function AddApartment() {
                         ))}
                     </div>
                 </div>
+
 
                 <div className="col-12">
                     <button type="submit" className="btn btn-primary">Invia</button>
