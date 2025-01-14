@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router"
+import DetailLayout from "../components/DetailLayout"
 
 function DetailPage() {
     const { id } = useParams()
@@ -16,12 +17,9 @@ function DetailPage() {
         <>
             <div>
                 {appartment ? (
-                    <>
-                        <div className="container">
-                            <h1>{appartment.title}</h1>
-                            <img src={appartment.picture_url} alt="" />
-                        </div>
-                    </>
+
+                    <DetailLayout appartment={appartment} />
+
                 ) : (
                     <>
                         <span>Error 404: appartment not found</span>
@@ -29,6 +27,7 @@ function DetailPage() {
                 )}
             </div>
         </>
+
     )
 }
 
