@@ -94,11 +94,10 @@ function addApartment(req, res) {
     connection.query(sql, apartmentData, (err, result) => {
         if (err) return res.status(500).json({ error: err });
 
-        const apartmentId = result.insertId; // Recuperiamo l'id dell'appartamento appena creato
-
+        const apartmentId = result.insertId; 
         // Verifica se ci sono servizi
         if (services && Array.isArray(services) && services.length > 0) {
-            const bridgeSql = 'INSERT INTO apartment_services (apartment_id, service_id) VALUES ?';
+            const bridgeSql = 'INSERT INTO apartment_service (id_apartment, id_service) VALUES ?';
             
             // Prepariamo i valori da inserire nella tabella ponte
             const bridgeData = services.map(serviceId => [apartmentId, serviceId]);
