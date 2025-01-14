@@ -31,22 +31,72 @@ function show(req, res) {
 
             res.json(apartment)
         })
-
-
     })
+}
 
+/* calidation server side */
+function validateApartmentData(data) {
+    const errors = [];
+    if (!data.title || typeof data.title !== 'string' || data.title.trim() === '') {
+        errors.push('Title is required and must be a non-empty string.');
+    }
+    if (!data.rooms_number || isNaN(data.rooms_number) || data.rooms_number <= 0) {
+        errors.push('Rooms number is required and must be a positive number.');
+    }
+    if (!data.beds || isNaN(data.beds) || data.beds <= 0) {
+        errors.push('Beds is required and must be a positive number.');
+    }
+    if (!data.bathrooms || isNaN(data.bathrooms) || data.bathrooms <= 0) {
+        errors.push('Bathrooms is required and must be a positive number.');
+    }
+    if (!data.square_meters || isNaN(data.square_meters) || data.square_meters <= 0) {
+        errors.push('Square meters is required and must be a positive number.');
+    }
+    if (!data.address || typeof data.address !== 'string' || data.address.trim() === '') {
+        errors.push('Address is required and must be a non-empty string.');
+    }
+    if (!data.description || typeof data.description !== 'string' || data.description.trim() === '') {
+        errors.push('Description is required and must be a non-empty string.');
+    }
+    if (data.services && (!Array.isArray(data.services) || data.services.some(id => isNaN(id) || id <= 0))) {
+        errors.push('Services must be an array of positive numbers if provided.');
+    }    
+    return errors;
+}
+
+function validateReviewData(data) {
+    const errors = [];
+    if (!data.author_name || typeof data.author_name !== 'string' || data.author_name.trim() === '') {
+        errors.push('Author name is required and must be a non-empty string.');
+    }
+    if (!data.author_email || typeof data.author_email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.author_email)) {
+        errors.push('A valid author email is required.');
+    }
+    if (!data.description || typeof data.description !== 'string' || data.description.trim() === '') {
+        errors.push('Description is required and must be a non-empty string.');
+    }
+    if (!data.days_of_stay || isNaN(data.days_of_stay) || data.days_of_stay <= 0) {
+        errors.push('Days of stay is required and must be a positive number.');
+    }
+    return errors;
 }
 
 /* add a review */
 function addReview(req, res) {
     const { author_name, description, days_of_stay, author_email } = req.body;
     const apartment_id = req.params.id;
-    const date = new Date();
 
+    /* validation data */
+    const errors = validateReviewData({ author_name, description, days_of_stay, author_email });
+    if (errors.length > 0) {
+        return res.status(400).json({ success: false, errors });
+    }
+
+    /* formatted date */
+    const date = new Date();
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-
     const formattedDate = `${year}-${month}-${day}`
 
 
@@ -72,31 +122,43 @@ function addReview(req, res) {
 /* registered user add an apartment */
 function addApartment(req, res) {
     const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, services } = req.body;
+
+
+    /* validation data */
+    const errors = validateApartmentData({ title, rooms_number, beds, bathrooms, square_meters, address, description, services });
+    if (errors.length > 0) {
+        return res.status(400).json({ success: false, errors });
+    }
+
+
     const owner_id = req.user.userId;
 
     const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, owner_id];
 
-    // Inserimento dell'appartamento
+
+    // add apartment
     connection.query(sql, apartmentData, (err, result) => {
         if (err) return res.status(500).json({ error: err });
 
-        const apartmentId = result.insertId; // Recuperiamo l'id dell'appartamento appena creato
+        const apartmentId = result.insertId; 
 
-        // Verifica se ci sono servizi
+        // check if services exist
         if (services && Array.isArray(services) && services.length > 0) {
             const bridgeSql = 'INSERT INTO apartment_service (id_apartment, id_service) VALUES ?';
-
-            // Prepariamo i valori da inserire nella tabella ponte
+            
             const bridgeData = services.map(serviceId => [apartmentId, serviceId]);
 
-            // Inseriamo i dati nella tabella ponte
+
             connection.query(bridgeSql, [bridgeData], (bridgeErr) => {
                 if (bridgeErr) return res.status(500).json({ error: bridgeErr });
                 res.status(201).json({ success: true, apartmentId });
             });
         } else {
-            // Se non ci sono servizi, restituiamo comunque la risposta
+
+
+            // if there are not the services
+
             res.status(201).json({ success: true, apartmentId });
         }
     });
