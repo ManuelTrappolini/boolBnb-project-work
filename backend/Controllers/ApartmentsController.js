@@ -60,7 +60,7 @@ function validateApartmentData(data) {
     }
     if (data.services && (!Array.isArray(data.services) || data.services.some(id => isNaN(id) || id <= 0))) {
         errors.push('Services must be an array of positive numbers if provided.');
-    }    
+    }
     return errors;
 }
 
@@ -141,12 +141,12 @@ function addApartment(req, res) {
     connection.query(sql, apartmentData, (err, result) => {
         if (err) return res.status(500).json({ error: err });
 
-        const apartmentId = result.insertId; 
+        const apartmentId = result.insertId;
 
         // check if services exist
         if (services && Array.isArray(services) && services.length > 0) {
             const bridgeSql = 'INSERT INTO apartment_service (id_apartment, id_service) VALUES ?';
-            
+
             const bridgeData = services.map(serviceId => [apartmentId, serviceId]);
 
 
@@ -203,5 +203,27 @@ function updateApartment(req, res) {
     });
 }
 
+function voteApartment(req, res) {
+    const apartmentId = req.params.id
 
-module.exports = { index, show, addReview, addApartment, updateApartment }
+    //Check if apartment exist
+
+    const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
+    connection.query(checkApartmentExistence, [apartmentId], (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Apartment not found' });
+        }
+
+        //Increment vote
+        const UpdateVoteSql = 'UPDATE apartments SET vote = vote + 1 WHERE id = ?';
+        connection.query(UpdateVoteSql, [apartmentId], (err, result) => {
+            if (err) return res.status(500).json({ error: err })
+
+            res.json({ success: true, message: 'Vote incremented successfully' })
+        })
+    })
+}
+
+
+module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment }
