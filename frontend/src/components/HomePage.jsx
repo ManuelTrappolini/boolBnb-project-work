@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import HeartCounter from './HeartsCounter';
 
 export default function HomePage() {
     const [cards, setCards] = useState([]);
@@ -34,6 +35,7 @@ export default function HomePage() {
                                     <p>Indirizzo: {card.address}</p>
                                     <p>Voto: {card.vote}</p>
                                 </div>
+                                <HeartCounter key={card.id} cardId={card.id} />
                             </div>
                         </div>
                     ))}
