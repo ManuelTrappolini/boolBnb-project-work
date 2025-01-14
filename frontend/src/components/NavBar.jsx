@@ -15,14 +15,14 @@ const Navbar = () => {
         e.preventDefault();
         setOverlayVisible(true);
         setShowLoginForm(true);
-        setShowRegisterForm(false);  // Ensure register form is hidden when login is clicked
+        setShowRegisterForm(false);
     };
 
     // Show overlay and register module
     const handleRegisterClick = (e) => {
         e.preventDefault();
         setOverlayVisible(true);
-        setShowLoginForm(false);  // Ensure login form is hidden when register is clicked
+        setShowLoginForm(false);
         setShowRegisterForm(true);
     };
 
@@ -36,6 +36,7 @@ const Navbar = () => {
     return (
         <nav style={styles.navbar}>
             {/* Overlay */}
+
             {overlayVisible && (
                 <div style={styles.overlay} onClick={closeOverlay}></div>
             )}
@@ -64,11 +65,20 @@ const Navbar = () => {
             )}
 
             {/* Register Module */}
+
             {overlayVisible && showRegisterForm && (
                 <div style={styles.loginFormContainer}>
                     <div style={styles.loginForm}>
                         <h2 style={styles.loginTitle}>Register</h2>
                         <form>
+                            <div style={styles.formGroup}>
+                                <label htmlFor="name" style={styles.label}>Name</label>
+                                <input type="name" id="name" name="name" style={styles.input} required />
+                            </div>
+                            <div style={styles.formGroup}>
+                                <label htmlFor="username" style={styles.label}>Username</label>
+                                <input type="username" id="username" name="username" style={styles.input} required />
+                            </div>
                             <div style={styles.formGroup}>
                                 <label htmlFor="email" style={styles.label}>Email</label>
                                 <input type="email" id="email" name="email" style={styles.input} required />
@@ -87,6 +97,7 @@ const Navbar = () => {
             )}
 
             {/* Right Navbar */}
+
             <ul style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', listStyleType: 'none' }}>
                 <li style={{ ...styles.navItem, position: 'relative' }} onClick={toggleDropdown}>
                     <a href="#" style={styles.navLink}>
