@@ -9,7 +9,32 @@ export default function AddApartment() {
     const [address, setAddress] = useState('');
     const [picture_url, setPicture_url] = useState('');
     const [description, setDescription] = useState('');
+    const [selectedServices, setSelectedServices] = useState([]);
+    const servicesList = [
+        { id: 3, name: 'air_conditioner' },
+        { id: 5, name: 'bathroom_essentials' },
+        { id: 6, name: 'bed_linen' },
+        { id: 11, name: 'disabled_access' },
+        { id: 4, name: 'eat-in_kitchen ' },
+        { id: 1, name: 'free_parking' },
+        { id: 9, name: 'pet_allowed' },
+        { id: 2, name: 'private_garden' },
+        { id: 10, name: 'smoker' },
+        { id: 7, name: 'television' },
+        { id: 8, name: 'wi-fi' },
 
+    ];
+
+    const handleCheckboxChange = (e) => {
+        const serviceId = parseInt(e.target.value);
+        setSelectedServices(prevSelectedServices =>
+            e.target.checked
+                ? [...prevSelectedServices, serviceId]
+                : prevSelectedServices.filter(id => id !== serviceId)
+        )
+        console.log(selectedServices);
+
+    }
     // Funzione per inviare i dati al backend
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -45,6 +70,7 @@ export default function AddApartment() {
             address,
             picture_url,
             description,
+            services: selectedServices
         };
 
         // Log dei dati prima dell'invio
@@ -78,99 +104,122 @@ export default function AddApartment() {
     };
 
     return (
-        <form className="row g-3" onSubmit={handleSubmit}>
-            <div className="col-12">
-                <label htmlFor="title" className="form-label">Titolo riepilogativo che descriva l’appartamento</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="title"
-                    name="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-            </div>
-            <div className="col-md-4">
-                <label htmlFor="rooms" className="form-label">Numero di stanze</label>
-                <input
-                    type="number"
-                    className="form-control"
-                    id="rooms"
-                    name="rooms"
-                    value={rooms_number}
-                    onChange={(e) => setRooms_number(e.target.value)}
-                />
-            </div>
-            <div className="col-md-4">
-                <label htmlFor="beds" className="form-label">Numero di letti</label>
-                <input
-                    type="number"
-                    className="form-control"
-                    id="beds"
-                    name="beds"
-                    value={beds}
-                    onChange={(e) => setBeds(e.target.value)}
-                />
-            </div>
-            <div className="col-md-4">
-                <label htmlFor="bathrooms" className="form-label">Numero di bagni</label>
-                <input
-                    type="number"
-                    className="form-control"
-                    id="bathrooms"
-                    name="bathrooms"
-                    value={bathrooms}
-                    onChange={(e) => setBathrooms(e.target.value)}
-                />
-            </div>
-            <div className="col-md-4">
-                <label htmlFor="square_meters" className="form-label">Metri quadrati</label>
-                <input
-                    type="number"
-                    className="form-control"
-                    id="square_meters"
-                    name="square_meters"
-                    value={square_meters}
-                    onChange={(e) => setSquare_meters(e.target.value)}
-                />
-            </div>
-            <div className="col-12">
-                <label htmlFor="address" className="form-label">Indirizzo completo</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="address"
-                    name="address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                />
-            </div>
-            <div className="col-12">
-                <label htmlFor="description" className="form-label">Descrizione dell'appartamento</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="description"
-                    name="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-            </div>
-            <div className="col-12">
-                <label htmlFor="picture_url" className="form-label">URL immagine rappresentativa dell’appartamento</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="picture_url"
-                    name="picture_url"
-                    value={picture_url}
-                    onChange={(e) => setPicture_url(e.target.value)}
-                    placeholder="Inserisci l'URL dell'immagine"
-                />
-            </div>
-            <div className="col-12">
-                <button type="submit" className="btn btn-primary">Invia</button>
-            </div>
-        </form>
+        <div className="container">
+            <form className="row g-3" onSubmit={handleSubmit}>
+                <div className="col-12">
+                    <label htmlFor="title" className="form-label">Titolo riepilogativo che descriva l’appartamento</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="title"
+                        name="title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <label htmlFor="rooms" className="form-label">Numero di stanze</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="rooms"
+                        name="rooms"
+                        value={rooms_number}
+                        onChange={(e) => setRooms_number(e.target.value)}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <label htmlFor="beds" className="form-label">Numero di letti</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="beds"
+                        name="beds"
+                        value={beds}
+                        onChange={(e) => setBeds(e.target.value)}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <label htmlFor="bathrooms" className="form-label">Numero di bagni</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="bathrooms"
+                        name="bathrooms"
+                        value={bathrooms}
+                        onChange={(e) => setBathrooms(e.target.value)}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <label htmlFor="square_meters" className="form-label">Metri quadrati</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="square_meters"
+                        name="square_meters"
+                        value={square_meters}
+                        onChange={(e) => setSquare_meters(e.target.value)}
+                    />
+                </div>
+                <div className="col-12">
+                    <label htmlFor="address" className="form-label">Indirizzo completo</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="address"
+                        name="address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                    />
+                </div>
+                <div className="col-12">
+                    <label htmlFor="description" className="form-label">Descrizione dell'appartamento</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="description"
+                        name="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                </div>
+                <div className="col-12">
+                    <label htmlFor="picture_url" className="form-label">URL immagine rappresentativa dell’appartamento</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="picture_url"
+                        name="picture_url"
+                        value={picture_url}
+                        onChange={(e) => setPicture_url(e.target.value)}
+                        placeholder="Inserisci l'URL dell'immagine"
+                    />
+                </div>
+
+                <div className="col-12">
+                    <label className="form-label">Servizi:</label>
+                    <div>
+                        {servicesList.map(service => (
+                            <div key={service.id} className="form-check">
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    value={service.id}
+                                    id={`service-${service.id}`}
+                                    onChange={handleCheckboxChange}
+                                />
+                                <label className="form-check-label" htmlFor={`service-${service.id}`}>
+                                    {service.name}
+                                </label>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="col-12">
+                    <button type="submit" className="btn btn-primary">Invia</button>
+                </div>
+            </form>
+        </div>
     );
 }
