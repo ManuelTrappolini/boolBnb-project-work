@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { FaFan, FaShower, FaBed, FaAccessibleIcon, FaUtensils, FaParking, FaPaw, FaTree, FaSmoking, FaTv, FaWifi } from 'react-icons/fa';
+
 
 export default function AddApartment() {
     const [title, setTitle] = useState('');
@@ -11,18 +13,17 @@ export default function AddApartment() {
     const [description, setDescription] = useState('');
     const [selectedServices, setSelectedServices] = useState([]);
     const servicesList = [
-        { id: 3, name: 'air_conditioner' },
-        { id: 5, name: 'bathroom_essentials' },
-        { id: 6, name: 'bed_linen' },
-        { id: 11, name: 'disabled_access' },
-        { id: 4, name: 'eat-in_kitchen ' },
-        { id: 1, name: 'free_parking' },
-        { id: 9, name: 'pet_allowed' },
-        { id: 2, name: 'private_garden' },
-        { id: 10, name: 'smoker' },
-        { id: 7, name: 'television' },
-        { id: 8, name: 'wi-fi' },
-
+        { id: 3, name: 'air_conditioner', icon: <FaFan /> },
+        { id: 5, name: 'bathroom_essentials', icon: <FaShower /> },
+        { id: 6, name: 'bed_linen', icon: <FaBed /> },
+        { id: 11, name: 'disabled_access', icon: <FaAccessibleIcon /> },
+        { id: 4, name: 'eat-in_kitchen', icon: <FaUtensils /> },
+        { id: 1, name: 'free_parking', icon: <FaParking /> },
+        { id: 9, name: 'pet_allowed', icon: <FaPaw /> },
+        { id: 2, name: 'private_garden', icon: <FaTree /> },
+        { id: 10, name: 'smoker', icon: <FaSmoking /> },
+        { id: 7, name: 'television', icon: <FaTv /> },
+        { id: 8, name: 'wi-fi', icon: <FaWifi /> },
     ];
 
     const handleCheckboxChange = (e) => {
@@ -104,13 +105,14 @@ export default function AddApartment() {
     };
 
     return (
-        <div className="container">
-            <form className="row g-3" onSubmit={handleSubmit}>
+        <div className="container py-5">
+            <h1 className="mb-4 text-center text-primary">Aggiungi il tuo appartamento</h1>
+            <form className="row g-4 shadow-lg p-4 rounded" onSubmit={handleSubmit}>
                 <div className="col-12">
                     <label htmlFor="title" className="form-label">Titolo riepilogativo che descriva l’appartamento</label>
                     <input
                         type="text"
-                        className="form-control"
+                        className="form-control form-control-lg"
                         id="title"
                         name="title"
                         value={title}
@@ -122,7 +124,7 @@ export default function AddApartment() {
                     <label htmlFor="rooms" className="form-label">Numero di stanze</label>
                     <input
                         type="number"
-                        className="form-control"
+                        className="form-control form-control-lg"
                         id="rooms"
                         name="rooms"
                         value={rooms_number}
@@ -134,7 +136,7 @@ export default function AddApartment() {
                     <label htmlFor="beds" className="form-label">Numero di letti</label>
                     <input
                         type="number"
-                        className="form-control"
+                        className="form-control form-control-lg"
                         id="beds"
                         name="beds"
                         value={beds}
@@ -146,7 +148,7 @@ export default function AddApartment() {
                     <label htmlFor="bathrooms" className="form-label">Numero di bagni</label>
                     <input
                         type="number"
-                        className="form-control"
+                        className="form-control form-control-lg"
                         id="bathrooms"
                         name="bathrooms"
                         value={bathrooms}
@@ -158,7 +160,7 @@ export default function AddApartment() {
                     <label htmlFor="square_meters" className="form-label">Metri quadrati</label>
                     <input
                         type="number"
-                        className="form-control"
+                        className="form-control form-control-lg"
                         id="square_meters"
                         name="square_meters"
                         value={square_meters}
@@ -170,7 +172,7 @@ export default function AddApartment() {
                     <label htmlFor="address" className="form-label">Indirizzo completo</label>
                     <input
                         type="text"
-                        className="form-control"
+                        className="form-control form-control-lg"
                         id="address"
                         name="address"
                         value={address}
@@ -180,9 +182,8 @@ export default function AddApartment() {
                 </div>
                 <div className="col-12">
                     <label htmlFor="description" className="form-label">Descrizione dell'appartamento</label>
-                    <input
-                        type="text"
-                        className="form-control"
+                    <textarea
+                        className="form-control form-control-lg"
                         id="description"
                         name="description"
                         value={description}
@@ -194,7 +195,7 @@ export default function AddApartment() {
                     <label htmlFor="picture_url" className="form-label">URL immagine rappresentativa dell’appartamento</label>
                     <input
                         type="text"
-                        className="form-control"
+                        className="form-control form-control-lg"
                         id="picture_url"
                         name="picture_url"
                         value={picture_url}
@@ -206,9 +207,9 @@ export default function AddApartment() {
 
                 <div className="col-12">
                     <label className="form-label">Servizi:</label>
-                    <div className="d-flex flex-wrap"> {/* Usa flexbox per disporre i checkbox in riga */}
+                    <div className="d-flex flex-wrap mb-4">
                         {servicesList.map(service => (
-                            <div key={service.id} className="form-check me-3 mb-2"> {/* Aggiungi margine per separare i checkbox */}
+                            <div key={service.id} className="form-check me-4 mb-2">
                                 <input
                                     className="form-check-input"
                                     type="checkbox"
@@ -218,18 +219,18 @@ export default function AddApartment() {
                                     required
                                 />
                                 <label className="form-check-label" htmlFor={`service-${service.id}`}>
-                                    {service.name}
+                                    {service.icon} {service.name}
                                 </label>
                             </div>
                         ))}
                     </div>
                 </div>
 
-
-                <div className="col-12">
-                    <button type="submit" className="btn btn-primary">Invia</button>
+                <div className="col-12 text-center">
+                    <button type="submit" className="btn btn-primary btn-lg px-5 py-3">Invia</button>
                 </div>
             </form>
         </div>
+
     );
 }
