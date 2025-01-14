@@ -26,6 +26,8 @@ router.post('/register', UserController.register)
 
 router.post('/:id', MessageController.sendMessage)
 
+router.post('/:id/vote', ApartmentsController.voteApartment)
+
 
 module.exports = router
 
