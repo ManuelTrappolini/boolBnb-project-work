@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import SearchBar from '../components/SearchBar';
 export default function HomePage() {
     const [cards, setCards] = useState([]);
-
+    const [search, setSearch] = useState('')
     useEffect(() => {
         fetch('http://localhost:3002/apartments')
             .then(response => response.json())
