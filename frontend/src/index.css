@@ -4,8 +4,17 @@
     min-height: 100vh !important;
 }
 
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
 main {
     flex-grow: 1 !important;
+    margin-top: 100px;
 }
 
 footer {
@@ -131,5 +140,29 @@ footer {
     a {
         font-weight: 300;
         color: white !important;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    footer {
+        .row{
+            div{
+                display: flex !important;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 10px;
+                ul{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+
+        }
+
+        .logo{
+            max-width: 100% !important;
+        }
     }
 }

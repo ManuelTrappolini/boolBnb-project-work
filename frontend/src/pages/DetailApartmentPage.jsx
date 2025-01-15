@@ -64,10 +64,10 @@ export default function DetailApartmentPage() {
                             <p className="text-muted py-2">{apartment.address}</p>
                             <p className="pt-2 mb-5">{apartment.description}</p>
                             <h5 className="fw-semibold mb-3">Services</h5>
-                            <ul className="list-unstyled">
+                            <ul className="list-unstyled d-flex flex-wrap">
                                 {filteredServices.length > 0 ? (
                                     filteredServices.map(service => (
-                                        <li key={service.id} className="pb-2">
+                                        <li key={service.id} className="pb-2 col-6 col-sm-4">
                                             <span>{service.icon} {service.name}</span>
                                         </li>
                                     ))
