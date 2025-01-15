@@ -73,10 +73,10 @@ export default function AddReview() {
     return (
         <div className="container">
             <div className='row'>
-                <h1>Add a Review</h1>
+                <h3 className='fw-bold mb-4 px-0'>Add a Review</h3>
 
                 {/* form */}
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className='px-0'>
                     <div className="row">
                         <div className="mb-3 col-12 col-md-4">
                             <label htmlFor="authorName" className="form-label">Name</label>

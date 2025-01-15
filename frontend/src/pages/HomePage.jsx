@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import SearchBar from '../components/SearchBar';
+import HeartCounter from '../components/HeartsCounter';
 export default function HomePage() {
     const [cards, setCards] = useState([]);
     const [search, setSearch] = useState('')
+
     useEffect(() => {
         fetch('http://localhost:3002/apartments')
             .then(response => response.json())
@@ -13,31 +15,49 @@ export default function HomePage() {
             })
             .catch(error => console.error('Errore nel caricamento dei dati:', error));
     }, []);
+
+    /* filter */
     const filteredCards = cards.filter(card =>
         card.address.toLowerCase().includes(search.toLocaleLowerCase()) || card.city.toLowerCase().includes(search.toLocaleLowerCase())
     )
+
     return (
         <>
             <div className="container my-5">
-                <SearchBar search={search} setSearch={setSearch} />
+
+                {/* search */}
+                <div className='search-bar'>
+                    <SearchBar search={search} setSearch={setSearch} />
+                </div>
+
+                {/* results */}
                 <div className="row">
                     {filteredCards.map((card) => (
                         <div key={card.id} className="col-md-3 col-12 p-3">
-                            <Link to={`http://localhost:5173/apartments/${card.id}`} className=''>
-                                <div className="card h-100">
+
+                            <div className="card h-100">
+                                <Link to={`http://localhost:5173/apartments/${card.id}`} className='h-75'>
                                     <img
                                         src={card.picture_url || "https://www.classcountryhomes.it/wp-content/uploads/2021/07/appartamento-roma-centro-storico-con-terrazzo.jpg"}
-                                        className="card-img-top h-50"
+                                        className="card-img-top h-100"
                                         alt={card.title}
                                     />
-                                    <div className="card-body">
-                                        <h5 className="card-title">{card.title}</h5>
-                                        <p>{card.address}</p>
-                                        <p>{card.city}</p>
-                                        <p>Voto: {card.vote}</p>
+                                </Link>
+                                <div className="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <Link to={`http://localhost:5173/apartments/${card.id}`} className='text-black'>
+                                            <h6 className="card-title">{card.title}</h6>
+                                        </Link>
+                                        <p className='mb-0'>{card.address}, {card.city}</p>
+                                    </div>
+
+                                    <div className='d-flex align-items-center justify-content-end'>
+                                        <p className='m-0'>{card.vote}</p>
+                                        <HeartCounter cardId={card.id}/>
                                     </div>
                                 </div>
-                            </Link>
+                            </div>
+
                         </div>
                     ))}
                 </div>

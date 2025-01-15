@@ -15,26 +15,37 @@ function show(req, res) {
     const id = req.params.id
     const sql = 'SELECT * FROM apartments WHERE id = ? '
     const reviewsSql = 'SELECT * FROM reviews WHERE id_apartment = ? '
+    const servicesSql = 'SELECT * FROM apartment_service WHERE id_apartment = ?'
 
     connection.query(sql, [id], (err, results) => {
-        if (err) return res.status(500).json({ err: err })
+        if (err) return res.status(500).json({ err: err });
 
-        if (results.length == 0) return res.status(404).json({ err: 'Apartment not found' })
+        if (results.length == 0) return res.status(404).json({ err: 'Apartment not found' });
 
+        // Esegui la query per le recensioni
         connection.query(reviewsSql, [id], (err, reviewsResults) => {
-            if (err) return res.status(500).json({ err: err })
+            if (err) return res.status(500).json({ err: err });
 
-            const apartment = {
-                ...results[0],
-                reviews: reviewsResults
-            }
+            // Esegui la query per i servizi
+            connection.query(servicesSql, [id], (err, servicesResults) => {
+                if (err) return res.status(500).json({ err: err });
 
-            res.json(apartment)
-        })
-    })
+                // Crea un oggetto con tutte le informazioni
+                const apartment = {
+                    ...results[0],
+                    reviews: reviewsResults,
+                    services: servicesResults
+                };
+
+                // Rispondi con i dati completi
+                res.json(apartment);
+            });
+        });
+    });
+
 }
 
-/* calidation server side */
+/* Validation server side */
 function validateApartmentData(data) {
     const errors = [];
     if (!data.title || typeof data.title !== 'string' || data.title.trim() === '') {
@@ -131,7 +142,7 @@ function addApartment(req, res) {
     }
 
 
-    const owner_id = req.user.userId;
+    const owner_id = 2;
 
     const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, owner_id];

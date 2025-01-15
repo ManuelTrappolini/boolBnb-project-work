@@ -98,6 +98,19 @@ header{
     }
 }
 
+/* main */
+
+.search-bar{
+    width: 30%;
+}
+
+@media screen and (max-width: 992px) {
+   .search-bar{
+    width: 100%;
+   }
+}
+
+
 /* footer */
 
 footer{

@@ -10,7 +10,7 @@ export default function SearchBar({ search, setSearch }) {
             <input
                 type="text"
                 className="form-control"
-                placeholder="Cerca per indirizzo"
+                placeholder="🔍 Search by city or address"
                 value={search}
                 onChange={handleSearchChange}
             />

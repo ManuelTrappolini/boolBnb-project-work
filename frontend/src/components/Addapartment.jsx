@@ -17,18 +17,19 @@ export default function AddApartment() {
     const [successMessage, setSuccessMessage] = useState('');
 
     const servicesList = [
-        { id: 3, name: 'air_conditioner', icon: <FaFan /> },
-        { id: 5, name: 'bathroom_essentials', icon: <FaShower /> },
-        { id: 6, name: 'bed_linen', icon: <FaBed /> },
-        { id: 11, name: 'disabled_access', icon: <FaAccessibleIcon /> },
-        { id: 4, name: 'eat-in_kitchen', icon: <FaUtensils /> },
-        { id: 1, name: 'free_parking', icon: <FaParking /> },
-        { id: 9, name: 'pet_allowed', icon: <FaPaw /> },
-        { id: 2, name: 'private_garden', icon: <FaTree /> },
-        { id: 10, name: 'smoker', icon: <FaSmoking /> },
-        { id: 7, name: 'television', icon: <FaTv /> },
-        { id: 8, name: 'wi-fi', icon: <FaWifi /> },
+        { id: 3, name: 'Air-Conditioner', icon: <FaFan /> },
+        { id: 5, name: 'Bathroom Essentials', icon: <FaShower /> },
+        { id: 6, name: 'Bed linen', icon: <FaBed /> },
+        { id: 11, name: 'Disabled Access', icon: <FaAccessibleIcon /> },
+        { id: 4, name: 'Eat-in Kitchen', icon: <FaUtensils /> },
+        { id: 1, name: 'Free Parking', icon: <FaParking /> },
+        { id: 9, name: 'Pet allowed', icon: <FaPaw /> },
+        { id: 2, name: 'Private Garden', icon: <FaTree /> },
+        { id: 10, name: 'Smoker', icon: <FaSmoking /> },
+        { id: 7, name: 'Television', icon: <FaTv /> },
+        { id: 8, name: 'Wi-Fi', icon: <FaWifi /> },
     ];
+
 
     const resetForm = () => {
         setTitle('');
@@ -131,9 +132,8 @@ export default function AddApartment() {
 
     return (
         <div className="container py-5">
-
             <form className="row g-4 shadow-lg p-4 rounded" onSubmit={handleSubmit}>
-                <h2>Add your apartment</h2>
+                <h1 className='fw-bold'>Add your apartment</h1>
                 <div className="col-12">
                     <label htmlFor="title" className="form-label">Title</label>
                     <input

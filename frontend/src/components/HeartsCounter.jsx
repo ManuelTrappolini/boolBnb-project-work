@@ -5,7 +5,7 @@ import { useParams } from "react-router"
 
 const HeartCounter = ({ cardId }) => {
     const [votes, setVotes] = useState(0)
-    console.log(cardId)
+    
     // Load initial vote from database
 
     useEffect(() => {
@@ -60,9 +60,8 @@ const HeartCounter = ({ cardId }) => {
     return (
         <div>
             <button onClick={handleVote} style={{ background: 'transparent', border: 'none' }}>
-                <span style={{ fontSize: '30px', color: 'gray' }}>&#10084;</span> {/* Cuore */}
+                <span style={{ fontSize: '20px', color: 'gray' }}>&#10084;</span> {/* Cuore */}
             </button>
-
         </div>
     )
 }
