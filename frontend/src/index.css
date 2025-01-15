@@ -1,31 +1,31 @@
-#root{
+#root {
     display: flex !important;
     flex-direction: column !important;
     min-height: 100vh !important;
 }
 
-main{
+main {
     flex-grow: 1 !important;
 }
 
-footer{
+footer {
     margin-top: auto !important;
 }
 
-a{
+a {
     text-decoration: none !important;
 }
 
 /* header */
 
-header{
+header {
     background-color: black;
 }
 
 .logo {
     max-width: 40% !important;
 
-    img{
+    img {
         max-width: 100px !important;
     }
 }
@@ -37,14 +37,14 @@ header{
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.363);
-    z-index:  1001;
+    z-index: 1001;
 
-    div{
+    div {
         background-color: white;
     }
 }
 
-.drop{
+.drop {
     position: absolute;
     top: 95px;
     background-color: black;
@@ -53,74 +53,82 @@ header{
     right: 42px;
     min-width: 130px;
 
-    li{
+    li {
         padding: 0.25rem 0;
     }
 }
 
-.menu-responsive{
+.menu-responsive {
     display: none !important;
 
-    div{
+    div {
         padding: 1.5rem;
         background-color: black;
         position: absolute;
         z-index: 1000;
     }
 
-    li{
+    li {
         padding: 0.25rem 0;
     }
 }
 
+#registration {
+    width: 35%;
+}
+
 @media screen and (max-width: 992px) {
-    
-    .menu{
+
+    .menu {
         display: none !important;
     }
 
     .menu-responsive {
         display: inline !important;
 
-        div{
+        div {
             top: 80px;
             right: 1rem;
             max-width: 200px;
         }
 
-        i{
+        i {
             font-size: 30px;
         }
     }
 
-    hr{
+    #registration {
+        width: 90%;
+    }
+
+    hr {
         color: antiquewhite !important;
     }
 }
 
 /* main */
 
-.search-bar{
+.search-bar {
     width: 30%;
 }
 
 @media screen and (max-width: 992px) {
-   .search-bar{
-    width: 100%;
-   }
+    .search-bar {
+        width: 100%;
+    }
 }
 
 
 /* footer */
 
-footer{
+footer {
     background-color: black;
 
-    h3{
+    h3 {
         color: whitesmoke;
     }
 
-    a{
+    a {
         font-weight: 300;
         color: white !important;
     }

@@ -141,7 +141,7 @@ function addApartment(req, res) {
     /* const owner_id = req.user.userId; */
     const owner_id = 2;
 
-    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, vote, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)';
     const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, owner_id];
 
 

@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 
-export default function AddReview() {
-    const { apartmentId } = useParams(); // Ottieni apartmentId dai parametri URL
+export default function AddReview({ apartmentId }) {
+
     const [authorName, setAuthorName] = useState('');
     const [authorEmail, setAuthorEmail] = useState('');
     const [description, setDescription] = useState('');
@@ -101,16 +101,16 @@ export default function AddReview() {
                             />
                         </div>
                         <div className="mb-3 col-12 col-md-4">
-                        <label htmlFor="daysOfStay" className="form-label">Days of Stay</label>
-                        <input
-                            className="form-control"
-                            placeholder="5"
-                            type="number"
-                            id="daysOfStay"
-                            value={daysOfStay}
-                            onChange={(e) => setDaysOfStay(e.target.value)}
-                        />
-                    </div>
+                            <label htmlFor="daysOfStay" className="form-label">Days of Stay</label>
+                            <input
+                                className="form-control"
+                                placeholder="5"
+                                type="number"
+                                id="daysOfStay"
+                                value={daysOfStay}
+                                onChange={(e) => setDaysOfStay(e.target.value)}
+                            />
+                        </div>
                     </div>
                     <div className="mb-3 col-12">
                         <label htmlFor="description" className="form-label">Description</label>
@@ -124,7 +124,7 @@ export default function AddReview() {
                             onChange={(e) => setDescription(e.target.value)}
                         />
                     </div>
-                    
+
                     <button type="submit" className='btn btn-primary'>Submit Review</button>
                     {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
