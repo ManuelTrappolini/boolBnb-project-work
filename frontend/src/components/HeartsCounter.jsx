@@ -3,7 +3,7 @@ import { useParams } from "react-router"
 
 
 
-const HeartCounter = ({ cardId }) => {
+const HeartCounter = ({ cardId, onHeartClick }) => {
     const [votes, setVotes] = useState(0)
     
     // Load initial vote from database
@@ -32,6 +32,9 @@ const HeartCounter = ({ cardId }) => {
     //Handle click on heart to add vote
 
     const handleVote = async () => {
+        console.log('click registrato');
+        
+
         try {
             const newVoteCount = votes + 1;
 
@@ -59,7 +62,12 @@ const HeartCounter = ({ cardId }) => {
 
     return (
         <div>
-            <button onClick={handleVote} style={{ background: 'transparent', border: 'none' }}>
+            <button onClick={() => {
+                handleVote();
+                onHeartClick();
+            }} 
+            style={{ background: 'transparent', border: 'none' }}
+            >
                 <span style={{ fontSize: '20px', color: 'gray' }}>&#10084;</span> {/* Cuore */}
             </button>
         </div>

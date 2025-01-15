@@ -22,22 +22,18 @@ function show(req, res) {
 
         if (results.length == 0) return res.status(404).json({ err: 'Apartment not found' });
 
-        // Esegui la query per le recensioni
         connection.query(reviewsSql, [id], (err, reviewsResults) => {
             if (err) return res.status(500).json({ err: err });
 
-            // Esegui la query per i servizi
             connection.query(servicesSql, [id], (err, servicesResults) => {
                 if (err) return res.status(500).json({ err: err });
 
-                // Crea un oggetto con tutte le informazioni
                 const apartment = {
                     ...results[0],
                     reviews: reviewsResults,
                     services: servicesResults
                 };
 
-                // Rispondi con i dati completi
                 res.json(apartment);
             });
         });
@@ -142,6 +138,7 @@ function addApartment(req, res) {
     }
 
 
+    /* const owner_id = req.user.userId; */
     const owner_id = 2;
 
     const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -214,6 +211,7 @@ function updateApartment(req, res) {
     });
 }
 
+/* add vote to apartment */
 function voteApartment(req, res) {
     const apartmentId = req.params.id
 

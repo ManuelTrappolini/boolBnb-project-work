@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from './pages/Layout'
 import HomePage from './pages/HomePage'
 import AddApartment from './components/Addapartment'
-import DetailApartmentPage from './pages/DetailApartamentPage'
+import DetailApartmentPage from './pages/DetailApartmentPage'
 
 function App() {
 
