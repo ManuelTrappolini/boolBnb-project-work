@@ -19,21 +19,17 @@ export default function HomePage() {
             <div className="container my-5">
                 <div className="row">
                     {cards.map((card) => (
-                        <div key={card.id} className="col-md-3 col-12 mb-4">
+                        <div key={card.id} className="col-md-3 col-12 p-3">
                             <Link to={`http://localhost:5173/apartments/${card.id}`} className=''>
-                                <div className="card" style={{ width: '100%', height: '400px' }}>
+                                <div className="card h-100">
                                     <img
                                         src={card.picture_url || "https://www.classcountryhomes.it/wp-content/uploads/2021/07/appartamento-roma-centro-storico-con-terrazzo.jpg"}
-                                        className="card-img-top"
+                                        className="card-img-top h-50"
                                         alt={card.title}
-                                        style={{
-                                            objectFit: 'cover',
-                                            height: '200px',
-                                        }}
                                     />
-                                    <div className="card-body" style={{ height: '200px' }}>
+                                    <div className="card-body">
                                         <h5 className="card-title">{card.title}</h5>
-                                        <p>Indirizzo: {card.address}</p>
+                                        <p>{card.address}</p>
                                         <p>Voto: {card.vote}</p>
                                     </div>
                                 </div>

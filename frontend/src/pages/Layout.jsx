@@ -7,7 +7,9 @@ export default function Layout() {
     return (
         <>
             <AppHeader />
-            <Outlet />
+            <main>
+                <Outlet />
+            </main>
             <AppFooter />
         </>
     )

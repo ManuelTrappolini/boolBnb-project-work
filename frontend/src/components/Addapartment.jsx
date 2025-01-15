@@ -78,7 +78,7 @@ export default function AddApartment() {
         console.log("Form Data in Submit: ", formData);
 
         // Usando .then() per gestire la promise
-        fetch('http://localhost:3004/apartments/addapartment', {
+        fetch('http://localhost:3002/apartments/addapartment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -11,7 +11,6 @@ export default function AppHeader() {
             </NavLink>
             <NavBar />
         </header>
-
-
+        
     )
 }

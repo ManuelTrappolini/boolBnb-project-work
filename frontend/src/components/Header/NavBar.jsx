@@ -145,7 +145,7 @@ const Navbar = () => {
             {/* Register Module */}
             {overlayVisible && showRegisterForm && (
                 <div className='overlay d-flex flex-column justify-content-center align-items-center'>
-                    <div className='rounded py-4 px-5'>
+                    <div className='rounded py-4 px-5 w-25'>
                         <h2 >Register</h2>
                         <form>
                             <div className="col-12 pt-2">
