@@ -9,9 +9,13 @@ export default function AddApartment() {
     const [bathrooms, setBathrooms] = useState('');
     const [square_meters, setSquare_meters] = useState('');
     const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
     const [picture_url, setPicture_url] = useState('');
     const [description, setDescription] = useState('');
     const [selectedServices, setSelectedServices] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+
     const servicesList = [
         { id: 3, name: 'air_conditioner', icon: <FaFan /> },
         { id: 5, name: 'bathroom_essentials', icon: <FaShower /> },
@@ -26,6 +30,20 @@ export default function AddApartment() {
         { id: 8, name: 'wi-fi', icon: <FaWifi /> },
     ];
 
+    const resetForm = () => {
+        setTitle('');
+        setRooms_number('');
+        setBeds('');
+        setBathrooms('');
+        setSquare_meters('');
+        setAddress('');
+        setCity('');
+        setPicture_url('');
+        setDescription('');
+        setSelectedServices([]);
+        setErrorMessage('');
+    };
+
     const handleCheckboxChange = (e) => {
         const serviceId = parseInt(e.target.value);
         setSelectedServices(prevSelectedServices =>
@@ -36,6 +54,7 @@ export default function AddApartment() {
         console.log(setSelectedServices);
 
     }
+
     // Funzione per inviare i dati al backend
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -54,21 +73,26 @@ export default function AddApartment() {
             isNaN(bathroomsNumber) || bathroomsNumber <= 0 ||
             isNaN(squareMeters) || squareMeters <= 0 ||
             address.length < 5 ||
+            city.length === 0 ||
             picture_url === '' ||
             description.length < 5
         ) {
-            alert('Tutti i campi devono essere riempiti correttamente.');
+            setErrorMessage('All fields must be filled in correctly');
             return;
         }
+
+        // Reset error message
+        setErrorMessage('');
 
         // Crea un oggetto con tutti i dati del form
         const formData = {
             title,
-            rooms_number: roomsNumber,  // Assicuriamo che il valore sia un numero valido
+            rooms_number: roomsNumber,
             beds: bedsNumber,
             bathrooms: bathroomsNumber,
             square_meters: squareMeters,
             address,
+            city,
             picture_url,
             description,
             services: selectedServices
@@ -83,7 +107,7 @@ export default function AddApartment() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData),  // Serializza l'oggetto in formato JSON
+            body: JSON.stringify(formData),
         })
             .then((res) => {
                 if (!res.ok) {
@@ -95,11 +119,12 @@ export default function AddApartment() {
             })
             .then((data) => {
                 console.log('Appartamento aggiunto:', data);
-                alert('Appartamento aggiunto con successo!');
+                setSuccessMessage('Apartment successfully added!');
+                resetForm();
             })
             .catch((error) => {
                 console.error('Errore:', error);
-                alert('Errore nella comunicazione con il server');
+                setErrorMessage('Error with server, please try again');
             });
 
     };
@@ -108,9 +133,9 @@ export default function AddApartment() {
         <div className="container py-5">
 
             <form className="row g-4 shadow-lg p-4 rounded" onSubmit={handleSubmit}>
-                <h1>Aggiungi il tuo appartamento</h1>
+                <h2>Add your apartment</h2>
                 <div className="col-12">
-                    <label htmlFor="title" className="form-label">Titolo riepilogativo che descriva l’appartamento</label>
+                    <label htmlFor="title" className="form-label">Title</label>
                     <input
                         type="text"
                         className="form-control form-control-lg"
@@ -118,11 +143,12 @@ export default function AddApartment() {
                         name="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        placeholder='Appartamento Napoli con vista mare'
                         required
                     />
                 </div>
                 <div className="col-md-6">
-                    <label htmlFor="rooms" className="form-label">Numero di stanze</label>
+                    <label htmlFor="rooms" className="form-label">Rooms</label>
                     <input
                         type="number"
                         className="form-control form-control-lg"
@@ -130,11 +156,12 @@ export default function AddApartment() {
                         name="rooms"
                         value={rooms_number}
                         onChange={(e) => setRooms_number(e.target.value)}
+                        placeholder='4'
                         required
                     />
                 </div>
                 <div className="col-md-6">
-                    <label htmlFor="beds" className="form-label">Numero di letti</label>
+                    <label htmlFor="beds" className="form-label">Beds</label>
                     <input
                         type="number"
                         className="form-control form-control-lg"
@@ -142,23 +169,25 @@ export default function AddApartment() {
                         name="beds"
                         value={beds}
                         onChange={(e) => setBeds(e.target.value)}
+                        placeholder='3'
                         required
                     />
                 </div>
                 <div className="col-md-6">
-                    <label htmlFor="bathrooms" className="form-label">Numero di bagni</label>
+                    <label htmlFor="bathrooms" className="form-label">Bathrooms</label>
                     <input
                         type="number"
                         className="form-control form-control-lg"
                         id="bathrooms"
                         name="bathrooms"
                         value={bathrooms}
+                        placeholder='2'
                         onChange={(e) => setBathrooms(e.target.value)}
                         required
                     />
                 </div>
                 <div className="col-md-6">
-                    <label htmlFor="square_meters" className="form-label">Metri quadrati</label>
+                    <label htmlFor="square_meters" className="form-label">Square Meters</label>
                     <input
                         type="number"
                         className="form-control form-control-lg"
@@ -166,11 +195,12 @@ export default function AddApartment() {
                         name="square_meters"
                         value={square_meters}
                         onChange={(e) => setSquare_meters(e.target.value)}
+                        placeholder='180'
                         required
                     />
                 </div>
-                <div className="col-12">
-                    <label htmlFor="address" className="form-label">Indirizzo completo</label>
+                <div className="col-md-7">
+                    <label htmlFor="address" className="form-label">Address</label>
                     <input
                         type="text"
                         className="form-control form-control-lg"
@@ -178,22 +208,37 @@ export default function AddApartment() {
                         name="address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
+                        placeholder='Via Chiaia'
+                        required
+                    />
+                </div>
+                <div className="col-md-5">
+                    <label htmlFor="city" className="form-label">City</label>
+                    <input
+                        type="text"
+                        className="form-control form-control-lg"
+                        id="city"
+                        name="city"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        placeholder='Napoli'
                         required
                     />
                 </div>
                 <div className="col-12">
-                    <label htmlFor="description" className="form-label">Descrizione dell'appartamento</label>
+                    <label htmlFor="description" className="form-label">Description</label>
                     <textarea
                         className="form-control form-control-lg"
                         id="description"
                         name="description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
+                        placeholder='Describe your apartment...'
                         required
                     />
                 </div>
                 <div className="col-12">
-                    <label htmlFor="picture_url" className="form-label">URL immagine rappresentativa dell’appartamento</label>
+                    <label htmlFor="picture_url" className="form-label">insert image of the apartment</label>
                     <input
                         type="text"
                         className="form-control form-control-lg"
@@ -201,23 +246,22 @@ export default function AddApartment() {
                         name="picture_url"
                         value={picture_url}
                         onChange={(e) => setPicture_url(e.target.value)}
-                        placeholder="Inserisci l'URL dell'immagine"
+                        placeholder="https://example.com/"
                         required
                     />
                 </div>
 
                 <div className="col-12">
-                    <label className="form-label">Servizi:</label>
-                    <div className="d-flex flex-wrap mb-4">
+                    <label className="form-label">Services</label>
+                    <div className="d-flex flex-wrap mb-4 gap-2">
                         {servicesList.map(service => (
-                            <div key={service.id} className="form-check me-4 mb-2">
+                            <div key={service.id} className="form-check col-12 col-md-2 d-flex align-items-center">
                                 <input
-                                    className="form-check-input"
+                                    className="form-check-input me-2"
                                     type="checkbox"
                                     value={service.id}
                                     id={`service-${service.id}`}
                                     onChange={handleCheckboxChange}
-                                    required
                                 />
                                 <label className="form-check-label" htmlFor={`service-${service.id}`}>
                                     {service.icon} {service.name}
@@ -228,7 +272,9 @@ export default function AddApartment() {
                 </div>
 
                 <div className="col-12">
-                    <button type="submit" className="btn btn-primary">Add Apartment</button>
+                    <button type="submit" className="btn btn-primary me-3 col-12 col-md-2">Add Apartment</button>
+                    {errorMessage && <span className='text-danger'>{errorMessage}</span>}
+                    {successMessage && <span className='text-success'>{successMessage}</span>}
                 </div>
             </form>
         </div>

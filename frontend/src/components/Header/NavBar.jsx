@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router';
 
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -45,27 +46,23 @@ const Navbar = () => {
             <div className="menu">
                 <ul className='d-flex m-0 list-unstyled gap-3'>
                     <li >
-                        <a href="/apartments/addapartment" className='text-white' >Add your Apartment</a>
-                    </li>
-
-                    <li >
-                        <a href="/contact" className='text-white' >Contact us</a>
+                        <Link className='text-white' to='/apartments/addapartment' >Add your Apartment</Link>
                     </li>
 
                     <li onClick={toggleDropdown}>
-                        <a href="#" className='text-white'>
+                        <Link to="#" className='text-white'>
                             <i className="bi bi-person"></i>
-                        </a>
+                        </Link>
                     </li>
 
                     {isDropdownOpen && (
                         <div className="drop rounded">
                             <ul className='d-flex flex-column m-0 p-0 list-unstyled'>
                                 <li>
-                                    <a href="#" className='text-white' onClick={handleLoginClick}>Login</a>
+                                    <Link to="#" className='text-white' onClick={handleLoginClick}>Login</Link>
                                 </li>
                                 <li>
-                                    <a href="#" className='text-white' onClick={handleRegisterClick}>Register</a>
+                                    <Link to="#" className='text-white' onClick={handleRegisterClick}>Register</Link>
                                 </li>
                             </ul>
                         </div>
@@ -81,20 +78,16 @@ const Navbar = () => {
                     <div className='d-flex rounded' id='label-menu'>
                         <ul className='d-flex flex-column m-0 p-0 list-unstyled'>
                             <li >
-                                <a href="/apartments/addapartment" className='text-white' >Add your Apartment</a>
-                            </li>
-
-                            <li >
-                                <a href="/contact" className='text-white' >Contact us</a>
+                                <Link className='text-white' to='/apartments/addapartment' >Add your Apartment</Link>
                             </li>
 
                             <hr className='p-0 my-3' />
 
                             <li>
-                                <a href="#" className='text-white' onClick={handleLoginClick}>Login</a>
+                                <Link to="#" className='text-white' onClick={handleLoginClick}>Login</Link>
                             </li>
                             <li>
-                                <a href="#" className='text-white' onClick={handleRegisterClick}>Register</a>
+                                <Link to="#" className='text-white' onClick={handleRegisterClick}>Register</Link>
                             </li>
 
                         </ul>
