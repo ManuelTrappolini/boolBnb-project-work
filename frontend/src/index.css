@@ -4,7 +4,7 @@
     min-height: 100vh !important;
 }
 
-header{
+header {
     position: fixed;
     top: 0;
     left: 0;
@@ -127,6 +127,12 @@ header {
     }
 }
 
+/* addApartmentForm */
+
+.input-error {
+    border: 1px solid red;
+}
+
 
 .overlay-success{
     position: absolute;
@@ -156,13 +162,14 @@ footer {
 
 @media screen and (max-width: 992px) {
     footer {
-        .row{
-            div{
+        .row {
+            div {
                 display: flex !important;
                 justify-content: center;
                 align-items: center;
                 margin-bottom: 10px;
-                ul{
+
+                ul {
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
@@ -172,10 +179,10 @@ footer {
 
         }
 
-        .logo{
+        .logo {
             max-width: 100% !important;
         }
     }
-}
 
+}
 
