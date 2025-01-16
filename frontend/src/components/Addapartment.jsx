@@ -14,6 +14,7 @@ export default function AddApartment() {
     const [selectedServices, setSelectedServices] = useState([]);
     const [errorMessages, setErrorMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
+    const [isFormVisible, setIsFormVisible] = useState(true); // Stato per gestire la visibilità del form
 
     const servicesList = [
         { id: 3, name: 'Air-Conditioner', icon: <FaFan /> },
@@ -105,8 +106,16 @@ export default function AddApartment() {
         })
             .then((res) => res.json())
             .then((data) => {
-                setSuccessMessage('Apartment successfully added!');
-                resetForm();
+                // Nascondi il form e mostra il messaggio di successo
+                setIsFormVisible(false);
+                setSuccessMessage('Form submitted successfully!');
+
+                // Mostra il messaggio di successo per 3 secondi, poi ripristina il form
+                setTimeout(() => {
+                    setIsFormVisible(true); // Mostra di nuovo il form
+                    setSuccessMessage(''); // Nascondi il messaggio di successo
+                    resetForm(); // Reset del form
+                }, 3000);
             })
             .catch((error) => {
                 setErrorMessages([{ field: 'server', message: 'Error with server, please try again' }]);
@@ -126,208 +135,213 @@ export default function AddApartment() {
 
     return (
         <div className="container py-5">
-            <form className="row g-4 shadow-lg p-4 rounded" onSubmit={handleSubmit}>
-                <h1 className='fw-bold'>Add your apartment</h1>
+            {isFormVisible ? (
+                <form className="row g-4 shadow-lg p-4 rounded" onSubmit={handleSubmit}>
+                    <h1 className='fw-bold'>Add your apartment</h1>
 
-                <div className="col-12">
-                    <label htmlFor="title" className="form-label">Title*</label>
-                    <div className="input-group">
-                        <input
-                            type="text"
-                            className={`form-control form-control-lg ${getInputClass('title')}`}
-                            id="title"
-                            name="title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder='example Appartamento Cagliari con vista mare'
-                        />
-                        {getErrorMessage('title') && (
-                            <div className="position-absolute top-50 end-0 translate-middle-y me-3">
-                                <FaExclamationCircle className="text-danger" />
-                            </div>
-                        )}
-                    </div>
-                    {getErrorMessage('title') && <div className="text-danger">{getErrorMessage('title')}</div>}
-                </div>
-
-                <div className="col-md-6">
-                    <label htmlFor="rooms" className="form-label">Rooms*</label>
-                    <div className="input-group">
-                        <input
-                            type="number"
-                            className={`form-control form-control-lg ${getInputClass('rooms_number')}`}
-                            id="rooms"
-                            name="rooms"
-                            value={rooms_number}
-                            onChange={(e) => setRooms_number(e.target.value)}
-                            placeholder='example 3'
-                            min="1"
-                        />
-                        {getErrorMessage('rooms_number') && (
-                            <div className="position-absolute top-50 end-0 translate-middle-y me-3">
-                                <FaExclamationCircle className="text-danger" />
-                            </div>
-                        )}
-                    </div>
-                    {getErrorMessage('rooms_number') && <div className="text-danger">{getErrorMessage('rooms_number')}</div>}
-                </div>
-
-                <div className="col-md-6">
-                    <label htmlFor="beds" className="form-label">Beds*</label>
-                    <div className="input-group">
-                        <input
-                            type="number"
-                            className={`form-control form-control-lg ${getInputClass('beds')}`}
-                            id="beds"
-                            name="beds"
-                            value={beds}
-                            onChange={(e) => setBeds(e.target.value)}
-                            placeholder='example 3'
-                            min="1"
-                        />
-                        {getErrorMessage('beds') && (
-                            <div className="position-absolute top-50 end-0 translate-middle-y me-3">
-                                <FaExclamationCircle className="text-danger" />
-                            </div>
-                        )}
-                    </div>
-                    {getErrorMessage('beds') && <div className="text-danger">{getErrorMessage('beds')}</div>}
-                </div>
-
-                <div className="col-md-6">
-                    <label htmlFor="bathrooms" className="form-label">Bathrooms*</label>
-                    <div className="input-group">
-                        <input
-                            type="number"
-                            className={`form-control form-control-lg ${getInputClass('bathrooms')}`}
-                            id="bathrooms"
-                            name="bathrooms"
-                            value={bathrooms}
-                            onChange={(e) => setBathrooms(e.target.value)}
-                            placeholder='example 2'
-                            min="1"
-                        />
-                        {getErrorMessage('bathrooms') && (
-                            <div className="position-absolute top-50 end-0 translate-middle-y me-3">
-                                <FaExclamationCircle className="text-danger" />
-                            </div>
-                        )}
-                    </div>
-                    {getErrorMessage('bathrooms') && <div className="text-danger">{getErrorMessage('bathrooms')}</div>}
-                </div>
-
-                <div className="col-md-6">
-                    <label htmlFor="square_meters" className="form-label">Square Meters*</label>
-                    <div className="input-group">
-                        <input
-                            type="number"
-                            className={`form-control form-control-lg ${getInputClass('square_meters')}`}
-                            id="square_meters"
-                            name="square_meters"
-                            value={square_meters}
-                            onChange={(e) => setSquare_meters(e.target.value)}
-                            placeholder='example 180'
-                            min="1"
-                        />
-                        {getErrorMessage('square_meters') && (
-                            <div className="position-absolute top-50 end-0 translate-middle-y me-3">
-                                <FaExclamationCircle className="text-danger" />
-                            </div>
-                        )}
-                    </div>
-                    {getErrorMessage('square_meters') && <div className="text-danger">{getErrorMessage('square_meters')}</div>}
-                </div>
-
-                <div className="col-md-7">
-                    <label htmlFor="address" className="form-label">Address*</label>
-                    <div className="input-group">
-                        <input
-                            type="text"
-                            className={`form-control form-control-lg ${getInputClass('address')}`}
-                            id="address"
-                            name="address"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            placeholder='example Via Chiaia'
-                            autoComplete='off'
-                        />
-                        {getErrorMessage('address') && (
-                            <div className="position-absolute top-50 end-0 translate-middle-y me-3">
-                                <FaExclamationCircle className="text-danger" />
-                            </div>
-                        )}
-                    </div>
-                    {getErrorMessage('address') && <div className="text-danger">{getErrorMessage('address')}</div>}
-                </div>
-
-                <div className="col-md-5">
-                    <label htmlFor="city" className="form-label">City*</label>
-                    <div className="input-group">
-                        <input
-                            type="text"
-                            className={`form-control form-control-lg ${getInputClass('city')}`}
-                            id="city"
-                            name="city"
-                            value={city}
-                            onChange={(e) => setCity(e.target.value)}
-                            placeholder='example Napoli'
-                            autoComplete='off'
-                        />
-                        {getErrorMessage('city') && (
-                            <div className="position-absolute top-50 end-0 translate-middle-y me-3">
-                                <FaExclamationCircle className="text-danger" />
-                            </div>
-                        )}
-                    </div>
-                    {getErrorMessage('city') && <div className="text-danger">{getErrorMessage('city')}</div>}
-                </div>
-
-                <div className="col-12">
-                    <label htmlFor="description" className="form-label">Description*</label>
-                    <div className="input-group">
-                        <textarea
-                            className={`form-control form-control-lg ${getInputClass('description')}`}
-                            id="description"
-                            name="description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder='Describe your apartment, at least 5 characters required'
-                        />
-                        {getErrorMessage('description') && (
-                            <div className="position-absolute top-50 end-0 translate-middle-y me-3">
-                                <FaExclamationCircle className="text-danger" />
-                            </div>
-                        )}
-                    </div>
-                    {getErrorMessage('description') && <div className="text-danger">{getErrorMessage('description')}</div>}
-                </div>
-
-                <div className="col-12">
-                    <label htmlFor="picture_url" className="form-label">Insert image of the apartment</label>
-                    <input
-                        type="text"
-                        className={`form-control form-control-lg ${getInputClass('picture_url')}`}
-                        id="picture_url"
-                        name="picture_url"
-                        value={picture_url}
-                        onChange={(e) => setPicture_url(e.target.value)}
-                        placeholder="https://example.com/"
-                    />
-                    {getErrorMessage('picture_url') && <div className="text-danger">{getErrorMessage('picture_url')}</div>}
-                </div>
-
-                <div className="col-12">
-                    <button type="submit" className="btn btn-primary me-3 col-12 col-md-2">Add Apartment</button>
-                    {errorMessages.length > 0 && (
-                        <div className="text-danger">
-                            <ul>
-                                {errorMessages.map((msg, index) => <li key={index}>{msg.message}</li>)}
-                            </ul>
+                    <div className="col-12">
+                        <label htmlFor="title" className="form-label">Title*</label>
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                className={`form-control form-control-lg ${getInputClass('title')}`}
+                                id="title"
+                                name="title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder='example Appartamento Cagliari con vista mare'
+                            />
+                            {getErrorMessage('title') && (
+                                <div className="position-absolute top-50 end-0 translate-middle-y me-3">
+                                    <FaExclamationCircle className="text-danger" />
+                                </div>
+                            )}
                         </div>
-                    )}
-                    {successMessage && <span className='text-success'>{successMessage}</span>}
+                        {getErrorMessage('title') && <div className="text-danger">{getErrorMessage('title')}</div>}
+                    </div>
+
+                    <div className="col-md-6">
+                        <label htmlFor="rooms" className="form-label">Rooms*</label>
+                        <div className="input-group">
+                            <input
+                                type="number"
+                                className={`form-control form-control-lg ${getInputClass('rooms_number')}`}
+                                id="rooms"
+                                name="rooms"
+                                value={rooms_number}
+                                onChange={(e) => setRooms_number(e.target.value)}
+                                placeholder='example 3'
+                                min="1"
+                            />
+                            {getErrorMessage('rooms_number') && (
+                                <div className="position-absolute top-50 end-0 translate-middle-y me-3">
+                                    <FaExclamationCircle className="text-danger" />
+                                </div>
+                            )}
+                        </div>
+                        {getErrorMessage('rooms_number') && <div className="text-danger">{getErrorMessage('rooms_number')}</div>}
+                    </div>
+
+                    <div className="col-md-6">
+                        <label htmlFor="beds" className="form-label">Beds*</label>
+                        <div className="input-group">
+                            <input
+                                type="number"
+                                className={`form-control form-control-lg ${getInputClass('beds')}`}
+                                id="beds"
+                                name="beds"
+                                value={beds}
+                                onChange={(e) => setBeds(e.target.value)}
+                                placeholder='example 3'
+                                min="1"
+                            />
+                            {getErrorMessage('beds') && (
+                                <div className="position-absolute top-50 end-0 translate-middle-y me-3">
+                                    <FaExclamationCircle className="text-danger" />
+                                </div>
+                            )}
+                        </div>
+                        {getErrorMessage('beds') && <div className="text-danger">{getErrorMessage('beds')}</div>}
+                    </div>
+
+                    <div className="col-md-6">
+                        <label htmlFor="bathrooms" className="form-label">Bathrooms*</label>
+                        <div className="input-group">
+                            <input
+                                type="number"
+                                className={`form-control form-control-lg ${getInputClass('bathrooms')}`}
+                                id="bathrooms"
+                                name="bathrooms"
+                                value={bathrooms}
+                                onChange={(e) => setBathrooms(e.target.value)}
+                                placeholder='example 2'
+                                min="1"
+                            />
+                            {getErrorMessage('bathrooms') && (
+                                <div className="position-absolute top-50 end-0 translate-middle-y me-3">
+                                    <FaExclamationCircle className="text-danger" />
+                                </div>
+                            )}
+                        </div>
+                        {getErrorMessage('bathrooms') && <div className="text-danger">{getErrorMessage('bathrooms')}</div>}
+                    </div>
+
+                    <div className="col-md-6">
+                        <label htmlFor="square_meters" className="form-label">Square Meters*</label>
+                        <div className="input-group">
+                            <input
+                                type="number"
+                                className={`form-control form-control-lg ${getInputClass('square_meters')}`}
+                                id="square_meters"
+                                name="square_meters"
+                                value={square_meters}
+                                onChange={(e) => setSquare_meters(e.target.value)}
+                                placeholder='example 180'
+                                min="1"
+                            />
+                            {getErrorMessage('square_meters') && (
+                                <div className="position-absolute top-50 end-0 translate-middle-y me-3">
+                                    <FaExclamationCircle className="text-danger" />
+                                </div>
+                            )}
+                        </div>
+                        {getErrorMessage('square_meters') && <div className="text-danger">{getErrorMessage('square_meters')}</div>}
+                    </div>
+
+                    <div className="col-md-7">
+                        <label htmlFor="address" className="form-label">Address*</label>
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                className={`form-control form-control-lg ${getInputClass('address')}`}
+                                id="address"
+                                name="address"
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
+                                placeholder='example Via Chiaia'
+                                autoComplete='off'
+                            />
+                            {getErrorMessage('address') && (
+                                <div className="position-absolute top-50 end-0 translate-middle-y me-3">
+                                    <FaExclamationCircle className="text-danger" />
+                                </div>
+                            )}
+                        </div>
+                        {getErrorMessage('address') && <div className="text-danger">{getErrorMessage('address')}</div>}
+                    </div>
+
+                    <div className="col-md-5">
+                        <label htmlFor="city" className="form-label">City*</label>
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                className={`form-control form-control-lg ${getInputClass('city')}`}
+                                id="city"
+                                name="city"
+                                value={city}
+                                onChange={(e) => setCity(e.target.value)}
+                                placeholder='example Napoli'
+                                autoComplete='off'
+                            />
+                            {getErrorMessage('city') && (
+                                <div className="position-absolute top-50 end-0 translate-middle-y me-3">
+                                    <FaExclamationCircle className="text-danger" />
+                                </div>
+                            )}
+                        </div>
+                        {getErrorMessage('city') && <div className="text-danger">{getErrorMessage('city')}</div>}
+                    </div>
+
+                    <div className="col-12">
+                        <label htmlFor="description" className="form-label">Description*</label>
+                        <div className="input-group">
+                            <textarea
+                                className={`form-control form-control-lg ${getInputClass('description')}`}
+                                id="description"
+                                name="description"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder='Describe your apartment, at least 5 characters required'
+                            />
+                            {getErrorMessage('description') && (
+                                <div className="position-absolute top-50 end-0 translate-middle-y me-3">
+                                    <FaExclamationCircle className="text-danger" />
+                                </div>
+                            )}
+                        </div>
+                        {getErrorMessage('description') && <div className="text-danger">{getErrorMessage('description')}</div>}
+                    </div>
+
+                    <div className="col-12">
+                        <label htmlFor="picture_url" className="form-label">Insert image of the apartment</label>
+                        <input
+                            type="text"
+                            className={`form-control form-control-lg ${getInputClass('picture_url')}`}
+                            id="picture_url"
+                            name="picture_url"
+                            value={picture_url}
+                            onChange={(e) => setPicture_url(e.target.value)}
+                            placeholder="https://example.com/"
+                        />
+                        {getErrorMessage('picture_url') && <div className="text-danger">{getErrorMessage('picture_url')}</div>}
+                    </div>
+
+                    <div className="col-12">
+                        <button type="submit" className="btn btn-primary me-3 col-12 col-md-2">Add Apartment</button>
+                        {errorMessages.length > 0 && (
+                            <div className="text-danger">
+                                <ul>
+                                    {errorMessages.map((msg, index) => <li key={index}>{msg.message}</li>)}
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                </form>
+            ) : (
+                <div className="alert alert-success" role="alert">
+                    {successMessage}
                 </div>
-            </form>
+            )}
         </div>
     );
 }
