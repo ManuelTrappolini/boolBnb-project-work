@@ -4,6 +4,8 @@ import Layout from './pages/Layout'
 import HomePage from './pages/HomePage'
 import AddApartment from './components/Addapartment'
 import DetailApartmentPage from './pages/DetailApartmentPage'
+import LoginPage from './pages/LoginPage'
+import RegistrationPage from './pages/RegistrationPage'
 
 function App() {
 
@@ -16,6 +18,8 @@ function App() {
             <Route path='/' element={<HomePage />} />
             <Route path='/apartments/:id' element={<DetailApartmentPage />} />
             <Route path='/apartments/addapartment' element={<AddApartment />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegistrationPage />} />
 
           </Route>
         </Routes>
