@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FaFan, FaShower, FaBed, FaAccessibleIcon, FaUtensils, FaParking, FaPaw, FaTree, FaSmoking, FaTv, FaWifi } from 'react-icons/fa';
 
-
 export default function AddApartment() {
     const [title, setTitle] = useState('');
     const [rooms_number, setRooms_number] = useState('');
@@ -13,7 +12,7 @@ export default function AddApartment() {
     const [picture_url, setPicture_url] = useState('');
     const [description, setDescription] = useState('');
     const [selectedServices, setSelectedServices] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessages, setErrorMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
 
     const servicesList = [
@@ -30,7 +29,6 @@ export default function AddApartment() {
         { id: 8, name: 'Wi-Fi', icon: <FaWifi /> },
     ];
 
-
     const resetForm = () => {
         setTitle('');
         setRooms_number('');
@@ -42,7 +40,7 @@ export default function AddApartment() {
         setPicture_url('');
         setDescription('');
         setSelectedServices([]);
-        setErrorMessage('');
+        setErrorMessages([]);
     };
 
     const handleCheckboxChange = (e) => {
@@ -51,63 +49,47 @@ export default function AddApartment() {
             e.target.checked
                 ? [...prevSelectedServices, serviceId]
                 : prevSelectedServices.filter(id => id !== serviceId)
-        )
-        console.log(setSelectedServices);
-
+        );
     }
 
-    // Funzione per inviare i dati al backend
     const handleSubmit = (e) => {
         e.preventDefault();
+        const errors = [];
 
-        // Converto i valori numerici per evitare invalidi vuoti
-        const roomsNumber = parseInt(rooms_number);
-        const bedsNumber = parseInt(beds);
-        const bathroomsNumber = parseInt(bathrooms);
-        const squareMeters = parseInt(square_meters);
+        // Validazione campi
+        if (title.trim() === '') errors.push({ field: 'title', message: 'Title is required.' });
+        else if (title.length < 5) errors.push({ field: 'title', message: 'Title must be at least 5 characters long.' });
 
-        // Inizializza una variabile per gli errori
-        let formErrors = '';
+        if (rooms_number === '' || isNaN(rooms_number) || rooms_number <= 0) errors.push({ field: 'rooms_number', message: 'You must enter the number of rooms.' });
+        if (beds === '' || isNaN(beds) || beds <= 0) errors.push({ field: 'beds', message: 'You must enter the number of beds.' });
+        if (bathrooms === '' || isNaN(bathrooms) || bathrooms <= 0) errors.push({ field: 'bathrooms', message: 'You must enter the number of bathrooms.' });
+        if (square_meters === '' || isNaN(square_meters) || square_meters <= 0) errors.push({ field: 'square_meters', message: 'You must enter the number of square meters.' });
 
-        // Aggiungi la validazione per tutti i campi
-        if (title.length < 5) {
-            formErrors = 'Title must be at least 5 characters long.';
-        } else if (isNaN(roomsNumber) || roomsNumber <= 0) {
-            formErrors = 'Rooms number must be a valid positive number.';
-        } else if (isNaN(bedsNumber) || bedsNumber <= 0) {
-            formErrors = 'Beds number must be a valid positive number.';
-        } else if (isNaN(bathroomsNumber) || bathroomsNumber <= 0) {
-            formErrors = 'Bathrooms number must be a valid positive number.';
-        } else if (isNaN(squareMeters) || squareMeters <= 0) {
-            formErrors = 'Square meters must be a valid positive number.';
-        } else if (address.length < 5) {
-            formErrors = 'Address must be at least 5 characters long.';
-        } else if (city.length === 0) {
-            formErrors = 'City is required.';
-        } else if (picture_url === '') {
-            formErrors = 'Picture URL is required.';
-        } else if (description.length < 5) {
-            formErrors = 'Description must be at least 5 characters long.';
-        }
+        if (address.trim() === '') errors.push({ field: 'address', message: 'Address is required.' });
+        else if (address.length < 5) errors.push({ field: 'address', message: 'Address must be at least 5 characters long.' });
 
-        // Se c'è un errore, aggiorna lo stato con il messaggio di errore e fermati
-        if (formErrors) {
-            setErrorMessage(formErrors);
+        if (city.trim() === '') errors.push({ field: 'city', message: 'City is required.' });
+
+        if (picture_url.trim() === '') errors.push({ field: 'picture_url', message: 'Picture URL is required.' });
+
+        if (description.trim() === '') errors.push({ field: 'description', message: 'Description is required.' });
+        else if (description.length < 5) errors.push({ field: 'description', message: 'Description must be at least 5 characters long.' });
+
+        // Se ci sono errori, mostriamo il messaggio di errore
+        if (errors.length > 0) {
+            setErrorMessages(errors);
             return;
         }
 
+        // Se non ci sono errori, resettiamo gli errori e inviamo il form
+        setErrorMessages([]);
 
-
-        // Reset error message
-        setErrorMessage('');
-
-        // Crea un oggetto con tutti i dati del form
         const formData = {
             title,
-            rooms_number: roomsNumber,
-            beds: bedsNumber,
-            bathrooms: bathroomsNumber,
-            square_meters: squareMeters,
+            rooms_number: parseInt(rooms_number),
+            beds: parseInt(beds),
+            bathrooms: parseInt(bathrooms),
+            square_meters: parseInt(square_meters),
             address,
             city,
             picture_url,
@@ -115,10 +97,7 @@ export default function AddApartment() {
             services: selectedServices
         };
 
-        // Log dei dati prima dell'invio
-        console.log("Form Data in Submit: ", formData);
-
-        // Usando .then() per gestire la promise
+        // Simula l'invio dei dati al backend
         fetch('http://localhost:3002/apartments/addapartment', {
             method: 'POST',
             headers: {
@@ -126,151 +105,155 @@ export default function AddApartment() {
             },
             body: JSON.stringify(formData),
         })
-            .then((res) => {
-                if (!res.ok) {
-                    return res.text().then(text => {
-                        throw new Error(text);
-                    });
-                }
-                return res.json();
-            })
+            .then((res) => res.json())
             .then((data) => {
-                console.log('Appartamento aggiunto:', data);
                 setSuccessMessage('Apartment successfully added!');
                 resetForm();
             })
             .catch((error) => {
-                console.error('Errore:', error);
-                setErrorMessage('Error with server, please try again');
+                setErrorMessages([{ field: 'server', message: 'Error with server, please try again' }]);
             });
+    };
 
+    const getInputClass = (field) => {
+        // Verifica se l'input ha errori
+        return errorMessages.some(error => error.field === field) ? 'input-error' : '';
+    };
+
+    const getErrorMessage = (field) => {
+        // Restituisce il messaggio di errore per un campo specifico
+        const error = errorMessages.find(error => error.field === field);
+        return error ? error.message : '';
     };
 
     return (
         <div className="container py-5">
             <form className="row g-4 shadow-lg p-4 rounded" onSubmit={handleSubmit}>
                 <h1 className='fw-bold'>Add your apartment</h1>
+
                 <div className="col-12">
-                    <label htmlFor="title" className="form-label">Title</label>
+                    <label htmlFor="title" className="form-label">Title*</label>
                     <input
                         type="text"
-                        className="form-control form-control-lg"
+                        className={`form-control form-control-lg ${getInputClass('title')}`}
                         id="title"
                         name="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder='example Appartamento Cagliari con vista mare'
-                        required
                     />
+                    {getErrorMessage('title') && <div className="text-danger">{getErrorMessage('title')}</div>}
                 </div>
+
                 <div className="col-md-6">
-                    <label htmlFor="rooms" className="form-label">Rooms</label>
+                    <label htmlFor="rooms" className="form-label">Rooms*</label>
                     <input
                         type="number"
-                        className="form-control form-control-lg"
+                        className={`form-control form-control-lg ${getInputClass('rooms_number')}`}
                         id="rooms"
                         name="rooms"
                         value={rooms_number}
                         onChange={(e) => setRooms_number(e.target.value)}
                         placeholder='example 3'
-                        min="0"
-                        required
                     />
+                    {getErrorMessage('rooms_number') && <div className="text-danger">{getErrorMessage('rooms_number')}</div>}
                 </div>
+
                 <div className="col-md-6">
-                    <label htmlFor="beds" className="form-label">Beds</label>
+                    <label htmlFor="beds" className="form-label">Beds*</label>
                     <input
                         type="number"
-                        className="form-control form-control-lg"
+                        className={`form-control form-control-lg ${getInputClass('beds')}`}
                         id="beds"
                         name="beds"
                         value={beds}
                         onChange={(e) => setBeds(e.target.value)}
                         placeholder='example 3'
-                        min="0"
-                        required
                     />
+                    {getErrorMessage('beds') && <div className="text-danger">{getErrorMessage('beds')}</div>}
                 </div>
+
                 <div className="col-md-6">
-                    <label htmlFor="bathrooms" className="form-label">Bathrooms</label>
+                    <label htmlFor="bathrooms" className="form-label">Bathrooms*</label>
                     <input
                         type="number"
-                        className="form-control form-control-lg"
+                        className={`form-control form-control-lg ${getInputClass('bathrooms')}`}
                         id="bathrooms"
                         name="bathrooms"
                         value={bathrooms}
-                        placeholder='example 2'
                         onChange={(e) => setBathrooms(e.target.value)}
-                        min="0"
-                        required
+                        placeholder='example 2'
                     />
+                    {getErrorMessage('bathrooms') && <div className="text-danger">{getErrorMessage('bathrooms')}</div>}
                 </div>
+
                 <div className="col-md-6">
-                    <label htmlFor="square_meters" className="form-label">Square Meters</label>
+                    <label htmlFor="square_meters" className="form-label">Square Meters*</label>
                     <input
                         type="number"
-                        className="form-control form-control-lg"
+                        className={`form-control form-control-lg ${getInputClass('square_meters')}`}
                         id="square_meters"
                         name="square_meters"
                         value={square_meters}
                         onChange={(e) => setSquare_meters(e.target.value)}
-                        placeholder=' example 180'
-                        min="0"
-                        required
+                        placeholder='example 180'
                     />
+                    {getErrorMessage('square_meters') && <div className="text-danger">{getErrorMessage('square_meters')}</div>}
                 </div>
+
                 <div className="col-md-7">
-                    <label htmlFor="address" className="form-label">Address</label>
+                    <label htmlFor="address" className="form-label">Address*</label>
                     <input
                         type="text"
-                        className="form-control form-control-lg"
+                        className={`form-control form-control-lg ${getInputClass('address')}`}
                         id="address"
                         name="address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder='example Via Chiaia'
-                        autoComplete='off'
-                        required
                     />
+                    {getErrorMessage('address') && <div className="text-danger">{getErrorMessage('address')}</div>}
                 </div>
+
                 <div className="col-md-5">
-                    <label htmlFor="city" className="form-label">City</label>
+                    <label htmlFor="city" className="form-label">City*</label>
                     <input
                         type="text"
-                        className="form-control form-control-lg"
+                        className={`form-control form-control-lg ${getInputClass('city')}`}
                         id="city"
                         name="city"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                         placeholder='example Napoli'
-                        autoComplete='off'
-                        required
                     />
+                    {getErrorMessage('city') && <div className="text-danger">{getErrorMessage('city')}</div>}
                 </div>
+
                 <div className="col-12">
-                    <label htmlFor="description" className="form-label">Description</label>
+                    <label htmlFor="description" className="form-label">Description*</label>
                     <textarea
-                        className="form-control form-control-lg"
+                        className={`form-control form-control-lg ${getInputClass('description')}`}
                         id="description"
                         name="description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder='Describe your apartment, at least 5 characters required'
-                        required
                     />
+                    {getErrorMessage('description') && <div className="text-danger">{getErrorMessage('description')}</div>}
                 </div>
+
                 <div className="col-12">
-                    <label htmlFor="picture_url" className="form-label">insert image of the apartment</label>
+                    <label htmlFor="picture_url" className="form-label">Insert image of the apartment</label>
                     <input
                         type="text"
-                        className="form-control form-control-lg"
+                        className={`form-control form-control-lg ${getInputClass('picture_url')}`}
                         id="picture_url"
                         name="picture_url"
                         value={picture_url}
                         onChange={(e) => setPicture_url(e.target.value)}
                         placeholder="https://example.com/"
-                        required
                     />
+                    {getErrorMessage('picture_url') && <div className="text-danger">{getErrorMessage('picture_url')}</div>}
                 </div>
 
                 <div className="col-12">
@@ -295,11 +278,16 @@ export default function AddApartment() {
 
                 <div className="col-12">
                     <button type="submit" className="btn btn-primary me-3 col-12 col-md-2">Add Apartment</button>
-                    {errorMessage && <span className='text-danger'>{errorMessage}</span>}
+                    {errorMessages.length > 0 && (
+                        <div className="text-danger">
+                            <ul>
+                                {errorMessages.map((msg, index) => <li key={index}>{msg.message}</li>)}
+                            </ul>
+                        </div>
+                    )}
                     {successMessage && <span className='text-success'>{successMessage}</span>}
                 </div>
             </form>
         </div>
-
     );
 }
