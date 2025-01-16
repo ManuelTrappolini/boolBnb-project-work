@@ -209,6 +209,7 @@ export default function AddApartment() {
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder='example Via Chiaia'
+                        autoComplete='off'
                         required
                     />
                 </div>
@@ -222,6 +223,7 @@ export default function AddApartment() {
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                         placeholder='example Napoli'
+                        autoComplete='off'
                         required
                     />
                 </div>
