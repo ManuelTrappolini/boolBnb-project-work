@@ -143,7 +143,7 @@ export default function AddApartment() {
                         name="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder='Appartamento Napoli con vista mare'
+                        placeholder='example Appartamento Cagliari con vista mare'
                         required
                     />
                 </div>
@@ -156,7 +156,7 @@ export default function AddApartment() {
                         name="rooms"
                         value={rooms_number}
                         onChange={(e) => setRooms_number(e.target.value)}
-                        placeholder='4'
+                        placeholder='example 3'
                         required
                     />
                 </div>
@@ -169,7 +169,7 @@ export default function AddApartment() {
                         name="beds"
                         value={beds}
                         onChange={(e) => setBeds(e.target.value)}
-                        placeholder='3'
+                        placeholder='example 3'
                         required
                     />
                 </div>
@@ -181,7 +181,7 @@ export default function AddApartment() {
                         id="bathrooms"
                         name="bathrooms"
                         value={bathrooms}
-                        placeholder='2'
+                        placeholder='example 2'
                         onChange={(e) => setBathrooms(e.target.value)}
                         required
                     />
@@ -195,7 +195,7 @@ export default function AddApartment() {
                         name="square_meters"
                         value={square_meters}
                         onChange={(e) => setSquare_meters(e.target.value)}
-                        placeholder='180'
+                        placeholder=' example 180'
                         required
                     />
                 </div>
@@ -208,7 +208,7 @@ export default function AddApartment() {
                         name="address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
-                        placeholder='Via Chiaia'
+                        placeholder='example Via Chiaia'
                         required
                     />
                 </div>
@@ -221,7 +221,7 @@ export default function AddApartment() {
                         name="city"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
-                        placeholder='Napoli'
+                        placeholder='example Napoli'
                         required
                     />
                 </div>
@@ -233,7 +233,7 @@ export default function AddApartment() {
                         name="description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        placeholder='Describe your apartment...'
+                        placeholder='Describe your apartment, at least 5 characters required'
                         required
                     />
                 </div>
