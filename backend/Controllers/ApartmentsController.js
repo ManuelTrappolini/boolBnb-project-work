@@ -14,7 +14,7 @@ function index(req, res) {
 function show(req, res) {
     const id = req.params.id
     const sql = 'SELECT * FROM apartments WHERE id = ? '
-    const reviewsSql = 'SELECT * FROM reviews WHERE id_apartment = ? '
+    const reviewsSql = 'SELECT * FROM reviews WHERE id_apartment = ? ORDER BY date DESC'
     const servicesSql = 'SELECT * FROM apartment_service WHERE id_apartment = ?'
 
     connection.query(sql, [id], (err, results) => {
@@ -116,7 +116,7 @@ function addReview(req, res) {
         }
 
 
-        const sql = 'INSERT INTO reviews (author_name, author_email, description, date, days_of_stay, ID_apartment) VALUES (?, ?, ?, ?, ?, ?)';
+        const sql = 'INSERT INTO reviews (author_name, author_email, description, date, days_of_stay, ID_apartment) VALUES (?, ?, ?, ?, ?, ?) ';
         const reviewData = [author_name, author_email, description, formattedDate, days_of_stay, apartment_id];
 
         connection.query(sql, reviewData, (err, result) => {
