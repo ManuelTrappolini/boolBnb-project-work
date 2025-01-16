@@ -173,6 +173,7 @@ export default function AddApartment() {
                         value={rooms_number}
                         onChange={(e) => setRooms_number(e.target.value)}
                         placeholder='example 3'
+                        min="0"
                         required
                     />
                 </div>
@@ -186,6 +187,7 @@ export default function AddApartment() {
                         value={beds}
                         onChange={(e) => setBeds(e.target.value)}
                         placeholder='example 3'
+                        min="0"
                         required
                     />
                 </div>
@@ -199,6 +201,7 @@ export default function AddApartment() {
                         value={bathrooms}
                         placeholder='example 2'
                         onChange={(e) => setBathrooms(e.target.value)}
+                        min="0"
                         required
                     />
                 </div>
@@ -212,6 +215,7 @@ export default function AddApartment() {
                         value={square_meters}
                         onChange={(e) => setSquare_meters(e.target.value)}
                         placeholder=' example 180'
+                        min="0"
                         required
                     />
                 </div>
