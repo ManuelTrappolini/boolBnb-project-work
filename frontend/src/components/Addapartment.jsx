@@ -70,7 +70,7 @@ export default function AddApartment() {
 
         if (city.trim() === '') errors.push({ field: 'city', message: 'City is required.' });
 
-        if (picture_url.trim() === '') errors.push({ field: 'picture_url', message: 'Picture URL is required.' });
+
 
         if (description.trim() === '') errors.push({ field: 'description', message: 'Description is required.' });
         else if (description.length < 5) errors.push({ field: 'description', message: 'Description must be at least 5 characters long.' });
@@ -155,6 +155,7 @@ export default function AddApartment() {
                         value={rooms_number}
                         onChange={(e) => setRooms_number(e.target.value)}
                         placeholder='example 3'
+                        min="1"
                     />
                     {getErrorMessage('rooms_number') && <div className="text-danger">{getErrorMessage('rooms_number')}</div>}
                 </div>
@@ -169,6 +170,7 @@ export default function AddApartment() {
                         value={beds}
                         onChange={(e) => setBeds(e.target.value)}
                         placeholder='example 3'
+                        min="1"
                     />
                     {getErrorMessage('beds') && <div className="text-danger">{getErrorMessage('beds')}</div>}
                 </div>
@@ -183,6 +185,7 @@ export default function AddApartment() {
                         value={bathrooms}
                         onChange={(e) => setBathrooms(e.target.value)}
                         placeholder='example 2'
+                        min="1"
                     />
                     {getErrorMessage('bathrooms') && <div className="text-danger">{getErrorMessage('bathrooms')}</div>}
                 </div>
@@ -197,6 +200,7 @@ export default function AddApartment() {
                         value={square_meters}
                         onChange={(e) => setSquare_meters(e.target.value)}
                         placeholder='example 180'
+                        min="1"
                     />
                     {getErrorMessage('square_meters') && <div className="text-danger">{getErrorMessage('square_meters')}</div>}
                 </div>
@@ -211,6 +215,7 @@ export default function AddApartment() {
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder='example Via Chiaia'
+                        autoComplete='1'
                     />
                     {getErrorMessage('address') && <div className="text-danger">{getErrorMessage('address')}</div>}
                 </div>
@@ -225,6 +230,7 @@ export default function AddApartment() {
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                         placeholder='example Napoli'
+                        autoComplete='0'
                     />
                     {getErrorMessage('city') && <div className="text-danger">{getErrorMessage('city')}</div>}
                 </div>
