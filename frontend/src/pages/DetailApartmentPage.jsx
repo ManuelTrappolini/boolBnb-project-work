@@ -113,7 +113,7 @@ export default function DetailApartmentPage() {
 
                     {/* Sezione recensioni */}
                     <div className="my-5">
-                        <AddReview apartmentId={id} />
+                        <AddReview apartmentId={id} onReviewSubmit={() => setTriggerFetch(!triggerFetch)} />
                     </div>
                     <div className="row mt-5">
                         <h3 className="fw-bold mb-4">Reviews</h3>

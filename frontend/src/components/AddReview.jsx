@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 
-export default function AddReview({ apartmentId }) {
+export default function AddReview({ apartmentId, onReviewSubmit }) {
 
     const [authorName, setAuthorName] = useState('');
     const [authorEmail, setAuthorEmail] = useState('');
@@ -62,6 +62,10 @@ export default function AddReview({ apartmentId }) {
             setAuthorEmail('');
             setDescription('');
             setDaysOfStay('');
+
+            if (onReviewSubmit) {
+                onReviewSubmit();
+            }
         } catch (error) {
             setErrorMessage('Review has not been added');
             console.log(error.message);
