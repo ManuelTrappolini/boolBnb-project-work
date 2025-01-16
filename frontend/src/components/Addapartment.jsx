@@ -66,21 +66,37 @@ export default function AddApartment() {
         const bathroomsNumber = parseInt(bathrooms);
         const squareMeters = parseInt(square_meters);
 
+        // Inizializza una variabile per gli errori
+        let formErrors = '';
+
         // Aggiungi la validazione per tutti i campi
-        if (
-            title.length < 5 ||
-            isNaN(roomsNumber) || roomsNumber <= 0 ||
-            isNaN(bedsNumber) || bedsNumber <= 0 ||
-            isNaN(bathroomsNumber) || bathroomsNumber <= 0 ||
-            isNaN(squareMeters) || squareMeters <= 0 ||
-            address.length < 5 ||
-            city.length === 0 ||
-            picture_url === '' ||
-            description.length < 5
-        ) {
-            setErrorMessage('All fields must be filled in correctly');
+        if (title.length < 5) {
+            formErrors = 'Title must be at least 5 characters long.';
+        } else if (isNaN(roomsNumber) || roomsNumber <= 0) {
+            formErrors = 'Rooms number must be a valid positive number.';
+        } else if (isNaN(bedsNumber) || bedsNumber <= 0) {
+            formErrors = 'Beds number must be a valid positive number.';
+        } else if (isNaN(bathroomsNumber) || bathroomsNumber <= 0) {
+            formErrors = 'Bathrooms number must be a valid positive number.';
+        } else if (isNaN(squareMeters) || squareMeters <= 0) {
+            formErrors = 'Square meters must be a valid positive number.';
+        } else if (address.length < 5) {
+            formErrors = 'Address must be at least 5 characters long.';
+        } else if (city.length === 0) {
+            formErrors = 'City is required.';
+        } else if (picture_url === '') {
+            formErrors = 'Picture URL is required.';
+        } else if (description.length < 5) {
+            formErrors = 'Description must be at least 5 characters long.';
+        }
+
+        // Se c'è un errore, aggiorna lo stato con il messaggio di errore e fermati
+        if (formErrors) {
+            setErrorMessage(formErrors);
             return;
         }
+
+
 
         // Reset error message
         setErrorMessage('');
