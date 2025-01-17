@@ -18,6 +18,9 @@ const Navbar = () => {
             <div className="menu">
                 <ul className='d-flex m-0 list-unstyled gap-3'>
                     <li>
+                        <Link className='text-white pe-3' to={'/search'}>Search Appartment</Link>
+                    </li>
+                    <li>
                         <Link className='text-white' to='/apartments/addapartment'>Add your Apartment</Link>
                     </li>
                     <li onClick={toggleDropdown}>

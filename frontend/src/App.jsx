@@ -7,7 +7,7 @@ import DetailApartmentPage from './pages/DetailApartmentPage'
 import LoginPage from './pages/LoginPage'
 import RegistrationPage from './pages/RegistrationPage'
 import SearchPage from './pages/SearchPage'
-import TrendingCityPage from './pages/TrendingCityPage'
+
 
 function App() {
 
@@ -23,7 +23,6 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path='/search' element={<SearchPage />} />
-            <Route path='/search/:search' element={<TrendingCityPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

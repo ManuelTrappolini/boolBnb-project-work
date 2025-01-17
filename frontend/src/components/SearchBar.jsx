@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 
 function SearchForm() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         trendingCity: "",
         searchInput: "",
@@ -9,7 +10,10 @@ function SearchForm() {
         minBeds: 0
     });
 
+
+
     const handleInputChange = (e) => {
+        e.preventDefault()
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
@@ -22,52 +26,29 @@ function SearchForm() {
 
         // Creazione della query string
         const queryParams = new URLSearchParams({
-            trendingCity: formData.trendingCity,
             searchInput: formData.searchInput,
             minRooms: formData.minRooms,
             minBeds: formData.minBeds
         }).toString();
 
         // Reindirizzamento all'URL con i parametri
-        window.location.href = `/search?${queryParams}`;
+        navigate(`/search?${queryParams}`)
     };
 
     return (
         <div>
-            <form onSubmit={handleSearchSubmit} className="d-flex flex-column gap-4">
-                {/* Sezione per la selezione della città */}
-                <div>
-                    <label htmlFor="trending-cities" className="form-label">Trending Cities:</label>
-                    <select
-                        id="trending-cities"
-                        className="form-select"
-                        name="trendingCity"
-                        value={formData.trendingCity}
-                        onChange={handleInputChange}
-                    >
-                        <option value="" disabled>Select a city</option>
-                        <option value="Napoli">Napoli</option>
-                        <option value="Firenze">Firenze</option>
-                        <option value="Milano">Milano</option>
-                        <option value="Bari">Bari</option>
-                        <option value="Palermo">Palermo</option>
-                    </select>
-                </div>
+            <form onSubmit={handleSearchSubmit} className="d-flex gap-4 justify-content-between">
 
                 {/* Sezione per la ricerca per città o indirizzo */}
-                <div className="search-bar d-flex">
+                <div className="search-bar">
+                    <label htmlFor="city" className="form-label">🔍 Search by city or address</label>
                     <input
                         type="text"
                         name="searchInput"
                         className="form-control"
-                        placeholder="🔍 Search by city or address"
+                        placeholder="Type Here..."
                         value={formData.searchInput}
                         onChange={handleInputChange}
-                    />
-                    <input
-                        type="submit"
-                        value="Invia"
-                        className="btn btn-primary ms-2"
                     />
                 </div>
 
@@ -98,6 +79,11 @@ function SearchForm() {
                         onChange={handleInputChange}
                     />
                 </div>
+                <input
+                    type="submit"
+                    value="Invia"
+                    className="btn btn-primary ms-2"
+                />
             </form>
         </div>
     );

@@ -44,16 +44,14 @@ export default function HomePage() {
     }, [location.search]); // Aggiorna ogni volta che cambia la query string
 
     // Filtrare i risultati in base ai parametri della query string
-    const filteredCards = cards.filter(card => {
-        const matchesSearch =
-            search && (card.address.toLowerCase().includes(search.toLowerCase()) ||
-                card.city.toLowerCase().includes(search.toLowerCase()));
-
-        const matchesMinRooms = minRooms ? card.rooms_number >= parseInt(minRooms) : false;
-        const matchesMinBeds = minBeds ? card.beds >= parseInt(minBeds) : false;
+    const filteredCards = cards.filter((card) => {
+        const matchesSearch = search ? card.address.toLowerCase().includes(search.toLowerCase()) || card.city.toLowerCase().includes(search.toLowerCase()) : true;
+        const matchesMinRooms = minRooms ? card.rooms_number >= parseInt(minRooms) : true;
+        const matchesMinBeds = minBeds ? card.beds >= parseInt(minBeds) : true;
 
         return matchesSearch && matchesMinRooms && matchesMinBeds;
     });
+
 
     return (
         <>
@@ -72,7 +70,7 @@ export default function HomePage() {
 
                 {/* Risultati */}
                 <div className="row">
-                    {filteredCards.map((card) => (
+                    {filteredCards.length !== 0 ? filteredCards.map((card) => (
                         <div key={card.id} className="col-md-3 col-12 p-3">
                             <div className="card h-100">
                                 <Link to={`/apartments/${card.id}`} className="h-75">
@@ -97,7 +95,9 @@ export default function HomePage() {
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    )) : (
+                        <h1 className='pt-5'>Nessun Appartamento Trovato con questi Requisiti</h1>
+                    )}
                 </div>
             </div>
         </>
