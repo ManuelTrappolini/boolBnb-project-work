@@ -8,9 +8,9 @@ const MessageController = require('../Controllers/MessageController');
 
 router.get('/', ApartmentsController.index)
 
-router.get('/:id', ApartmentsController.show)
+router.get('/:slug', ApartmentsController.show)
 
-router.post('/:id/review', ApartmentsController.addReview)
+router.post('/:slug/review', ApartmentsController.addReview)
 
 router.post('/addapartment', /* authenticateToken, */ ApartmentsController.addApartment)
 
@@ -26,7 +26,8 @@ router.post('/register', UserController.register)
 
 router.post('/:id', MessageController.sendMessage)
 
-router.post('/:id/vote', ApartmentsController.voteApartment)
+router.post('/apartments/vote/:id', ApartmentsController.voteApartment);
+
 
 
 module.exports = router

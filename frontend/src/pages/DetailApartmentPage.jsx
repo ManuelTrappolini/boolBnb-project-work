@@ -74,8 +74,7 @@ export default function DetailApartmentPage() {
                             <div className="d-flex justify-content-between align-items-center">
                                 <h1 className="fw-bold">{apartment.title}</h1>
                                 <div className='d-flex align-items-center justify-content-end'>
-                                    <p className='m-0'>{apartment.vote}</p>
-                                    <HeartCounter cardId={apartment.id} onHeartClick={() => setTriggerFetch(!triggerFetch)} />
+                                    <HeartCounter cardId={apartment.id} initialVotes={apartment.vote} />
                                 </div>
                             </div>
                             <p className="text-muted py-2">{apartment.address}</p>

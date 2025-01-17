@@ -144,6 +144,40 @@ header {
     height: 110%;
 }
 
+/* heart */
+.heart-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+
+    .bi {
+        font-size: 1.2rem;
+    }
+}
+
+.heart-counter span {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.heart-counter i {
+    font-size: 1.2rem;
+    vertical-align: middle;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.heart-counter:hover i {
+    transform: scale(1.2);
+    cursor: pointer;
+    color: red;
+}
+
+.bi-heart-fill {
+    color: red;
+}
+
 
 /* footer */
 
@@ -189,7 +223,7 @@ footer {
 
 
 .login-container {
-    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    background: white;
     min-height: 100vh;
 }
 
@@ -220,7 +254,7 @@ footer {
 
 
 .registration-container {
-    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    background: white;
     min-height: 100vh;
 }
 
@@ -248,6 +282,7 @@ footer {
     font-size: 1.2rem;
     border-radius: 10px;
     padding: 15px;
+
 }
 
 
@@ -277,4 +312,5 @@ footer {
 
 .reviews-scrollable::-webkit-scrollbar-thumb:hover {
     background-color: #0056b3;
+
 }
