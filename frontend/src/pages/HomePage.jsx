@@ -5,7 +5,6 @@ import HeartCounter from '../components/HeartsCounter';
 export default function HomePage() {
     const [cards, setCards] = useState([]);
     const [search, setSearch] = useState('')
-    const [triggerFetch, setTriggerFetch] = useState(false);
 
     useEffect(() => {
         fetch('http://localhost:3002/apartments')
@@ -15,7 +14,7 @@ export default function HomePage() {
                 setCards(data.apartments);
             })
             .catch(error => console.error('Errore nel caricamento dei dati:', error));
-    }, [triggerFetch]);
+    }, []);
 
     /* filter */
     const filteredCards = cards.filter(card =>
@@ -53,8 +52,7 @@ export default function HomePage() {
                                     </div>
 
                                     <div className='d-flex align-items-center justify-content-end'>
-                                        <p className='m-0'>{card.vote}</p>
-                                        <HeartCounter cardId={card.id} onHeartClick={() => setTriggerFetch(!triggerFetch)} />
+                                        <HeartCounter cardId={card.id} initialVotes={card.vote} />
                                     </div>
                                 </div>
                             </div>

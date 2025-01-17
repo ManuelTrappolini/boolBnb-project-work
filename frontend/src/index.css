@@ -144,6 +144,40 @@ header {
     height: 110%;
 }
 
+/* heart */
+.heart-counter {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px; 
+    text-align: center;
+
+    .bi{
+        font-size: 1.2rem;
+    }
+}
+
+.heart-counter span {
+    font-size: 1rem;
+    line-height: 1; 
+}
+
+.heart-counter i {
+    font-size: 1.2rem; 
+    vertical-align: middle;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.heart-counter:hover i {
+    transform: scale(1.2); 
+    cursor: pointer;
+    color: red;
+}
+
+.bi-heart-fill {
+    color: red;
+}
+
 
 /* footer */
 
