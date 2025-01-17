@@ -13,7 +13,7 @@ const FormEmail = forwardRef((props, ref) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Effettua la validazione
+        // Validation data
         const errors = [];
         if (!name) errors.push({ field: 'name', message: 'Name is required.' });
         if (!applicantEmail) errors.push({ field: 'applicantEmail', message: 'Email is required.' });
@@ -26,11 +26,11 @@ const FormEmail = forwardRef((props, ref) => {
         }
 
         try {
-            // Invia la richiesta POST al backend con `fetch`
+            // Send request to backend with fetch
             const response = await fetch(`http://localhost:3002/apartments/${id}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', // Imposta il tipo di contenuto
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     name,
@@ -40,17 +40,19 @@ const FormEmail = forwardRef((props, ref) => {
                 }),
             });
 
-            // Gestisci la risposta
+            // Handle response
+
             if (response.ok) {
                 const responseData = await response.json();
                 setSuccessMessage('Your message has been sent successfully!');
 
-                // Nascondi il messaggio di successo dopo 3 secondi
+                // Hide message after 2 sec
+
                 setTimeout(() => {
                     setSuccessMessage('');
                 }, 3000);
 
-                // Svuota i campi del form
+                // Empty form field
                 setName('');
                 setApplicantEmail('');
                 setSubject('');
@@ -67,7 +69,8 @@ const FormEmail = forwardRef((props, ref) => {
 
     const handleChange = (field, setter) => (e) => {
         setter(e.target.value);
-        // Rimuovi l'errore per il campo modificato
+
+        // Remove error for fill form field
         setErrorMessages((prevErrors) =>
             prevErrors.filter((error) => error.field !== field)
         );
@@ -98,8 +101,8 @@ const FormEmail = forwardRef((props, ref) => {
                             id="name"
                             name="name"
                             value={name}
-                            onChange={handleChange('name', setName)} // Aggiungi onChange
-                            placeholder="Enter your full name"
+                            onChange={handleChange('name', setName)}
+                            placeholder="e.g. John Smith"
                         />
                         {getErrorMessage('name') && <div className="text-danger">{getErrorMessage('name')}</div>}
                     </div>
@@ -112,8 +115,8 @@ const FormEmail = forwardRef((props, ref) => {
                             id="applicantEmail"
                             name="applicantEmail"
                             value={applicantEmail}
-                            onChange={handleChange('applicantEmail', setApplicantEmail)} // Aggiungi onChange
-                            placeholder="Enter your email"
+                            onChange={handleChange('applicantEmail', setApplicantEmail)}
+                            placeholder="e.g. example@gmail.com"
                         />
                         {getErrorMessage('applicantEmail') && <div className="text-danger">{getErrorMessage('applicantEmail')}</div>}
                     </div>
@@ -126,7 +129,7 @@ const FormEmail = forwardRef((props, ref) => {
                             id="subject"
                             name="subject"
                             value={subject}
-                            onChange={handleChange('subject', setSubject)} // Aggiungi onChange
+                            onChange={handleChange('subject', setSubject)}
                             placeholder="Enter the subject"
                         />
                         {getErrorMessage('subject') && <div className="text-danger">{getErrorMessage('subject')}</div>}
@@ -139,7 +142,7 @@ const FormEmail = forwardRef((props, ref) => {
                             id="text"
                             name="text"
                             value={text}
-                            onChange={handleChange('text', setText)} // Aggiungi onChange
+                            onChange={handleChange('text', setText)}
                             placeholder="Enter your message"
                         />
                         {getErrorMessage('text') && <div className="text-danger">{getErrorMessage('text')}</div>}

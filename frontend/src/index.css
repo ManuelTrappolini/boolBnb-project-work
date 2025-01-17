@@ -134,7 +134,7 @@ header {
 }
 
 
-.overlay-success{
+.overlay-success {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -250,3 +250,31 @@ footer {
     padding: 15px;
 }
 
+
+.reviews-scrollable {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+
+.reviews-scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+
+
+.reviews-scrollable::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 10px;
+    border: 2px solid #fff;
+}
+
+
+.reviews-scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+
+.reviews-scrollable::-webkit-scrollbar-thumb:hover {
+    background-color: #0056b3;
+}
