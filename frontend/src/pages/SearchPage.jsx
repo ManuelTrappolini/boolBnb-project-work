@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Per accedere ai parametri della route
-import { Link, useLocation } from 'react-router-dom'; // Aggiungi useLocation
+import { Link, useLocation } from 'react-router-dom'; // Per accedere alla location
 import SearchBar from '../components/SearchBar';
 import HeartCounter from '../components/HeartsCounter';
 
@@ -10,22 +9,20 @@ export default function HomePage() {
     const [triggerFetch, setTriggerFetch] = useState(false);
     const [minRooms, setMinRooms] = useState('');
     const [minBeds, setMinBeds] = useState('');
-    const [selectedServices, setSelectedServices] = useState([]);
 
-    const { search: urlSearch } = useParams(); // Legge il parametro dalla URL
     const location = useLocation(); // Usato per ottenere i parametri della query string
 
     // Funzione per ottenere i parametri della query string
     const getQueryParams = () => {
         const params = new URLSearchParams(location.search);
         return {
-            search: params.get('search') || '',
+            search: params.get('searchInput') || '',
             minRooms: params.get('minRooms') || '',
             minBeds: params.get('minBeds') || '',
-            services: params.get('services') ? params.get('services').split(',') : [],
         };
     };
 
+    // Caricamento iniziale delle carte dall'API
     useEffect(() => {
         fetch('http://localhost:3002/apartments')
             .then(response => response.json())
@@ -36,28 +33,26 @@ export default function HomePage() {
             .catch(error => console.error('Errore nel caricamento dei dati:', error));
     }, [triggerFetch]);
 
-    // Aggiorna lo stato quando cambiano i parametri della query string
+    // Aggiorna lo stato in base ai parametri della query string
     useEffect(() => {
-        const { search, minRooms, minBeds, services } = getQueryParams();
+        const { search, minRooms, minBeds } = getQueryParams();
         setSearch(search);
         setMinRooms(minRooms);
         setMinBeds(minBeds);
-        setSelectedServices(services);
-    }, [location.search]); // Aggiorna quando cambia la query string
+        console.log(search, minBeds, minRooms);
 
-    // Filtrare i risultati in base ai parametri ottenuti dalla query string
+    }, [location.search]); // Aggiorna ogni volta che cambia la query string
+
+    // Filtrare i risultati in base ai parametri della query string
     const filteredCards = cards.filter(card => {
         const matchesSearch =
-            card.address.toLowerCase().includes(search.toLowerCase()) ||
-            card.city.toLowerCase().includes(search.toLowerCase());
+            search && (card.address.toLowerCase().includes(search.toLowerCase()) ||
+                card.city.toLowerCase().includes(search.toLowerCase()));
 
-        const matchesMinRooms = minRooms ? card.rooms_number >= minRooms : true;
-        const matchesMinBeds = minBeds ? card.beds >= minBeds : true;
-        const matchesServices = selectedServices.length
-            ? selectedServices.every(service => card.services.includes(service))
-            : true;
+        const matchesMinRooms = minRooms ? card.rooms_number >= parseInt(minRooms) : false;
+        const matchesMinBeds = minBeds ? card.beds >= parseInt(minBeds) : false;
 
-        return matchesSearch && matchesMinRooms && matchesMinBeds && matchesServices;
+        return matchesSearch && matchesMinRooms && matchesMinBeds;
     });
 
     return (
@@ -72,8 +67,6 @@ export default function HomePage() {
                         setMinRooms={setMinRooms}
                         minBeds={minBeds}
                         setMinBeds={setMinBeds}
-                        selectedServices={selectedServices}
-                        setSelectedServices={setSelectedServices}
                     />
                 </div>
 

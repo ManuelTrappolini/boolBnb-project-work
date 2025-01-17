@@ -1,29 +1,35 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
-export default function SearchBar({ setSearch, setMinRooms, setMinBeds, setSelectedServices, minBeds, minRooms, selectedServices }) {
-    const navigate = useNavigate();
+function SearchForm() {
+    const [formData, setFormData] = useState({
+        trendingCity: "",
+        searchInput: "",
+        minRooms: 0,
+        minBeds: 0
+    });
 
-    const handleSearchSubmit = (event) => {
-        event.preventDefault();
-        const form = event.target;
-        const searchValue = form.elements.searchInput.value.trim();
-
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }));
     };
 
-    const handleTrendingChange = (event) => {
-        const selectedCity = event.target.value;
-        if (selectedCity) {
-            setSearch(selectedCity);
-            navigate(`/search/${encodeURIComponent(selectedCity)}`);
-        }
-    };
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
 
-    // Gestore per i checkbox dei servizi
-    const handleServiceChange = (event) => {
-        const service = event.target.value;
-        setSelectedServices((prev) =>
-            prev.includes(service) ? prev.filter((s) => s !== service) : [...prev, service]
-        );
+        // Creazione della query string
+        const queryParams = new URLSearchParams({
+            trendingCity: formData.trendingCity,
+            searchInput: formData.searchInput,
+            minRooms: formData.minRooms,
+            minBeds: formData.minBeds
+        }).toString();
+
+        // Reindirizzamento all'URL con i parametri
+        window.location.href = `/search?${queryParams}`;
     };
 
     return (
@@ -35,8 +41,9 @@ export default function SearchBar({ setSearch, setMinRooms, setMinBeds, setSelec
                     <select
                         id="trending-cities"
                         className="form-select"
-                        onChange={handleTrendingChange}
-                        defaultValue=""
+                        name="trendingCity"
+                        value={formData.trendingCity}
+                        onChange={handleInputChange}
                     >
                         <option value="" disabled>Select a city</option>
                         <option value="Napoli">Napoli</option>
@@ -54,6 +61,8 @@ export default function SearchBar({ setSearch, setMinRooms, setMinBeds, setSelec
                         name="searchInput"
                         className="form-control"
                         placeholder="🔍 Search by city or address"
+                        value={formData.searchInput}
+                        onChange={handleInputChange}
                     />
                     <input
                         type="submit"
@@ -68,10 +77,11 @@ export default function SearchBar({ setSearch, setMinRooms, setMinBeds, setSelec
                     <input
                         type="number"
                         id="minRooms"
+                        name="minRooms"
                         className="form-control"
-                        value={minRooms}
-                        onChange={(e) => setMinRooms(e.target.value)}
                         placeholder="Minimum number of rooms"
+                        value={formData.minRooms}
+                        onChange={handleInputChange}
                     />
                 </div>
 
@@ -81,48 +91,16 @@ export default function SearchBar({ setSearch, setMinRooms, setMinBeds, setSelec
                     <input
                         type="number"
                         id="minBeds"
+                        name="minBeds"
                         className="form-control"
-                        value={minBeds}
-                        onChange={(e) => setMinBeds(e.target.value)}
                         placeholder="Minimum number of beds"
+                        value={formData.minBeds}
+                        onChange={handleInputChange}
                     />
-                </div>
-
-                {/* Filtro per i servizi aggiuntivi */}
-                <div>
-                    <label className="form-label">Services:</label>
-                    <div className="d-flex flex-column">
-                        <div className="form-check">
-                            <input
-                                type="checkbox"
-                                value="WiFi"
-                                className="form-check-input"
-                                onChange={handleServiceChange}
-                            />
-                            <label className="form-check-label">WiFi</label>
-                        </div>
-                        <div className="form-check">
-                            <input
-                                type="checkbox"
-                                value="Parking"
-                                className="form-check-input"
-                                onChange={handleServiceChange}
-                            />
-                            <label className="form-check-label">Parking</label>
-                        </div>
-                        <div className="form-check">
-                            <input
-                                type="checkbox"
-                                value="AirConditioning"
-                                className="form-check-input"
-                                onChange={handleServiceChange}
-                            />
-                            <label className="form-check-label">Air Conditioning</label>
-                        </div>
-                        {/* Aggiungi altri servizi qui */}
-                    </div>
                 </div>
             </form>
         </div>
     );
 }
+
+export default SearchForm;
