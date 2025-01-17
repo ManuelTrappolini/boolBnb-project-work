@@ -9,6 +9,8 @@ const FormEmail = forwardRef((props, ref) => {
     const [errorMessages, setErrorMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const { id } = useParams();
+    const maxTextLength = 500;
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,7 +21,9 @@ const FormEmail = forwardRef((props, ref) => {
         if (!applicantEmail) errors.push({ field: 'applicantEmail', message: 'Email is required.' });
         if (!subject) errors.push({ field: 'subject', message: 'Subject is required.' });
         if (!text) errors.push({ field: 'text', message: 'Message is required.' });
-
+        if (text.length < 15 || text.length > maxTextLength) {
+            errors.push({ field: 'text', message: `The message must be at least 15 characters long and no longer than ${maxTextLength} characters.` });
+        }
         if (errors.length > 0) {
             setErrorMessages(errors);
             return;
@@ -145,6 +149,7 @@ const FormEmail = forwardRef((props, ref) => {
                             onChange={handleChange('text', setText)}
                             placeholder="Enter your message"
                         />
+                        <small>{text.length}/{maxTextLength} characters</small>
                         {getErrorMessage('text') && <div className="text-danger">{getErrorMessage('text')}</div>}
                     </div>
 
