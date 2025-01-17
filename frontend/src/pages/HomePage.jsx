@@ -17,23 +17,13 @@ export default function HomePage() {
             .catch(error => console.error('Errore nel caricamento dei dati:', error));
     }, [triggerFetch]);
 
-    /* filter */
-    const filteredCards = cards.filter(card =>
-        card.address.toLowerCase().includes(search.toLocaleLowerCase()) || card.city.toLowerCase().includes(search.toLocaleLowerCase())
-    )
-
     return (
         <>
             <div className="container my-5">
 
-                {/* search */}
-                <div className='search-bar'>
-                    <SearchBar search={search} setSearch={setSearch} />
-                </div>
-
                 {/* results */}
                 <div className="row">
-                    {filteredCards.map((card) => (
+                    {cards.map((card) => (
                         <div key={card.id} className="col-md-3 col-12 p-3">
 
                             <div className="card h-100">
