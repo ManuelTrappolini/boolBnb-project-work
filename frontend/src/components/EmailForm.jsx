@@ -1,17 +1,18 @@
 import React, { useState, forwardRef } from 'react';
-import { useParams } from 'react-router';
 
-const FormEmail = forwardRef((props, ref) => {
+const FormEmail = forwardRef(({apartmentId}, ref) => {
     const [name, setName] = useState('');
     const [applicantEmail, setApplicantEmail] = useState('');
     const [subject, setSubject] = useState('');
     const [text, setText] = useState('');
     const [errorMessages, setErrorMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
-    const { id } = useParams();
+    const id = apartmentId;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(id);
+        
 
         // Effettua la validazione
         const errors = [];
@@ -26,11 +27,10 @@ const FormEmail = forwardRef((props, ref) => {
         }
 
         try {
-            // Invia la richiesta POST al backend con `fetch`
             const response = await fetch(`http://localhost:3002/apartments/${id}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', // Imposta il tipo di contenuto
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     name,
@@ -98,7 +98,7 @@ const FormEmail = forwardRef((props, ref) => {
                             id="name"
                             name="name"
                             value={name}
-                            onChange={handleChange('name', setName)} // Aggiungi onChange
+                            onChange={handleChange('name', setName)}
                             placeholder="Enter your full name"
                         />
                         {getErrorMessage('name') && <div className="text-danger">{getErrorMessage('name')}</div>}
@@ -112,7 +112,7 @@ const FormEmail = forwardRef((props, ref) => {
                             id="applicantEmail"
                             name="applicantEmail"
                             value={applicantEmail}
-                            onChange={handleChange('applicantEmail', setApplicantEmail)} // Aggiungi onChange
+                            onChange={handleChange('applicantEmail', setApplicantEmail)} 
                             placeholder="Enter your email"
                         />
                         {getErrorMessage('applicantEmail') && <div className="text-danger">{getErrorMessage('applicantEmail')}</div>}
@@ -126,7 +126,7 @@ const FormEmail = forwardRef((props, ref) => {
                             id="subject"
                             name="subject"
                             value={subject}
-                            onChange={handleChange('subject', setSubject)} // Aggiungi onChange
+                            onChange={handleChange('subject', setSubject)}
                             placeholder="Enter the subject"
                         />
                         {getErrorMessage('subject') && <div className="text-danger">{getErrorMessage('subject')}</div>}
@@ -139,7 +139,7 @@ const FormEmail = forwardRef((props, ref) => {
                             id="text"
                             name="text"
                             value={text}
-                            onChange={handleChange('text', setText)} // Aggiungi onChange
+                            onChange={handleChange('text', setText)}
                             placeholder="Enter your message"
                         />
                         {getErrorMessage('text') && <div className="text-danger">{getErrorMessage('text')}</div>}

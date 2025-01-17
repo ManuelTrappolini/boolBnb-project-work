@@ -30,7 +30,6 @@ const MessageController = {
                 const ownerId = results[0].owner_id;
 
                 // 2. Retrieve the owner's email
-
                 const queryGetOwnerEmail = 'SELECT email FROM owners WHERE id = ?';
 
                 connection.query(queryGetOwnerEmail, [ownerId], (err, results) => {
@@ -70,7 +69,7 @@ const MessageController = {
                                     to: applicant_email,
                                     from: process.env.EMAIL_USER,
                                     subject: `You send a message to ${ownerEmail} in BoolBnB`,
-                                    text: `You send this message: ${text}`,
+                                    text: `You send this message "${text}" to ${ownerEmail}. you will be contacted soon, thank you`,
                                 };
 
                                 return sgMail.send(applicant_mail);

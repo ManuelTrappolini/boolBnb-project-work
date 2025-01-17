@@ -4,10 +4,9 @@ import AddReview from "../components/AddReview"
 import HeartCounter from "../components/HeartsCounter"
 import { FaFan, FaShower, FaBed, FaAccessibleIcon, FaUtensils, FaParking, FaPaw, FaTree, FaSmoking, FaTv, FaWifi } from 'react-icons/fa';
 import FormEmail from "../components/EmailForm";
-import { Link } from 'react-router-dom';
 
 export default function DetailApartmentPage() {
-    const { id } = useParams()
+    const { slug } = useParams()
     const [apartment, setApartment] = useState()
     const [triggerFetch, setTriggerFetch] = useState(false);
 
@@ -25,9 +24,8 @@ export default function DetailApartmentPage() {
     };
 
 
-
     useEffect(() => {
-        fetch(`http://localhost:3002/apartments/${id}`)
+        fetch(`http://localhost:3002/apartments/${slug}`)
             .then((res) => res.json())
             .then((data) => setApartment(data))
             .catch((error) => console.error("Errore nel recupero dei post:", error));
@@ -135,7 +133,7 @@ export default function DetailApartmentPage() {
 
                     {/* Sezione recensioni */}
                     <div className="my-5">
-                        <AddReview apartmentId={id} onReviewSubmit={() => setTriggerFetch(!triggerFetch)} />
+                        <AddReview apartmentId={apartment.id} onReviewSubmit={() => setTriggerFetch(!triggerFetch)} />
                     </div>
                     <div className="row mt-5">
                         <h3 className="fw-bold mb-4">{apartment.reviews.length} Reviews</h3>
@@ -160,7 +158,7 @@ export default function DetailApartmentPage() {
                             <p className="text-muted">No reviews available for this apartment.</p>
                         )}
                     </div>
-                    <FormEmail ref={emailFormRef} id="emailForm" />
+                    <FormEmail ref={emailFormRef} id="emailForm" apartmentId={apartment.id}/>
                 </div>
 
             ) : (

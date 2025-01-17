@@ -17,7 +17,7 @@ const HeartCounter = ({ cardId, initialVotes }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ votes: newVoteCount }),
+                body: JSON.stringify({ vote: newVoteCount, apartmentId: cardId }),
             });
 
             if (!response.ok) {
