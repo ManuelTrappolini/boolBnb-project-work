@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 export default function RegistrationPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -15,44 +16,52 @@ export default function RegistrationPage() {
     };
 
     return (
-        <div className="container d-flex justify-content-center align-items-center min-vh-100">
-            <div className="rounded py-4 px-5 shadow-lg">
-                <h2 className="text-center">Register</h2>
+        <div className="d-flex justify-content-center align-items-center min-vh-100 registration-container">
+            <div className="login-box p-4 shadow-lg rounded-lg">
+                <h2 className="text-center text-white mb-4">Register</h2>
                 <form onSubmit={handleRegisterSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="form-control my-2"
-                    />
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="form-control my-2"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="form-control my-2"
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="form-control my-2"
-                    />
-                    <div className="d-flex gap-2">
-                        <button type="submit" className="btn btn-success w-50">Register</button>
-                        <button type="button" className="btn btn-danger w-50" onClick={() => navigate('/')}>Cancel</button>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="form-control my-3 py-3 input-style"
+                        />
+                    </div>
+                    <div className="input-group">
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="form-control my-3 py-3 input-style"
+                        />
+                    </div>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className="form-control my-3 py-3 input-style"
+                        />
+                    </div>
+                    <div className="input-group">
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="form-control my-3 py-3 input-style"
+                        />
+                    </div>
+                    <div className="d-flex gap-3">
+                        <button type="submit" className="btn btn-primary w-100 py-3 btn-style">Register</button>
                     </div>
                 </form>
             </div>
         </div>
     );
 }
+
