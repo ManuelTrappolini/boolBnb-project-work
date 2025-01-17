@@ -70,6 +70,23 @@ const MessageController = {
                                 console.error('Error sending email:', error);
                                 res.status(500).json({ error: 'Error sending email.' });
                             });
+
+                        const applicant_mail = {
+                            to: applicant_email,
+                            from: process.env.EMAIL_USER,
+                            subject: `Send message to ${ownerEmail}`,
+                            text: `You send this message: ${text}`,
+                        };
+
+                        sgMail.send(applicant_mail)
+                            .then(() => {
+                                // 6. Positive response
+                                res.status(200).json({ message: 'Email sent successfully and message saved in database!' });
+                            })
+                            .catch((error) => {
+                                console.error('Error sending email:', error);
+                                res.status(500).json({ error: 'Error sending email.' });
+                            });
                     });
                 });
             });

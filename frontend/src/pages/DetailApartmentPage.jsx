@@ -116,7 +116,7 @@ export default function DetailApartmentPage() {
                         <AddReview apartmentId={id} onReviewSubmit={() => setTriggerFetch(!triggerFetch)} />
                     </div>
                     <div className="row mt-5">
-                        <h3 className="fw-bold mb-4">Reviews</h3>
+                        <h3 className="fw-bold mb-4">{apartment.reviews.length} Reviews</h3>
                         {apartment.reviews && apartment.reviews.length > 0 ? (
                             apartment.reviews.map((review) => (
                                 <div key={review.id} className="col-12 mb-4">

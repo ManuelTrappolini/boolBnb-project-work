@@ -127,6 +127,23 @@ header {
     }
 }
 
+/* addApartmentForm */
+
+.input-error {
+    border: 1px solid red;
+}
+
+
+.overlay-success{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.90);
+    width: 100%;
+    height: 110%;
+}
+
 
 /* footer */
 
@@ -166,7 +183,9 @@ footer {
             max-width: 100% !important;
         }
     }
+
 }
+
 
 
 .login-container {
@@ -230,3 +249,4 @@ footer {
     border-radius: 10px;
     padding: 15px;
 }
+
