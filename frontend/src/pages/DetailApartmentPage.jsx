@@ -1,13 +1,30 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useParams } from "react-router"
 import AddReview from "../components/AddReview"
 import HeartCounter from "../components/HeartsCounter"
 import { FaFan, FaShower, FaBed, FaAccessibleIcon, FaUtensils, FaParking, FaPaw, FaTree, FaSmoking, FaTv, FaWifi } from 'react-icons/fa';
+import FormEmail from "../components/EmailForm";
+import { Link } from 'react-router-dom';
 
 export default function DetailApartmentPage() {
     const { id } = useParams()
     const [apartment, setApartment] = useState()
     const [triggerFetch, setTriggerFetch] = useState(false);
+
+    const emailFormRef = useRef(null)
+
+
+    const handleScrollToForm = () => {
+        console.log(emailFormRef.current)
+        if (emailFormRef.current) {
+            emailFormRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+        }
+    };
+
+
 
     useEffect(() => {
         fetch(`http://localhost:3002/apartments/${id}`)
@@ -102,11 +119,17 @@ export default function DetailApartmentPage() {
                                         {apartment.square_meters} m²
                                     </li>
                                 </ul>
-                                <a href="#send-email">
-                                    <button className="btn btn-primary w-100">
-                                        <i className="bi bi-envelope me-2"></i> Talk with owner
-                                    </button>
-                                </a>
+
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleScrollToForm();
+                                    }}
+                                    className="btn btn-primary w-100"
+                                >
+                                    <i className="bi bi-envelope me-2"></i> Talk with owner
+                                </button>
+
                             </div>
                         </div>
                     </div>
@@ -138,6 +161,7 @@ export default function DetailApartmentPage() {
                             <p className="text-muted">No reviews available for this apartment.</p>
                         )}
                     </div>
+                    <FormEmail ref={emailFormRef} id="emailForm" />
                 </div>
 
             ) : (
