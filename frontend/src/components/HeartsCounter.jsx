@@ -1,45 +1,17 @@
-import { useState, useEffect } from "react"
-import { useParams } from "react-router"
+import { useState } from 'react';
 
+const HeartCounter = ({ cardId, initialVotes }) => {
+    const [votes, setVotes] = useState(initialVotes);
+    const [isFilled, setIsFilled] = useState(false)
 
-
-const HeartCounter = ({ cardId, onHeartClick }) => {
-    const [votes, setVotes] = useState(0)
-    
-    // Load initial vote from database
-
-    useEffect(() => {
-
-        if (!cardId) {
-            console.error("ID dell'appartamento mancante");
-            return;
-        }
-
-        const fetchVotes = async () => {
-            try {
-                const response = await fetch(`http://localhost:3002/apartments/${cardId}`)
-                const data = await response.json();
-                setVotes(data.votes)
-            }
-            catch (error) {
-                console.error('Cannot add vote', error)
-            }
-        }
-
-        fetchVotes();
-    }, [cardId])
-
-    //Handle click on heart to add vote
-
+    // Gestire il click sul cuore
     const handleVote = async () => {
         console.log('click registrato');
-        
 
         try {
             const newVoteCount = votes + 1;
 
-            // Sending the request to the backend to update the vote
-
+            // Invia la richiesta al backend per aggiornare il voto
             const response = await fetch(`http://localhost:3002/apartments/${cardId}/vote`, {
                 method: 'POST',
                 headers: {
@@ -52,26 +24,24 @@ const HeartCounter = ({ cardId, onHeartClick }) => {
                 throw new Error('Error updating the vote');
             }
 
-            //Update votes number
-
+            // Aggiorna il numero di voti
             setVotes(newVoteCount);
+
+            setIsFilled(true);
+            setTimeout(() => setIsFilled(false), 300)
+            
         } catch (error) {
             console.error('Error sending the vote', error);
         }
     };
 
+
     return (
-        <div>
-            <button onClick={() => {
-                handleVote();
-                onHeartClick();
-            }} 
-            style={{ background: 'transparent', border: 'none' }}
-            >
-                <span style={{ fontSize: '20px', color: 'gray' }}>&#10084;</span> {/* Cuore */}
-            </button>
+        <div onClick={handleVote} className="heart-counter">
+            <span>{votes}</span>
+            <i className={`bi ${isFilled ? 'bi-heart-fill' : 'bi-heart'}`}></i>
         </div>
-    )
+    );
 }
 
-export default HeartCounter
+export default HeartCounter;
