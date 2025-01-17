@@ -9,28 +9,32 @@ const FormEmail = forwardRef((props, ref) => {
     const [errorMessages, setErrorMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const { id } = useParams();
+    const maxTextLength = 500;
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Effettua la validazione
+        // Validation data
         const errors = [];
         if (!name) errors.push({ field: 'name', message: 'Name is required.' });
         if (!applicantEmail) errors.push({ field: 'applicantEmail', message: 'Email is required.' });
         if (!subject) errors.push({ field: 'subject', message: 'Subject is required.' });
         if (!text) errors.push({ field: 'text', message: 'Message is required.' });
-
+        if (text.length < 15 || text.length > maxTextLength) {
+            errors.push({ field: 'text', message: `The message must be at least 15 characters long and no longer than ${maxTextLength} characters.` });
+        }
         if (errors.length > 0) {
             setErrorMessages(errors);
             return;
         }
 
         try {
-            // Invia la richiesta POST al backend con `fetch`
+            // Send request to backend with fetch
             const response = await fetch(`http://localhost:3002/apartments/${id}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', // Imposta il tipo di contenuto
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     name,
@@ -40,17 +44,19 @@ const FormEmail = forwardRef((props, ref) => {
                 }),
             });
 
-            // Gestisci la risposta
+            // Handle response
+
             if (response.ok) {
                 const responseData = await response.json();
                 setSuccessMessage('Your message has been sent successfully!');
 
-                // Nascondi il messaggio di successo dopo 3 secondi
+                // Hide message after 2 sec
+
                 setTimeout(() => {
                     setSuccessMessage('');
                 }, 3000);
 
-                // Svuota i campi del form
+                // Empty form field
                 setName('');
                 setApplicantEmail('');
                 setSubject('');
@@ -67,7 +73,8 @@ const FormEmail = forwardRef((props, ref) => {
 
     const handleChange = (field, setter) => (e) => {
         setter(e.target.value);
-        // Rimuovi l'errore per il campo modificato
+
+        // Remove error for fill form field
         setErrorMessages((prevErrors) =>
             prevErrors.filter((error) => error.field !== field)
         );
@@ -94,12 +101,12 @@ const FormEmail = forwardRef((props, ref) => {
                         <label htmlFor="name" className="form-label">Your Name*</label>
                         <input
                             type="text"
-                            className={`form-control form-control-lg ${getInputClass('name')}`}
+                            className={`form-control  ${getInputClass('name')}`}
                             id="name"
                             name="name"
                             value={name}
-                            onChange={handleChange('name', setName)} // Aggiungi onChange
-                            placeholder="Enter your full name"
+                            onChange={handleChange('name', setName)}
+                            placeholder="e.g. John Smith"
                         />
                         {getErrorMessage('name') && <div className="text-danger">{getErrorMessage('name')}</div>}
                     </div>
@@ -108,12 +115,12 @@ const FormEmail = forwardRef((props, ref) => {
                         <label htmlFor="applicantEmail" className="form-label">Your Email*</label>
                         <input
                             type="email"
-                            className={`form-control form-control-lg ${getInputClass('applicantEmail')}`}
+                            className={`form-control ${getInputClass('applicantEmail')}`}
                             id="applicantEmail"
                             name="applicantEmail"
                             value={applicantEmail}
-                            onChange={handleChange('applicantEmail', setApplicantEmail)} // Aggiungi onChange
-                            placeholder="Enter your email"
+                            onChange={handleChange('applicantEmail', setApplicantEmail)}
+                            placeholder="e.g. example@gmail.com"
                         />
                         {getErrorMessage('applicantEmail') && <div className="text-danger">{getErrorMessage('applicantEmail')}</div>}
                     </div>
@@ -122,11 +129,11 @@ const FormEmail = forwardRef((props, ref) => {
                         <label htmlFor="subject" className="form-label">Subject*</label>
                         <input
                             type="text"
-                            className={`form-control form-control-lg ${getInputClass('subject')}`}
+                            className={`form-control ${getInputClass('subject')}`}
                             id="subject"
                             name="subject"
                             value={subject}
-                            onChange={handleChange('subject', setSubject)} // Aggiungi onChange
+                            onChange={handleChange('subject', setSubject)}
                             placeholder="Enter the subject"
                         />
                         {getErrorMessage('subject') && <div className="text-danger">{getErrorMessage('subject')}</div>}
@@ -135,13 +142,14 @@ const FormEmail = forwardRef((props, ref) => {
                     <div className="col-12">
                         <label htmlFor="text" className="form-label">Your Message*</label>
                         <textarea
-                            className={`form-control form-control-lg ${getInputClass('text')}`}
+                            className={`form-control  ${getInputClass('text')}`}
                             id="text"
                             name="text"
                             value={text}
-                            onChange={handleChange('text', setText)} // Aggiungi onChange
+                            onChange={handleChange('text', setText)}
                             placeholder="Enter your message"
                         />
+                        <small>{text.length}/{maxTextLength} characters</small>
                         {getErrorMessage('text') && <div className="text-danger">{getErrorMessage('text')}</div>}
                     </div>
 

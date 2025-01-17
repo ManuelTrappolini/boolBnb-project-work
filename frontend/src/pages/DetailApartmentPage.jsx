@@ -30,7 +30,7 @@ export default function DetailApartmentPage() {
         fetch(`http://localhost:3002/apartments/${id}`)
             .then((res) => res.json())
             .then((data) => setApartment(data))
-            .catch((error) => console.error("Errore nel recupero dei post:", error));
+            .catch((error) => console.error("Error retrieving posts:", error));
     }, [triggerFetch])
 
     const services = apartment?.services?.map(service => service.id_service) || []
@@ -56,7 +56,7 @@ export default function DetailApartmentPage() {
             {apartment ? (
 
                 <div className="container my-5">
-                    {/* Immagine principale */}
+                    {/* Main picture */}
                     <div className="row">
                         <div className="col-12">
                             <img
@@ -68,7 +68,7 @@ export default function DetailApartmentPage() {
                         </div>
                     </div>
 
-                    {/* Titolo e breve descrizione */}
+                    {/* Title and short description */}
                     <div className="row mt-4">
                         <div className="col-12 col-lg-8">
                             <div className="d-flex justify-content-between align-items-center">
@@ -96,7 +96,7 @@ export default function DetailApartmentPage() {
 
                         </div>
 
-                        {/* Dettagli principali */}
+                        {/* Main details */}
                         <div className="col-12 col-lg-4">
                             <div className="bg-light p-4 rounded shadow-sm">
                                 <h5 className="fw-semibold mb-4">Details</h5>
@@ -133,33 +133,39 @@ export default function DetailApartmentPage() {
                         </div>
                     </div>
 
-                    {/* Sezione recensioni */}
+                    {/* Review Section */}
                     <div className="my-5">
                         <AddReview apartmentId={id} onReviewSubmit={() => setTriggerFetch(!triggerFetch)} />
                     </div>
                     <div className="row mt-5">
                         <h3 className="fw-bold mb-4">{apartment.reviews.length} Reviews</h3>
-                        {apartment.reviews && apartment.reviews.length > 0 ? (
-                            apartment.reviews.map((review) => (
-                                <div key={review.id} className="col-12 mb-4">
-                                    <div className="p-3 border rounded shadow-sm">
-                                        <div className="d-flex justify-content-between align-items-center">
-                                            <h5 className="fw-semibold mb-1">{review.author_name}</h5>
-                                            <small className="text-muted">
-                                                {new Date(review.date).toLocaleDateString()}
-                                            </small>
+
+
+                        {/* Scroll container */}
+                        <div className="reviews-scrollable">
+                            {apartment.reviews && apartment.reviews.length > 0 ? (
+                                apartment.reviews.map((review) => (
+                                    <div key={review.id} className="col-12 mb-4">
+                                        <div className="p-3 border rounded shadow-sm">
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <h5 className="fw-semibold mb-1">{review.author_name}</h5>
+                                                <small className="text-muted">
+                                                    {new Date(review.date).toLocaleDateString()}
+                                                </small>
+                                            </div>
+                                            <p className="mb-2 text-muted py-2">
+                                                Stayed for {review.days_of_stay} days
+                                            </p>
+                                            <p className="mb-0 pt-2">{review.description}</p>
                                         </div>
-                                        <p className="mb-2 text-muted py-2">
-                                            Stayed for {review.days_of_stay} days
-                                        </p>
-                                        <p className="mb-0 pt-2">{review.description}</p>
                                     </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-muted">No reviews available for this apartment.</p>
-                        )}
+                                ))
+                            ) : (
+                                <p className="text-muted">No reviews available for this apartment.</p>
+                            )}
+                        </div>
                     </div>
+
                     <FormEmail ref={emailFormRef} id="emailForm" />
                 </div>
 
