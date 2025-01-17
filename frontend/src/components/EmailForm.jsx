@@ -101,7 +101,7 @@ const FormEmail = forwardRef((props, ref) => {
                         <label htmlFor="name" className="form-label">Your Name*</label>
                         <input
                             type="text"
-                            className={`form-control form-control-lg ${getInputClass('name')}`}
+                            className={`form-control  ${getInputClass('name')}`}
                             id="name"
                             name="name"
                             value={name}
@@ -115,7 +115,7 @@ const FormEmail = forwardRef((props, ref) => {
                         <label htmlFor="applicantEmail" className="form-label">Your Email*</label>
                         <input
                             type="email"
-                            className={`form-control form-control-lg ${getInputClass('applicantEmail')}`}
+                            className={`form-control ${getInputClass('applicantEmail')}`}
                             id="applicantEmail"
                             name="applicantEmail"
                             value={applicantEmail}
@@ -129,7 +129,7 @@ const FormEmail = forwardRef((props, ref) => {
                         <label htmlFor="subject" className="form-label">Subject*</label>
                         <input
                             type="text"
-                            className={`form-control form-control-lg ${getInputClass('subject')}`}
+                            className={`form-control ${getInputClass('subject')}`}
                             id="subject"
                             name="subject"
                             value={subject}
@@ -142,7 +142,7 @@ const FormEmail = forwardRef((props, ref) => {
                     <div className="col-12">
                         <label htmlFor="text" className="form-label">Your Message*</label>
                         <textarea
-                            className={`form-control form-control-lg ${getInputClass('text')}`}
+                            className={`form-control  ${getInputClass('text')}`}
                             id="text"
                             name="text"
                             value={text}
