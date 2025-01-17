@@ -198,3 +198,35 @@ footer {
     border-radius: 10px;
     padding: 15px;
 }
+
+
+.registration-container {
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    min-height: 100vh;
+}
+
+
+.login-box {
+    background-color: rgba(0, 0, 0, 0.7);
+    max-width: 400px;
+    width: 100%;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.input-style {
+    font-size: 1.1rem;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+
+.btn-style {
+    background-color: #007bff;
+    border: none;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    padding: 15px;
+}
