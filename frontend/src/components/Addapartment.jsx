@@ -14,7 +14,8 @@ export default function AddApartment() {
     const [selectedServices, setSelectedServices] = useState([]);
     const [errorMessages, setErrorMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
-    const [isFormVisible, setIsFormVisible] = useState(true); // Stato per gestire la visibilità del form
+    const [isFormVisible, setIsFormVisible] = useState(true);
+    const maxDescriptionLength = 500;
 
     const servicesList = [
         { id: 3, name: 'Air-Conditioner', icon: <FaFan /> },
@@ -72,6 +73,9 @@ export default function AddApartment() {
         if (city.trim() === '') errors.push({ field: 'city', message: 'City is required.' });
 
         if (description.trim() === '') errors.push({ field: 'description', message: 'Description is required.' });
+        if (description.length < 15 || description.length > maxDescriptionLength) {
+            errors.push({ field: 'description', message: `The description must be at least 15 characters long and no longer than ${maxDescriptionLength} characters.` });
+        }
         else if (description.length < 5) errors.push({ field: 'description', message: 'Description must be at least 5 characters long.' });
 
         // Se ci sono errori, mostriamo il messaggio di errore
@@ -133,6 +137,15 @@ export default function AddApartment() {
         return error ? error.message : '';
     };
 
+    const handleChange = (field, setter) => (e) => {
+        setter(e.target.value);
+
+        // Rimuovi gli errori per il campo specifico
+        setErrorMessages((prevErrors) =>
+            prevErrors.filter((error) => error.field !== field)
+        );
+    };
+
     return (
         <div className="container py-5">
             {isFormVisible ? (
@@ -144,12 +157,12 @@ export default function AddApartment() {
                         <div className="input-group">
                             <input
                                 type="text"
-                                className={`form-control form-control-lg ${getInputClass('title')}`}
+                                className={`form-control ${getInputClass('title')}`}
                                 id="title"
                                 name="title"
                                 value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder='example Appartamento Cagliari con vista mare'
+                                onChange={handleChange('title', setTitle)}
+                                placeholder='e.g. Appartamento Cagliari con vista mare'
                             />
                             {getErrorMessage('title') && (
                                 <div className="position-absolute top-50 end-0 translate-middle-y me-3">
@@ -165,12 +178,12 @@ export default function AddApartment() {
                         <div className="input-group">
                             <input
                                 type="number"
-                                className={`form-control form-control-lg ${getInputClass('rooms_number')}`}
+                                className={`form-control  ${getInputClass('rooms_number')}`}
                                 id="rooms"
                                 name="rooms"
                                 value={rooms_number}
-                                onChange={(e) => setRooms_number(e.target.value)}
-                                placeholder='example 3'
+                                onChange={handleChange('rooms_number', setRooms_number)}
+                                placeholder='e.g. 3'
                                 min="1"
                             />
                             {getErrorMessage('rooms_number') && (
@@ -187,12 +200,12 @@ export default function AddApartment() {
                         <div className="input-group">
                             <input
                                 type="number"
-                                className={`form-control form-control-lg ${getInputClass('beds')}`}
+                                className={`form-control ${getInputClass('beds')}`}
                                 id="beds"
                                 name="beds"
                                 value={beds}
-                                onChange={(e) => setBeds(e.target.value)}
-                                placeholder='example 3'
+                                onChange={handleChange('beds', setBeds)}
+                                placeholder='e.g. 3'
                                 min="1"
                             />
                             {getErrorMessage('beds') && (
@@ -209,12 +222,12 @@ export default function AddApartment() {
                         <div className="input-group">
                             <input
                                 type="number"
-                                className={`form-control form-control-lg ${getInputClass('bathrooms')}`}
+                                className={`form-control  ${getInputClass('bathrooms')}`}
                                 id="bathrooms"
                                 name="bathrooms"
                                 value={bathrooms}
-                                onChange={(e) => setBathrooms(e.target.value)}
-                                placeholder='example 2'
+                                onChange={handleChange('bathrooms', setBathrooms)}
+                                placeholder='e.g. 2'
                                 min="1"
                             />
                             {getErrorMessage('bathrooms') && (
@@ -231,12 +244,12 @@ export default function AddApartment() {
                         <div className="input-group">
                             <input
                                 type="number"
-                                className={`form-control form-control-lg ${getInputClass('square_meters')}`}
+                                className={`form-control  ${getInputClass('square_meters')}`}
                                 id="square_meters"
                                 name="square_meters"
                                 value={square_meters}
-                                onChange={(e) => setSquare_meters(e.target.value)}
-                                placeholder='example 180'
+                                onChange={handleChange('square_meters', setSquare_meters)}
+                                placeholder='e.g. 180'
                                 min="1"
                             />
                             {getErrorMessage('square_meters') && (
@@ -253,12 +266,12 @@ export default function AddApartment() {
                         <div className="input-group">
                             <input
                                 type="text"
-                                className={`form-control form-control-lg ${getInputClass('address')}`}
+                                className={`form-control  ${getInputClass('address')}`}
                                 id="address"
                                 name="address"
                                 value={address}
-                                onChange={(e) => setAddress(e.target.value)}
-                                placeholder='example Via Chiaia'
+                                onChange={handleChange('address', setAddress)}
+                                placeholder='e.g. Via Chiaia'
                                 autoComplete='off'
                             />
                             {getErrorMessage('address') && (
@@ -275,12 +288,12 @@ export default function AddApartment() {
                         <div className="input-group">
                             <input
                                 type="text"
-                                className={`form-control form-control-lg ${getInputClass('city')}`}
+                                className={`form-control  ${getInputClass('city')}`}
                                 id="city"
                                 name="city"
                                 value={city}
-                                onChange={(e) => setCity(e.target.value)}
-                                placeholder='example Napoli'
+                                onChange={handleChange('city', setCity)}
+                                placeholder='e.g. Napoli'
                                 autoComplete='off'
                             />
                             {getErrorMessage('city') && (
@@ -296,19 +309,21 @@ export default function AddApartment() {
                         <label htmlFor="description" className="form-label">Description*</label>
                         <div className="input-group">
                             <textarea
-                                className={`form-control form-control-lg ${getInputClass('description')}`}
+                                className={`form-control ${getInputClass('description')}`}
                                 id="description"
                                 name="description"
                                 value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                onChange={handleChange('description', setDescription)}
                                 placeholder='Describe your apartment, at least 5 characters required'
                             />
+
                             {getErrorMessage('description') && (
                                 <div className="position-absolute top-50 end-0 translate-middle-y me-3">
                                     <FaExclamationCircle className="text-danger" />
                                 </div>
                             )}
                         </div>
+                        <small>{description.length}/{maxDescriptionLength} characters</small>
                         {getErrorMessage('description') && <div className="text-danger">{getErrorMessage('description')}</div>}
                     </div>
 
@@ -316,14 +331,38 @@ export default function AddApartment() {
                         <label htmlFor="picture_url" className="form-label">Insert image of the apartment</label>
                         <input
                             type="text"
-                            className={`form-control form-control-lg ${getInputClass('picture_url')}`}
+                            className={`form-control ${getInputClass('picture_url')}`}
                             id="picture_url"
                             name="picture_url"
                             value={picture_url}
-                            onChange={(e) => setPicture_url(e.target.value)}
+                            onChange={handleChange('picture_url', setPicture_url)}
                             placeholder="https://example.com/"
                         />
+
                         {getErrorMessage('picture_url') && <div className="text-danger">{getErrorMessage('picture_url')}</div>}
+                    </div>
+
+                    <div className="col-12">
+                        <label htmlFor="services" className="form-label">Select Services*</label>
+                        <div className="d-flex flex-wrap">
+                            {servicesList.map((service) => (
+                                <div className="form-check me-4" key={service.id}>
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        id={`service-${service.id}`}
+                                        value={service.id}
+                                        checked={selectedServices.includes(service.id)}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    <label className="form-check-label" htmlFor={`service-${service.id}`}>
+                                        <span className="me-2">{service.icon}</span>
+                                        {service.name}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                        {getErrorMessage('services') && <div className="text-danger">{getErrorMessage('services')}</div>}
                     </div>
 
                     <div className="col-12">
