@@ -104,7 +104,7 @@ function validateReviewData(data) {
 /* add a review */
 function addReview(req, res) {
     const { author_name, description, days_of_stay, author_email } = req.body;
-    const apartment_slug = req.params.slug;  // Modificato: recupera lo slug invece dell'id
+    const apartmentId = req.params.id;
 
     /* validation data */
     const errors = validateReviewData({ author_name, description, days_of_stay, author_email });
@@ -122,26 +122,15 @@ function addReview(req, res) {
     const seconds = String(date.getSeconds()).padStart(2, '0');
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-    // Recupera l'ID dell'appartamento tramite lo slug
-    const checkApartmentExistence = 'SELECT id FROM apartments WHERE slug = ?';  // Modificato: usa lo slug
-    connection.query(checkApartmentExistence, [apartment_slug], (err, results) => {
+    // Inserisci la recensione nel database
+    const sql = 'INSERT INTO reviews (author_name, author_email, description, date, days_of_stay, id_apartment) VALUES (?, ?, ?, ?, ?, ?)';
+    const reviewData = [author_name, author_email, description, formattedDate, days_of_stay, apartmentId];
+
+    connection.query(sql, reviewData, (err, result) => {
         if (err) return res.status(500).json({ error: err });
-
-        if (results.length === 0) {
-            return res.status(404).json({ error: 'Apartment not found' });
-        }
-
-        const apartment_id = results[0].id;  // Recuperato l'ID dell'appartamento tramite lo slug
-
-        // Inserisci la recensione nel database
-        const sql = 'INSERT INTO reviews (author_name, author_email, description, date, days_of_stay, ID_apartment) VALUES (?, ?, ?, ?, ?, ?)';
-        const reviewData = [author_name, author_email, description, formattedDate, days_of_stay, apartment_id];
-
-        connection.query(sql, reviewData, (err, result) => {
-            if (err) return res.status(500).json({ error: err });
-            res.status(201).json({ success: true, reviewId: result.insertId });
-        });
+        res.status(201).json({ success: true, reviewId: result.insertId });
     });
+
 }
 
 /* registered user add an apartment */
@@ -230,16 +219,11 @@ function updateApartment(req, res) {
 }
 
 /* add vote to apartment */
-
-
 function voteApartment(req, res) {
-    const apartmentId = parseInt(req.params.id);  // Ora ricevi l'ID dell'appartamento
-    console.log(`ID ricevuto dal backend: ${apartmentId}`);  // Verifica che l'ID sia corretto
-    if (isNaN(apartmentId)) {
-        return res.status(400).json({ error: 'Invalid apartment ID' });
-    }
+    const { vote, apartmentId } = req.body
+
     // Controlla se l'appartamento esiste usando l'ID
-    const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';  // Cambia da slug a id
+    const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
     connection.query(checkApartmentExistence, [apartmentId], (err, results) => {
         if (err) return res.status(500).json({ error: err });
 
@@ -248,15 +232,11 @@ function voteApartment(req, res) {
             return res.status(404).json({ error: 'Apartment not found' });
         }
 
-        // ID dell'appartamento trovato
-        console.log(`ID dell'appartamento trovato: ${apartmentId}`);
-
         // Incrementa il voto utilizzando l'ID
-        const updateVoteSql = 'UPDATE apartments SET vote = vote + 1 WHERE id = ?';  // Usa l'ID per l'aggiornamento
-        connection.query(updateVoteSql, [apartmentId], (err, result) => {
+        const updateVoteSql = 'UPDATE apartments SET vote= ? WHERE id = ?';
+        connection.query(updateVoteSql, [vote, apartmentId], (err, result) => {
             if (err) return res.status(500).json({ error: err });
 
-            console.log(`Voto aggiornato per l'appartamento con ID: ${apartmentId}`);
             res.json({ success: true, vote: result.affectedRows });
         });
     });

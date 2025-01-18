@@ -10,7 +10,7 @@ router.get('/', ApartmentsController.index)
 
 router.get('/:slug', ApartmentsController.show)
 
-router.post('/:slug/review', ApartmentsController.addReview)
+router.post('/:id/review', ApartmentsController.addReview)
 
 router.post('/addapartment', /* authenticateToken, */ ApartmentsController.addApartment)
 
@@ -26,7 +26,7 @@ router.post('/register', UserController.register)
 
 router.post('/:id', MessageController.sendMessage)
 
-router.post('/apartments/vote/:id', ApartmentsController.voteApartment);
+router.post('/:id/vote', ApartmentsController.voteApartment);
 
 
 

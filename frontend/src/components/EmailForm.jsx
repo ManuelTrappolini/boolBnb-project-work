@@ -1,19 +1,23 @@
 import React, { useState, forwardRef } from 'react';
-import { useParams } from 'react-router';
 
-const FormEmail = forwardRef((props, ref) => {
+const FormEmail = forwardRef(({apartmentId}, ref) => {
     const [name, setName] = useState('');
     const [applicantEmail, setApplicantEmail] = useState('');
     const [subject, setSubject] = useState('');
     const [text, setText] = useState('');
     const [errorMessages, setErrorMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
-    const { id } = useParams();
+
+    const id = apartmentId;
+
     const maxTextLength = 500;
+
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(id);
+        
 
         // Validation data
         const errors = [];
@@ -30,7 +34,10 @@ const FormEmail = forwardRef((props, ref) => {
         }
 
         try {
+
+
             // Send request to backend with fetch
+
             const response = await fetch(`http://localhost:3002/apartments/${id}`, {
                 method: 'POST',
                 headers: {
@@ -106,7 +113,11 @@ const FormEmail = forwardRef((props, ref) => {
                             name="name"
                             value={name}
                             onChange={handleChange('name', setName)}
+
+                            
+
                             placeholder="e.g. John Smith"
+
                         />
                         {getErrorMessage('name') && <div className="text-danger">{getErrorMessage('name')}</div>}
                     </div>
@@ -119,6 +130,9 @@ const FormEmail = forwardRef((props, ref) => {
                             id="applicantEmail"
                             name="applicantEmail"
                             value={applicantEmail}
+
+                            
+
                             onChange={handleChange('applicantEmail', setApplicantEmail)}
                             placeholder="e.g. example@gmail.com"
                         />
