@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import HeartCounter from '../components/HeartsCounter';
+import { FaFan, FaShower, FaBed, FaAccessibleIcon, FaUtensils, FaParking, FaPaw, FaTree, FaSmoking, FaTv, FaWifi, FaQuestionCircle } from 'react-icons/fa';
 
 export default function HomePage() {
     const [cards, setCards] = useState([]);
@@ -21,11 +22,26 @@ export default function HomePage() {
         };
     };
 
+    const servicesList = [
+        { id: 3, name: 'Air-Conditioner', icon: <FaFan /> },
+        { id: 5, name: 'Bathroom Essentials', icon: <FaShower /> },
+        { id: 6, name: 'Bed linen', icon: <FaBed /> },
+        { id: 11, name: 'Disabled Access', icon: <FaAccessibleIcon /> },
+        { id: 4, name: 'Eat-in Kitchen', icon: <FaUtensils /> },
+        { id: 1, name: 'Free Parking', icon: <FaParking /> },
+        { id: 9, name: 'Pet allowed', icon: <FaPaw /> },
+        { id: 2, name: 'Private Garden', icon: <FaTree /> },
+        { id: 10, name: 'Smoker', icon: <FaSmoking /> },
+        { id: 7, name: 'Television', icon: <FaTv /> },
+        { id: 8, name: 'Wi-Fi', icon: <FaWifi /> },
+    ];
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3002/apartments');
+                const response = await fetch('http://localhost:3002/apartments/service');
                 const data = await response.json();
+                console.log(data);
 
                 if (data && data.apartments) {
                     setCards(data.apartments);
@@ -87,20 +103,37 @@ export default function HomePage() {
                                         <p className="mb-0">{card.address}, {card.city}</p>
                                     </div>
 
-                                    <div className="d-flex align-items-center justify-content-end">
-                                        <p className="m-0">{card.vote}</p>
-                                        <HeartCounter cardId={card.id} onHeartClick={() => setTriggerFetch(!triggerFetch)} />
-                                    </div>
                                 </div>
-                                {card.services?.length > 0 ? (
-                                    card.services.map((service, index) => (
-                                        <li key={index} className="pb-2 col-6 col-sm-4">
-                                            <span>{service.icon} {service.name}</span>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <p className="text-muted">No services available for this apartment.</p>
-                                )}
+                                <div className='ps-2'>
+
+                                    {card.services?.length > 0 ? (
+                                        <div className="d-flex flex-wrap justify-content-start gap-2 mt-3">
+                                            {card.services.map((service, index) => {
+                                                const matchedService = servicesList.find(item => item.id === service.id_service);
+
+                                                if (matchedService) {
+                                                    return (
+                                                        <div key={index} className="service-icon d-flex align-items-center justify-content-center bg-light border rounded-circle" style={{ width: '40px', height: '40px' }}>
+                                                            {matchedService.icon}
+                                                        </div>
+                                                    );
+                                                } else {
+                                                    return (
+                                                        <div key={index} className="service-icon d-flex align-items-center justify-content-center bg-light border rounded-circle text-muted" style={{ width: '40px', height: '40px' }}>
+                                                            <FaQuestionCircle />
+                                                        </div>
+                                                    );
+                                                }
+                                            })}
+                                        </div>
+                                    ) : (
+                                        <p className="text-muted">No services available for this apartment.</p>
+                                    )}
+                                </div>
+                                <div className="d-flex align-items-center justify-content-end">
+                                    <p className="m-0">{card.vote}</p>
+                                    <HeartCounter cardId={card.id} onHeartClick={() => setTriggerFetch(!triggerFetch)} />
+                                </div>
                             </div>
                         </div>
                     )) : (

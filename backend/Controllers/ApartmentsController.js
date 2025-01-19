@@ -57,7 +57,7 @@ function showAll(req, res) {
             connection.query(servicesSql, (err, servicesResults) => {
                 if (err) return res.status(500).json({ err: err });
 
-                // Mappa ogni appartamento con le recensioni e i servizi corrispondenti
+                // Struttura i dati con chiave "apartments"
                 const apartments = apartmentsResults.map(apartment => {
                     const reviews = reviewsResults.filter(review => review.id_apartment === apartment.id);
                     const services = servicesResults.filter(service => service.id_apartment === apartment.id);
@@ -69,7 +69,8 @@ function showAll(req, res) {
                     };
                 });
 
-                res.json(apartments);
+                // Responde con l'oggetto "apartments"
+                res.json({ apartments });
             });
         });
     });
