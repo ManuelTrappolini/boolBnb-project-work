@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom'; // Per accedere alla location
+import { Link, useLocation } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import HeartCounter from '../components/HeartsCounter';
 
@@ -10,9 +10,8 @@ export default function HomePage() {
     const [minRooms, setMinRooms] = useState('');
     const [minBeds, setMinBeds] = useState('');
 
-    const location = useLocation(); // Usato per ottenere i parametri della query string
+    const location = useLocation();
 
-    // Funzione per ottenere i parametri della query string
     const getQueryParams = () => {
         const params = new URLSearchParams(location.search);
         return {
@@ -22,53 +21,53 @@ export default function HomePage() {
         };
     };
 
-    // Caricamento iniziale delle carte dall'API
     useEffect(() => {
-        fetch('http://localhost:3002/apartments')
-            .then(response => response.json())
-            .then(data => {
-                console.log('Risposta dell\'API:', data.apartments);
-                setCards(data.apartments);
-            })
-            .catch(error => console.error('Errore nel caricamento dei dati:', error));
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3002/apartments');
+                const data = await response.json();
+
+                if (data && data.apartments) {
+                    setCards(data.apartments);
+                } else {
+                    console.error('Formato della risposta non valido:', data);
+                }
+            } catch (error) {
+                console.error('Errore nel caricamento dei dati:', error);
+            }
+        };
+
+        fetchData();
     }, [triggerFetch]);
 
-    // Aggiorna lo stato in base ai parametri della query string
     useEffect(() => {
         const { search, minRooms, minBeds } = getQueryParams();
         setSearch(search);
         setMinRooms(minRooms);
         setMinBeds(minBeds);
-        console.log(search, minBeds, minRooms);
+    }, [location.search]);
 
-    }, [location.search]); // Aggiorna ogni volta che cambia la query string
-
-    // Filtrare i risultati in base ai parametri della query string
     const filteredCards = cards.filter((card) => {
-        const matchesSearch = search ? card.address.toLowerCase().includes(search.toLowerCase()) || card.city.toLowerCase().includes(search.toLowerCase()) : true;
+        if (!card) return false;
+        const matchesSearch = search ? card.address?.toLowerCase().includes(search.toLowerCase()) || card.city?.toLowerCase().includes(search.toLowerCase()) : true;
         const matchesMinRooms = minRooms ? card.rooms_number >= parseInt(minRooms) : true;
         const matchesMinBeds = minBeds ? card.beds >= parseInt(minBeds) : true;
 
         return matchesSearch && matchesMinRooms && matchesMinBeds;
     });
 
-
     return (
         <>
             <div className="container my-5">
-                {/* SearchBar */}
-                <div>
-                    <SearchBar
-                        search={search}
-                        setSearch={setSearch}
-                        minRooms={minRooms}
-                        setMinRooms={setMinRooms}
-                        minBeds={minBeds}
-                        setMinBeds={setMinBeds}
-                    />
-                </div>
+                <SearchBar
+                    search={search}
+                    setSearch={setSearch}
+                    minRooms={minRooms}
+                    setMinRooms={setMinRooms}
+                    minBeds={minBeds}
+                    setMinBeds={setMinBeds}
+                />
 
-                {/* Risultati */}
                 <div className="row">
                     {filteredCards.length !== 0 ? filteredCards.map((card) => (
                         <div key={card.id} className="col-md-3 col-12 p-3">
@@ -93,6 +92,15 @@ export default function HomePage() {
                                         <HeartCounter cardId={card.id} onHeartClick={() => setTriggerFetch(!triggerFetch)} />
                                     </div>
                                 </div>
+                                {card.services?.length > 0 ? (
+                                    card.services.map((service, index) => (
+                                        <li key={index} className="pb-2 col-6 col-sm-4">
+                                            <span>{service.icon} {service.name}</span>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <p className="text-muted">No services available for this apartment.</p>
+                                )}
                             </div>
                         </div>
                     )) : (

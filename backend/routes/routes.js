@@ -8,6 +8,8 @@ const MessageController = require('../Controllers/MessageController');
 
 router.get('/', ApartmentsController.index)
 
+router.get('/service', ApartmentsController.showAll)
+
 router.get('/:id', ApartmentsController.show)
 
 router.post('/:id/review', ApartmentsController.addReview)

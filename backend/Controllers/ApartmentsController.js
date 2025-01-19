@@ -41,6 +41,41 @@ function show(req, res) {
 
 }
 
+function showAll(req, res) {
+    const apartmentsSql = 'SELECT * FROM apartments';
+    const reviewsSql = 'SELECT * FROM reviews';
+    const servicesSql = 'SELECT * FROM apartment_service';
+
+    connection.query(apartmentsSql, (err, apartmentsResults) => {
+        if (err) return res.status(500).json({ err: err });
+
+        if (apartmentsResults.length === 0) return res.status(404).json({ err: 'No apartments found' });
+
+        connection.query(reviewsSql, (err, reviewsResults) => {
+            if (err) return res.status(500).json({ err: err });
+
+            connection.query(servicesSql, (err, servicesResults) => {
+                if (err) return res.status(500).json({ err: err });
+
+                // Mappa ogni appartamento con le recensioni e i servizi corrispondenti
+                const apartments = apartmentsResults.map(apartment => {
+                    const reviews = reviewsResults.filter(review => review.id_apartment === apartment.id);
+                    const services = servicesResults.filter(service => service.id_apartment === apartment.id);
+
+                    return {
+                        ...apartment,
+                        reviews,
+                        services
+                    };
+                });
+
+                res.json(apartments);
+            });
+        });
+    });
+}
+
+
 /* Validation server side */
 function validateApartmentData(data) {
     const errors = [];
@@ -238,4 +273,4 @@ function voteApartment(req, res) {
 }
 
 
-module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment }
+module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment, showAll }
