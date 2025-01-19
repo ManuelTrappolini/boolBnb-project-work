@@ -10,6 +10,7 @@ export default function AddApartment() {
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [picture_url, setPicture_url] = useState('');
+    const [pictureFile, setPictureFile] = useState(null);
     const [description, setDescription] = useState('');
     const [selectedServices, setSelectedServices] = useState([]);
     const [errorMessages, setErrorMessages] = useState([]);
@@ -87,18 +88,30 @@ export default function AddApartment() {
         // Se non ci sono errori, resettiamo gli errori e inviamo il form
         setErrorMessages([]);
 
-        const formData = {
-            title,
-            rooms_number: parseInt(rooms_number),
-            beds: parseInt(beds),
-            bathrooms: parseInt(bathrooms),
-            square_meters: parseInt(square_meters),
-            address,
-            city,
-            picture_url,
-            description,
-            services: selectedServices
-        };
+        const formData = new FormData();
+
+        // Aggiungi i campi del form a FormData
+        formData.append('title', title);
+        formData.append('rooms_number', rooms_number);
+        formData.append('beds', beds);
+        formData.append('bathrooms', bathrooms);
+        formData.append('square_meters', square_meters);
+        formData.append('address', address);
+        formData.append('city', city);
+        formData.append('description', description);
+        selectedServices.forEach((serviceId) => formData.append('services[]', serviceId));
+
+        // Aggiungi l'immagine: URL o file
+        if (picture_url) {
+            formData.append('picture_url', picture_url);
+        }
+        if (pictureFile) {
+            formData.append('picture_file', pictureFile);
+        }
+        // Verifica il contenuto di FormData
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
 
         // Simula l'invio dei dati al backend
         fetch('http://localhost:3002/apartments/addapartment', {
@@ -135,6 +148,13 @@ export default function AddApartment() {
         // Restituisce il messaggio di errore per un campo specifico
         const error = errorMessages.find(error => error.field === field);
         return error ? error.message : '';
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        console.log(file);
+        setPictureFile(file);
+
     };
 
     const handleChange = (field, setter) => (e) => {
@@ -340,6 +360,25 @@ export default function AddApartment() {
                         />
 
                         {getErrorMessage('picture_url') && <div className="text-danger">{getErrorMessage('picture_url')}</div>}
+                    </div>
+
+                    {/* Campo File per caricare l'immagine */}
+                    <div className="col-12">
+                        <label htmlFor="picture_file" className="form-label">Upload an image</label>
+                        <input
+                            type="file"
+                            className={`form-control ${getInputClass('picture_file')}`}
+                            id="picture_file"
+                            name="picture_file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                        />
+                        {pictureFile && (
+                            <div className="mt-2">
+                                <img src={URL.createObjectURL(pictureFile)} alt="Preview" width="100" />
+                            </div>
+                        )}
+                        {getErrorMessage('picture_file') && <div className="text-danger">{getErrorMessage('picture_file')}</div>}
                     </div>
 
                     <div className="col-12">

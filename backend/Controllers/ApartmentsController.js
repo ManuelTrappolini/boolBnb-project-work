@@ -1,5 +1,10 @@
 
+
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 const connection = require('../database/connection')
+
 
 /* show apartments */
 function index(req, res) {
@@ -133,52 +138,115 @@ function addReview(req, res) {
 
 }
 
-/* registered user add an apartment */
-function addApartment(req, res) {
-    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, services, city, slug } = req.body;
-    const apartmentSlug = slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = path.resolve(__dirname, '../uploads');
 
-    /* validation data */
-    const errors = validateApartmentData({ title, rooms_number, beds, bathrooms, square_meters, address, description, services });
-    if (errors.length > 0) {
-        return res.status(400).json({ success: false, errors });
-    }
+        // Cartella dove salviamo le immagini
 
-
-    /* const owner_id = req.user.userId; */
-    const owner_id = 2;
-
-    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, vote, owner_id, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)';
-    const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, owner_id, apartmentSlug];
-
-
-    // add apartment
-    connection.query(sql, apartmentData, (err, result) => {
-        if (err) return res.status(500).json({ error: err });
-
-        const apartmentId = result.insertId;
-
-        // check if services exist
-        if (services && Array.isArray(services) && services.length > 0) {
-            const bridgeSql = 'INSERT INTO apartment_service (id_apartment, id_service) VALUES ?';
-
-            const bridgeData = services.map(serviceId => [apartmentId, serviceId]);
-
-
-            connection.query(bridgeSql, [bridgeData], (bridgeErr) => {
-                if (bridgeErr) return res.status(500).json({ error: bridgeErr });
-                res.status(201).json({ success: true, apartmentId });
-            });
-        } else {
-
-
-            // if there are not the services
-
-            res.status(201).json({ success: true, apartmentId });
+        // Crea la cartella se non esiste
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true }); // Crea la cartella se non esiste
         }
-    });
+
+        cb(null, uploadDir); // Destinazione del file
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9); // Nome univoco per il file
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname)); // Aggiungi l'estensione originale
+    }
+});
+
+// Limita le dimensioni e i tipi di file consentiti
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // Limita la dimensione a 10MB
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.mimetype)) {
+            return cb(new Error('Only JPEG, PNG, or GIF files are allowed'), false);
+        }
+        cb(null, true);
+    }
+}).single('picture_file'); // Utilizza 'picture_file' come nome del campo
+
+// Funzione per validare i dati dell'appartamento
+function validateApartmentData(data) {
+    const errors = [];
+    if (!data.title || !data.rooms_number || !data.beds || !data.bathrooms || !data.square_meters || !data.address || !data.city) {
+        errors.push({ message: 'All fields are required' });
+    }
+    return errors;
 }
 
+// Controller per aggiungere un appartamento
+function addApartment(req, res) {
+    // Aggiungi un log per vedere il corpo della richiesta
+    console.log("Received body:", req.body);
+    console.log("Received file:", req.file);
+
+    // Usa multer per gestire l'upload del file
+    upload(req, res, (err) => {
+        if (err) {
+            console.log("Error during file upload:", err); // Log dell'errore di upload
+            return res.status(400).json({ error: err.message }); // Gestione errori upload
+        }
+
+        console.log("File uploaded successfully:", req.file); // Log per vedere il file caricato
+
+        // Estrai i dati dal body della richiesta
+        const { title, rooms_number, beds, bathrooms, square_meters, address, description, services, city, slug } = req.body;
+        const pictureUrl = req.file ? req.file.filename : null; // Ottieni il nome del file caricato
+
+        // Verifica se l'immagine è stata caricata correttamente
+        if (!pictureUrl) {
+            return res.status(400).json({ error: 'Image is required' });
+        }
+
+        // Genera lo slug se non presente
+        const apartmentSlug = slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+
+        // Valida i dati dell'appartamento
+        const errors = validateApartmentData({ title, rooms_number, beds, bathrooms, square_meters, address, description, services });
+        if (errors.length > 0) {
+            return res.status(400).json({ success: false, errors });
+        }
+
+        // Definisci l'ID dell'owner (può venire da req.user se autenticato)
+        const owner_id = 2; // Sostituisci con il valore reale dell'utente autenticato
+
+        // SQL per inserire i dati dell'appartamento
+        const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, vote, owner_id, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)';
+        const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, city, pictureUrl, description, owner_id, apartmentSlug];
+
+        // Inserisci l'appartamento nel database
+        connection.query(sql, apartmentData, (err, result) => {
+            if (err) {
+                console.error("Error inserting apartment:", err); // Log dell'errore nel database
+                return res.status(500).json({ error: err });
+            }
+
+            const apartmentId = result.insertId;
+
+            // Se sono presenti servizi, inseriscili nel database
+            if (services && Array.isArray(services) && services.length > 0) {
+                const bridgeSql = 'INSERT INTO apartment_service (id_apartment, id_service) VALUES ?';
+                const bridgeData = services.map(serviceId => [apartmentId, serviceId]);
+
+                connection.query(bridgeSql, [bridgeData], (bridgeErr) => {
+                    if (bridgeErr) {
+                        console.error("Error inserting apartment services:", bridgeErr);  // Log degli errori dei servizi
+                        return res.status(500).json({ error: bridgeErr });
+                    }
+                    res.status(201).json({ success: true, apartmentId });
+                });
+            } else {
+                // Se non ci sono servizi, rispondi con successo
+                res.status(201).json({ success: true, apartmentId });
+            }
+        });
+    });
+}
 /* registered user update the apartment */
 function updateApartment(req, res) {
     const apartment_id = req.params.id;
@@ -245,4 +313,4 @@ function voteApartment(req, res) {
 
 
 
-module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment }
+module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment, upload }

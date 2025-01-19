@@ -6,13 +6,14 @@ const ApartmentsController = require('../Controllers/ApartmentsController')
 const UserController = require('../Controllers/UsersController');
 const MessageController = require('../Controllers/MessageController');
 
+
 router.get('/', ApartmentsController.index)
 
 router.get('/:slug', ApartmentsController.show)
 
 router.post('/:id/review', ApartmentsController.addReview)
 
-router.post('/addapartment', /* authenticateToken, */ ApartmentsController.addApartment)
+router.post('/addapartment', ApartmentsController.upload, /* authenticateToken, */ ApartmentsController.addApartment)
 
 router.put('/:id', /* authenticateToken, */ ApartmentsController.updateApartment)
 
