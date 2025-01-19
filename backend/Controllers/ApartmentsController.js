@@ -42,7 +42,7 @@ function show(req, res) {
 }
 
 function showAll(req, res) {
-    const apartmentsSql = 'SELECT * FROM apartments';
+    const apartmentsSql = 'SELECT * FROM apartments ORDER BY vote DESC';
     const reviewsSql = 'SELECT * FROM reviews';
     const servicesSql = 'SELECT * FROM apartment_service';
 

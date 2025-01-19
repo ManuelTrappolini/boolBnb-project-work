@@ -104,10 +104,38 @@ export default function HomePage() {
                                     </div>
 
                                 </div>
+                                <div className="">
+                                    <div className="bg-light px-3 rounded shadow-sm">
+                                        <ul className="list-unstyled">
+                                            <div className='d-flex justify-content-between'>
+
+                                                <li className="mb-2">
+                                                    <i className="bi bi-house-door me-2"></i>
+                                                    {card.rooms_number} Rooms
+                                                </li>
+                                                <li className="mb-2">
+                                                    <i className="bi bi-person-fill me-2"></i>
+                                                    {card.beds} Beds
+                                                </li>
+                                            </div>
+                                            <div className='d-flex justify-content-between'>
+
+                                                <li className="mb-2">
+                                                    <i className="bi bi-droplet me-2"></i>
+                                                    {card.bathrooms} Bathrooms
+                                                </li>
+                                                <li className="mb-2">
+                                                    <i className="bi bi-arrows-fullscreen me-2"></i>
+                                                    {card.square_meters} m²
+                                                </li>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <div className='ps-2'>
 
                                     {card.services?.length > 0 ? (
-                                        <div className="d-flex flex-wrap justify-content-start gap-2 mt-3">
+                                        <div className="d-flex flex-wrap justify-content-start gap-2">
                                             {card.services.map((service, index) => {
                                                 const matchedService = servicesList.find(item => item.id === service.id_service);
 
