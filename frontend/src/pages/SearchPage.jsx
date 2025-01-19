@@ -72,6 +72,7 @@ export default function HomePage() {
         return matchesSearch && matchesMinRooms && matchesMinBeds;
     });
 
+
     return (
         <>
             <div className="container my-5">
@@ -158,9 +159,15 @@ export default function HomePage() {
                                         <p className="text-muted">No services available for this apartment.</p>
                                     )}
                                 </div>
-                                <div className="d-flex align-items-center justify-content-end">
-                                    <p className="m-0">{card.vote}</p>
-                                    <HeartCounter cardId={card.id} onHeartClick={() => setTriggerFetch(!triggerFetch)} />
+                                <div className='d-flex justify-content-between ps-3 pt-2'>
+
+                                    <div className='pt-1'>
+                                        recensioni: {card.reviews.length}
+                                    </div>
+                                    <div className="d-flex align-items-center justify-content-end pe-1">
+                                        <p className="m-0">{card.vote}</p>
+                                        <HeartCounter cardId={card.id} onHeartClick={() => setTriggerFetch(!triggerFetch)} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
