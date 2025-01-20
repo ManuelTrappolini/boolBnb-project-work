@@ -165,8 +165,8 @@ export default function HomePage() {
                                         recensioni: {card.reviews.length}
                                     </div>
                                     <div className="d-flex align-items-center justify-content-end pe-1">
-                                        <p className="m-0">{card.vote}</p>
-                                        <HeartCounter cardId={card.id} onHeartClick={() => setTriggerFetch(!triggerFetch)} />
+
+                                        <HeartCounter cardId={card.id} initialVotes={card.vote} />
                                     </div>
                                 </div>
                             </div>
