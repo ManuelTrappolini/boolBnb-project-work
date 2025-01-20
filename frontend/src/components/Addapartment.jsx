@@ -114,10 +114,10 @@ export default function AddApartment() {
             method: 'POST',
 
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`  // Aggiungi il token come header
+
+                'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(formData),
+            body: formData,
 
         })
             .then((res) => res.json())
