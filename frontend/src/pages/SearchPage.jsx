@@ -89,7 +89,7 @@ export default function HomePage() {
                     {filteredCards.length !== 0 ? filteredCards.map((card) => (
                         <div key={card.id} className="col-md-3 col-12 p-3">
                             <div className="card h-100">
-                                <Link to={`/apartments/${card.id}`} className="h-75">
+                                <Link to={`/apartments/${card.slug}`} className="h-75">
                                     <img
                                         src={card.picture_url || "https://www.classcountryhomes.it/wp-content/uploads/2021/07/appartamento-roma-centro-storico-con-terrazzo.jpg"}
                                         className="card-img-top h-100"
@@ -98,7 +98,7 @@ export default function HomePage() {
                                 </Link>
                                 <div className="card-body d-flex flex-column justify-content-between">
                                     <div>
-                                        <Link to={`/apartments/${card.id}`} className="text-black">
+                                        <Link to={`/apartments/${card.slug}`} className="text-black">
                                             <h6 className="card-title">{card.title}</h6>
                                         </Link>
                                         <p className="mb-0">{card.address}, {card.city}</p>
@@ -142,13 +142,13 @@ export default function HomePage() {
 
                                                 if (matchedService) {
                                                     return (
-                                                        <div key={index} className="service-icon d-flex align-items-center justify-content-center bg-light border rounded-circle" style={{ width: '40px', height: '40px' }}>
+                                                        <div key={index} className="service-icon d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
                                                             {matchedService.icon}
                                                         </div>
                                                     );
                                                 } else {
                                                     return (
-                                                        <div key={index} className="service-icon d-flex align-items-center justify-content-center bg-light border rounded-circle text-muted" style={{ width: '40px', height: '40px' }}>
+                                                        <div key={index} className="service-icon d-flex align-items-center justify-content-center bg-light  text-muted" style={{ width: '40px', height: '40px' }}>
                                                             <FaQuestionCircle />
                                                         </div>
                                                     );
@@ -162,7 +162,7 @@ export default function HomePage() {
                                 <div className='d-flex justify-content-between ps-3 pt-2'>
 
                                     <div className='pt-1'>
-                                        recensioni: {card.reviews.length}
+                                        Recensioni: {card.reviews.length}
                                     </div>
                                     <div className="d-flex align-items-center justify-content-end pe-1">
 
