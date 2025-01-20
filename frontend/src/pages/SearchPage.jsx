@@ -114,7 +114,7 @@ export default function HomePage() {
                         <div className="card h-100">
                             <Link to={`/apartments/${card.slug}`} className="h-75">
                                 <img
-                                    src={card.picture_url || "https://www.classcountryhomes.it/wp-content/uploads/2021/07/appartamento-roma-centro-storico-con-terrazzo.jpg"}
+                                    src={card.picture_url.startsWith('http') ? card.picture_url : `http://localhost:3002${card.picture_url}`}
                                     className="card-img-top h-100"
                                     alt={card.title}
                                 />
