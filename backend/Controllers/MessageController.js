@@ -30,7 +30,6 @@ const MessageController = {
                 const ownerId = results[0].owner_id;
 
                 // 2. Retrieve the owner's email
-
                 const queryGetOwnerEmail = 'SELECT email FROM owners WHERE id = ?';
 
                 connection.query(queryGetOwnerEmail, [ownerId], (err, results) => {
@@ -63,9 +62,25 @@ const MessageController = {
                         // 5. Sending the email via SendGrid
                         sgMail.send(mailOptions)
                             .then(() => {
-                                // 6. Positive response
+
+
+                                //Configure the email to send to the applican
+                                const applicant_mail = {
+                                    to: applicant_email,
+                                    from: process.env.EMAIL_USER,
+                                    subject: `You send a message to ${ownerEmail} in BoolBnB`,
+                                    text: `You send this message "${text}" to ${ownerEmail}. you will be contacted soon, thank you`,
+                                };
+
+                                return sgMail.send(applicant_mail);
+                            })
+
+                            .then(() => {
+                                // 7. Positive response after both emails are sent successfully
                                 res.status(200).json({ message: 'Email sent successfully and message saved in database!' });
                             })
+
+
                             .catch((error) => {
                                 console.error('Error sending email:', error);
                                 res.status(500).json({ error: 'Error sending email.' });

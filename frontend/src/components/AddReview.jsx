@@ -11,9 +11,10 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
     const [fieldErrors, setFieldErrors] = useState({});
     const maxDescriptionLength = 500;
 
-    /* validate form */
+    // Funzione di validazione del form
     const validateForm = () => {
         const errors = {};
+
         if (!authorName.trim()) errors.authorName = 'Name is required.';
         if (!authorEmail.trim()) {
             errors.authorEmail = 'Email is required.';
@@ -34,6 +35,7 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
         return Object.keys(errors).length === 0;
     };
 
+    // Gestione invio form
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -79,20 +81,24 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
         }
     };
 
+    // Funzione per gestire il cambiamento nei campi e rimuovere gli errori
+    const handleInputChange = (field, setter) => (e) => {
+        setter(e.target.value);
+        setFieldErrors((prevErrors) => {
+            const newErrors = { ...prevErrors };
+            delete newErrors[field]; // Rimuove l'errore per il campo quando si inizia a riscrivere
+            return newErrors;
+        });
+    };
+
     return (
         <div className="container px-0">
-            {/* Overlay for success message */}
+            {/* Overlay per messaggio di successo */}
             {successMessageVisible ? (
-
                 <div className="d-flex align-items-center alert alert-success" role="alert">
-                    <span className="text-success me-2 fs-5">
-                        ✅
-                    </span>
-                    <p className="text-success m-0 fw-bold fs-6">
-                        Review added successfully!
-                    </p>
+                    <span className="text-success me-2 fs-5">✅</span>
+                    <p className="text-success m-0 fw-bold fs-6">Review added successfully!</p>
                 </div>
-
             ) : (
                 <>
                     <h3 className="fw-bold mb-4">Add a Review</h3>
@@ -106,7 +112,7 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
                                     id="authorName"
                                     value={authorName}
                                     placeholder="e.g. John Smith"
-                                    onChange={(e) => setAuthorName(e.target.value)}
+                                    onChange={handleInputChange('authorName', setAuthorName)}
                                     aria-invalid={!!fieldErrors.authorName}
                                     aria-describedby="authorNameError"
                                 />
@@ -121,7 +127,7 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
                                     id="authorEmail"
                                     value={authorEmail}
                                     placeholder="e.g. example@gmail.com"
-                                    onChange={(e) => setAuthorEmail(e.target.value)}
+                                    onChange={handleInputChange('authorEmail', setAuthorEmail)}
                                     aria-invalid={!!fieldErrors.authorEmail}
                                     aria-describedby="authorEmailError"
                                     autoComplete="off"
@@ -137,7 +143,7 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
                                     id="daysOfStay"
                                     value={daysOfStay}
                                     placeholder="Enter a number"
-                                    onChange={(e) => setDaysOfStay(e.target.value)}
+                                    onChange={handleInputChange('daysOfStay', setDaysOfStay)}
                                     aria-invalid={!!fieldErrors.daysOfStay}
                                     aria-describedby="daysOfStayError"
                                     min="1"
@@ -154,7 +160,7 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
                                 value={description}
                                 rows="3"
                                 placeholder="Describe your stay..."
-                                onChange={(e) => setDescription(e.target.value)}
+                                onChange={handleInputChange('description', setDescription)}
                                 aria-invalid={!!fieldErrors.description}
                                 aria-describedby="descriptionError"
                             ></textarea>
@@ -169,12 +175,12 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
                         <div className="d-flex align-items-center">
                             <button type="submit" className="btn btn-primary me-3">Submit Review</button>
                             <div>
-                                {errorMessage && <p role="alert" className="m-0 text-danger" >{errorMessage}</p>}
+                                {errorMessage && <p role="alert" className="m-0 text-danger">{errorMessage}</p>}
                             </div>
                         </div>
                     </form>
                 </>
             )}
         </div>
-    )
+    );
 }

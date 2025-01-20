@@ -10,36 +10,48 @@ function index(req, res) {
     })
 }
 
-/* show a specific apartment */
 function show(req, res) {
-    const id = req.params.id
-    const sql = 'SELECT * FROM apartments WHERE id = ? '
-    const reviewsSql = 'SELECT * FROM reviews WHERE id_apartment = ? ORDER BY date DESC'
-    const servicesSql = 'SELECT * FROM apartment_service WHERE id_apartment = ?'
+    const slug = req.params.slug;
+    console.log('Slug ricevuto dal client:', slug); // Log dello slug
 
-    connection.query(sql, [id], (err, results) => {
+    // Assicurati che lo slug non sia undefined o vuoto
+    if (!slug) {
+        console.error('Lo slug è undefined o vuoto');
+        return res.status(400).json({ error: 'Slug mancante' });
+    }
+
+    const sql = 'SELECT * FROM apartments WHERE slug = ?';
+    const reviewsSql = 'SELECT * FROM reviews WHERE id_apartment = ? ORDER BY date DESC';
+    const servicesSql = 'SELECT * FROM apartment_service WHERE id_apartment = ?';
+
+    connection.query(sql, [slug], (err, results) => {
         if (err) return res.status(500).json({ err: err });
 
-        if (results.length == 0) return res.status(404).json({ err: 'Apartment not found' });
+        if (results.length === 0) return res.status(404).json({ err: 'Apartment not found' });
 
-        connection.query(reviewsSql, [id], (err, reviewsResults) => {
+        const apartmentId = results[0].id;  // Prendi l'ID dell'appartamento
+
+        // Query per le recensioni
+        connection.query(reviewsSql, [apartmentId], (err, reviewsResults) => {
             if (err) return res.status(500).json({ err: err });
 
-            connection.query(servicesSql, [id], (err, servicesResults) => {
+            // Query per i servizi
+            connection.query(servicesSql, [apartmentId], (err, servicesResults) => {
                 if (err) return res.status(500).json({ err: err });
 
+                // Combina i risultati
                 const apartment = {
-                    ...results[0],
-                    reviews: reviewsResults,
-                    services: servicesResults
+                    ...results[0],  // Aggiungi i dettagli dell'appartamento
+                    reviews: reviewsResults,  // Aggiungi le recensioni
+                    services: servicesResults  // Aggiungi i servizi
                 };
 
-                res.json(apartment);
+                res.json(apartment);  // Invia la risposta con l'appartamento completo
             });
         });
     });
-
 }
+
 
 function showAll(req, res) {
     const apartmentsSql = 'SELECT * FROM apartments ORDER BY vote DESC';
@@ -75,6 +87,7 @@ function showAll(req, res) {
         });
     });
 }
+
 
 
 /* Validation server side */
@@ -127,7 +140,7 @@ function validateReviewData(data) {
 /* add a review */
 function addReview(req, res) {
     const { author_name, description, days_of_stay, author_email } = req.body;
-    const apartment_id = req.params.id;
+    const apartmentId = req.params.id;
 
     /* validation data */
     const errors = validateReviewData({ author_name, description, days_of_stay, author_email });
@@ -145,30 +158,21 @@ function addReview(req, res) {
     const seconds = String(date.getSeconds()).padStart(2, '0');
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
+    // Inserisci la recensione nel database
+    const sql = 'INSERT INTO reviews (author_name, author_email, description, date, days_of_stay, id_apartment) VALUES (?, ?, ?, ?, ?, ?)';
+    const reviewData = [author_name, author_email, description, formattedDate, days_of_stay, apartmentId];
 
-    const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
-    connection.query(checkApartmentExistence, [apartment_id], (err, results) => {
+    connection.query(sql, reviewData, (err, result) => {
         if (err) return res.status(500).json({ error: err });
-
-        if (results.length === 0) {
-            return res.status(404).json({ error: 'Apartment not found' });
-        }
-
-
-        const sql = 'INSERT INTO reviews (author_name, author_email, description, date, days_of_stay, ID_apartment) VALUES (?, ?, ?, ?, ?, ?) ';
-        const reviewData = [author_name, author_email, description, formattedDate, days_of_stay, apartment_id];
-
-        connection.query(sql, reviewData, (err, result) => {
-            if (err) return res.status(500).json({ error: err });
-            res.status(201).json({ success: true, reviewId: result.insertId });
-        });
+        res.status(201).json({ success: true, reviewId: result.insertId });
     });
+
 }
 
 /* registered user add an apartment */
 function addApartment(req, res) {
-    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, services, city } = req.body;
-
+    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, services, city, slug } = req.body;
+    const apartmentSlug = slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
     /* validation data */
     const errors = validateApartmentData({ title, rooms_number, beds, bathrooms, square_meters, address, description, services });
@@ -180,8 +184,8 @@ function addApartment(req, res) {
     /* const owner_id = req.user.userId; */
     const owner_id = 2;
 
-    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, vote, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)';
-    const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, owner_id];
+    const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, vote, owner_id, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)';
+    const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, owner_id, apartmentSlug];
 
 
     // add apartment
@@ -252,26 +256,31 @@ function updateApartment(req, res) {
 
 /* add vote to apartment */
 function voteApartment(req, res) {
-    const apartmentId = req.params.id
+    const { vote, apartmentId } = req.body
 
-    //Check if apartment exist
-
+    // Controlla se l'appartamento esiste usando l'ID
     const checkApartmentExistence = 'SELECT * FROM apartments WHERE id = ?';
     connection.query(checkApartmentExistence, [apartmentId], (err, results) => {
         if (err) return res.status(500).json({ error: err });
+
         if (results.length === 0) {
+            console.log("Appartamento non trovato");
             return res.status(404).json({ error: 'Apartment not found' });
         }
 
-        //Increment vote
-        const UpdateVoteSql = 'UPDATE apartments SET vote = vote + 1 WHERE id = ?';
-        connection.query(UpdateVoteSql, [apartmentId], (err, result) => {
-            if (err) return res.status(500).json({ error: err })
+        // Incrementa il voto utilizzando l'ID
+        const updateVoteSql = 'UPDATE apartments SET vote= ? WHERE id = ?';
+        connection.query(updateVoteSql, [vote, apartmentId], (err, result) => {
+            if (err) return res.status(500).json({ error: err });
 
-            res.json({ success: true, message: 'Vote incremented successfully' })
-        })
-    })
+            res.json({ success: true, vote: result.affectedRows });
+        });
+    });
 }
 
 
 module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment, showAll }
+
+
+
+

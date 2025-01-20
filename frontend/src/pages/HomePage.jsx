@@ -5,7 +5,6 @@ import HeartCounter from '../components/HeartsCounter';
 export default function HomePage() {
     const [cards, setCards] = useState([]);
     const [search, setSearch] = useState('')
-    const [triggerFetch, setTriggerFetch] = useState(false);
 
     useEffect(() => {
         fetch('http://localhost:3002/apartments')
@@ -15,7 +14,7 @@ export default function HomePage() {
                 setCards(data.apartments);
             })
             .catch(error => console.error('Errore nel caricamento dei dati:', error));
-    }, [triggerFetch]);
+    }, []);
 
     return (
         <>
@@ -27,7 +26,7 @@ export default function HomePage() {
                         <div key={card.id} className="col-md-3 col-12 p-3">
 
                             <div className="card h-100">
-                                <Link to={`http://localhost:5173/apartments/${card.id}`} className='h-75'>
+                                <Link to={`http://localhost:5173/apartments/${card.slug}`} className='h-75'>
                                     <img
                                         src={card.picture_url || "https://www.classcountryhomes.it/wp-content/uploads/2021/07/appartamento-roma-centro-storico-con-terrazzo.jpg"}
                                         className="card-img-top h-100"
@@ -36,15 +35,14 @@ export default function HomePage() {
                                 </Link>
                                 <div className="card-body d-flex flex-column justify-content-between">
                                     <div>
-                                        <Link to={`http://localhost:5173/apartments/${card.id}`} className='text-black'>
+                                        <Link to={`http://localhost:5173/apartments/${card.slug}`} className='text-black'>
                                             <h6 className="card-title">{card.title}</h6>
                                         </Link>
                                         <p className='mb-0'>{card.address}, {card.city}</p>
                                     </div>
 
                                     <div className='d-flex align-items-center justify-content-end'>
-                                        <p className='m-0'>{card.vote}</p>
-                                        <HeartCounter cardId={card.id} onHeartClick={() => setTriggerFetch(!triggerFetch)} />
+                                        <HeartCounter cardId={card.id} initialVotes={card.vote} />
                                     </div>
                                 </div>
                             </div>

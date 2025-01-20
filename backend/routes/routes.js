@@ -10,7 +10,8 @@ router.get('/', ApartmentsController.index)
 
 router.get('/service', ApartmentsController.showAll)
 
-router.get('/:id', ApartmentsController.show)
+
+router.get('/:slug', ApartmentsController.show)
 
 router.post('/:id/review', ApartmentsController.addReview)
 
@@ -28,7 +29,8 @@ router.post('/register', UserController.register)
 
 router.post('/:id', MessageController.sendMessage)
 
-router.post('/:id/vote', ApartmentsController.voteApartment)
+router.post('/:id/vote', ApartmentsController.voteApartment);
+
 
 
 module.exports = router
