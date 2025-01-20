@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-
+const upload = require('../middlewares/multer')
 const { authenticateToken } = require('../middlewares/auth');
 const ApartmentsController = require('../Controllers/ApartmentsController')
 const UserController = require('../Controllers/UsersController');
@@ -15,7 +15,7 @@ router.get('/:slug', ApartmentsController.show)
 
 router.post('/:id/review', ApartmentsController.addReview)
 
-router.post('/addapartment', /* authenticateToken, */ ApartmentsController.addApartment)
+router.post('/addapartment', /* authenticateToken, */ upload.single('picture_file'), ApartmentsController.addApartment)
 
 router.put('/:id', /* authenticateToken, */ ApartmentsController.updateApartment)
 

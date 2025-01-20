@@ -58,7 +58,7 @@ export default function DetailApartmentPage() {
                     <div className="row">
                         <div className="col-12">
                             <img
-                                src={apartment.picture_url}
+                                src={apartment.picture_url.startsWith('http') ? apartment.picture_url : `http://localhost:3002${apartment.picture_url}`}
                                 alt={apartment.title}
                                 className="img-fluid rounded shadow-lg"
                                 style={{ width: "100%", maxHeight: "500px", objectFit: "cover" }}
@@ -163,10 +163,10 @@ export default function DetailApartmentPage() {
                             )}
                         </div>
                     </div>
-                    <FormEmail ref={emailFormRef} id="emailForm" apartmentId={apartment.id}/>
+                    <FormEmail ref={emailFormRef} id="emailForm" apartmentId={apartment.id} />
 
 
-                    
+
 
                 </div>
 
