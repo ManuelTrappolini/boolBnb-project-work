@@ -110,80 +110,99 @@ export default function HomePage() {
 
             <div className="row">
                 {filteredCards.length !== 0 ? filteredCards.map((card) => (
-                    <div key={card.id} className="col-md-3 col-12 p-3">
+                    <div key={card.id} className="col-md-4 col-12 p-3" style={{ height: '650px' }}>
                         <div className="card h-100">
-                            <Link to={`/apartments/${card.slug}`} className="h-75">
-                                <img
-                                    src={card.picture_url.startsWith('http') ? card.picture_url : `http://localhost:3002${card.picture_url}`}
-                                    className="card-img-top h-100"
-                                    alt={card.title}
-                                />
-                            </Link>
-                            <div className="card-body d-flex flex-column justify-content-between">
-                                <div>
-                                    <Link to={`/apartments/${card.slug}`} className="text-black">
-                                        <h6 className="card-title">{card.title}</h6>
-                                    </Link>
-                                    <p className="mb-0">{card.address}, {card.city}</p>
-                                </div>
-                            </div>
-                            <div className="">
-                                <div className="bg-light px-3 rounded shadow-sm">
-                                    <ul className="list-unstyled">
-                                        <div className='d-flex justify-content-between'>
-                                            <li className="mb-2">
-                                                <i className="bi bi-house-door me-2"></i>
-                                                {card.rooms_number} Rooms
-                                            </li>
-                                            <li className="mb-2">
-                                                <i className="bi bi-person-fill me-2"></i>
-                                                {card.beds} Beds
-                                            </li>
-                                        </div>
-                                        <div className='d-flex justify-content-between'>
-                                            <li className="mb-2">
-                                                <i className="bi bi-droplet me-2"></i>
-                                                {card.bathrooms} Bathrooms
-                                            </li>
-                                            <li className="mb-2">
-                                                <i className="bi bi-arrows-fullscreen me-2"></i>
-                                                {card.square_meters} m²
-                                            </li>
-                                        </div>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div className='ps-2'>
-                                {card.services?.length > 0 ? (
-                                    <div className="d-flex flex-wrap justify-content-start gap-2">
-                                        {card.services.map((service, index) => {
-                                            const matchedService = servicesList.find(item => item.id === service.id_service);
+                            <div className='h-50'>
+                                {/* image */}
+                                <Link to={`/apartments/${card.slug}`}>
+                                    <img
+                                        src={card.picture_url.startsWith('http') ? card.picture_url : `http://localhost:3002${card.picture_url}`}
+                                        className="card-img-top h-100"
+                                        alt={card.title}
+                                    />
+                                </Link>
 
-                                            if (matchedService) {
-                                                return (
-                                                    <div key={index} className="service-icon d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-                                                        {matchedService.icon}
-                                                    </div>
-                                                );
-                                            } else {
-                                                return (
-                                                    <div key={index} className="service-icon d-flex align-items-center justify-content-center bg-light  text-muted" style={{ width: '40px', height: '40px' }}>
-                                                        <FaQuestionCircle />
-                                                    </div>
-                                                );
-                                            }
-                                        })}
-                                    </div>
-                                ) : (
-                                    <p className="text-muted">No services available for this apartment.</p>
-                                )}
                             </div>
-                            <div className='d-flex justify-content-between ps-3 pt-2'>
-                                <div className='pt-1'>
-                                    Recensioni: {card.reviews.length}
+
+                            <div className='d-flex flex-column justify-content-between h-50'>
+                                <div>
+
+                                    {/* info */}
+                                    <div className="p-3">
+
+                                        <Link to={`/apartments/${card.slug}`} className="text-black">
+                                            <h6 className="card-title">{card.title}</h6>
+                                        </Link>
+                                        <p className="mb-0">{card.address}, {card.city}</p>
+
+                                    </div>
+
+                                    {/* Details */}
+                                    <div className="px-3 rounded">
+                                        <ul className="list-unstyled">
+                                            <div className='d-flex justify-content-between'>
+                                                <li className="mb-2">
+                                                    <i className="bi bi-house-door me-2"></i>
+                                                    {card.rooms_number} Rooms
+                                                </li>
+                                                <li className="mb-2">
+                                                    <i className="bi bi-person-fill me-2"></i>
+                                                    {card.beds} Beds
+                                                </li>
+                                            </div>
+                                            <div className='d-flex justify-content-between'>
+                                                <li className="mb-2">
+                                                    <i className="bi bi-droplet me-2"></i>
+                                                    {card.bathrooms} Bathrooms
+                                                </li>
+                                                <li className="mb-2">
+                                                    <i className="bi bi-arrows-fullscreen me-2"></i>
+                                                    {card.square_meters} m²
+                                                </li>
+                                            </div>
+                                        </ul>
+                                    </div>
+
+                                    {/* service */}
+                                    <div className='ps-2'>
+                                        {card.services?.length > 0 ? (
+                                            <div className="d-flex flex-wrap justify-content-start gap-2">
+                                                {card.services.map((service, index) => {
+                                                    const matchedService = servicesList.find(item => item.id === service.id_service);
+
+                                                    if (matchedService) {
+                                                        return (
+                                                            <div key={index} className="service-icon d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                                                                {matchedService.icon}
+                                                            </div>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <div key={index} className="service-icon d-flex align-items-center justify-content-center bg-light  text-muted" style={{ width: '40px', height: '40px' }}>
+                                                                <FaQuestionCircle />
+                                                            </div>
+                                                        );
+                                                    }
+                                                })}
+                                            </div>
+                                        ) : (
+                                            <p className="text-muted">No services available for this apartment.</p>
+                                        )}
+                                    </div>
+
                                 </div>
-                                <div className="d-flex align-items-center justify-content-end pe-1">
-                                    <HeartCounter cardId={card.id} initialVotes={card.vote} />
+                                <div>
+
+                                    {/* review and heart */}
+                                    <div className='d-flex justify-content-between ps-3 pt-2 pb-3'>
+                                        <div className='pt-1'>
+                                            Recensioni: {card.reviews.length}
+                                        </div>
+                                        <div className="d-flex align-items-center justify-content-end pe-3">
+                                            <HeartCounter cardId={card.id} initialVotes={card.vote} />
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

@@ -223,7 +223,7 @@ function SearchForm() {
                     {/* Finestra popup dei servizi */}
                     {showServices && (
                         <div
-                            className="col-4 col-md-2"
+                            className="col-6 col-md-2"
                             style={{
                                 position: 'absolute',  // Posizionamento assoluto rispetto al form
 
