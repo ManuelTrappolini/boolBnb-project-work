@@ -10,8 +10,12 @@ router.get('/', ApartmentsController.index)
 
 router.get('/service', ApartmentsController.showAll)
 
+router.get('/city', ApartmentsController.indexCity)
+router.get('/indexService', ApartmentsController.indexService)
 
 router.get('/:slug', ApartmentsController.show)
+
+
 
 router.post('/:id/review', ApartmentsController.addReview)
 
