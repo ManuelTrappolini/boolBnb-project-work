@@ -13,8 +13,6 @@ server.use(express.json())
 
 server.use('/apartments', ApartmentsRouter)
 
-server.use('/users', ApartmentsRouter)
-
 server.get('/', (req, res) => {
     res.send('Server is running')
 })

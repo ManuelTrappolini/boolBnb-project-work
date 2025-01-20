@@ -7,6 +7,7 @@ export default function RegistrationPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [acceptTerms, setAcceptTerms] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const [errors, setErrors] = useState([]);
@@ -43,10 +44,14 @@ export default function RegistrationPage() {
             validationErrors.push({ field: 'confirmPassword', message: 'Passwords do not match.' });
         }
 
+        if (!acceptTerms) {
+            validationErrors.push({ field: 'acceptTerms', message: 'You must accept the terms and conditions.' });
+        }
+
         return validationErrors;
     };
 
-    const handleRegisterSubmit = (e) => {
+    const handleRegisterSubmit = async (e) => {
         e.preventDefault();
 
         const validationErrors = validateForm();
@@ -55,9 +60,38 @@ export default function RegistrationPage() {
             return;
         }
 
-        setErrors([]);
-        console.log('Form submitted:', { name, email, username, password });
-        navigate('/login');
+        try {
+            // Effettua la chiamata all'API utilizzando fetch
+            const response = await fetch('http://localhost:3002/apartments/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    username,
+                    password,
+                }),
+            });
+
+            // Controllo della risposta
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Registration failed.');
+            }
+
+            const data = await response.json();
+
+            // Gestione della risposta di successo
+            if (data.success) {
+                console.log('Registration successful:', data);
+                navigate('/login'); // Reindirizza alla pagina di login
+            }
+        } catch (error) {
+            // Gestione degli errori dell'API
+            setErrors([{ field: 'api', message: error.message }]);
+        }
     };
 
     const handleInputChange = (field, value) => {
@@ -77,6 +111,9 @@ export default function RegistrationPage() {
             case 'confirmPassword':
                 setConfirmPassword(value);
                 break;
+            case 'acceptTerms':
+                setAcceptTerms(value);
+                break;
             default:
                 break;
         }
@@ -93,136 +130,135 @@ export default function RegistrationPage() {
     };
 
     return (
-        <div className='d-flex mt-2'>
-            <div className='d-none d-lg-flex col-lg-6 flex-column justify-content-center aling-items-center ps-5 bg-photo'>
-                <div className="bg-overlay"></div> {/* Overlay sopra l'immagine */}
-                <div className="bg-content">
-                    <h2 className='fw-bold'>Become a Boolbnb host! <br /> Share your space, grow your income...</h2>
-                </div>
-            </div>
-            <div className=" col-12 col-lg-6">
-                <div className="p-5">
-                    <h2>Registration</h2>
-                    <span>Enter your details to register</span>
-                    <form onSubmit={handleRegisterSubmit} className='mt-4'>
-                        {/* Name */}
-                        <div className="mb-3">
-                            <label htmlFor="name" className="form-label fw-medium ">Name *</label>
-                            <input
-                                type="text"
-                                id='name'
-                                placeholder="e.g. Mario Rossi"
-                                value={name}
-                                onChange={(e) => handleInputChange('name', e.target.value)}
-                                className={`form-control py-3 input-style ${getInputClass('name')}`}
-                            />
-                            {getErrorMessage('name') && (
-                                <div className="text-danger small mt-1">{getErrorMessage('name')}</div>
-                            )}
-                        </div>
-
-                        {/* Email */}
-                        <div className="mb-3">
-                            <label htmlFor="email" className="form-label fw-medium ">Email *</label>
-                            <input
-                                type="email"
-                                id='email'
-                                placeholder="e.g. example@gmail.com"
-                                value={email}
-                                onChange={(e) => handleInputChange('email', e.target.value)}
-                                className={`form-control py-3 input-style ${getInputClass('email')}`}
-                            />
-                            {getErrorMessage('email') && (
-                                <div className="text-danger small mt-1">{getErrorMessage('email')}</div>
-                            )}
-                        </div>
-
-                        {/* Username */}
-                        <div className="mb-3">
-                            <label htmlFor="username" className="form-label fw-medium ">Username *</label>
-                            <input
-                                type="text"
-                                id='username'
-                                placeholder="e.g. Mario18"
-                                value={username}
-                                onChange={(e) => handleInputChange('username', e.target.value)}
-                                className={`form-control py-3 input-style ${getInputClass('username')}`}
-                            />
-                            {getErrorMessage('username') && (
-                                <div className="text-danger small mt-1">{getErrorMessage('username')}</div>
-                            )}
-                        </div>
-
-                        {/* Password */}
-                        <div className="mb-3 position-relative">
-                            <label htmlFor="password" className="form-label fw-medium ">Password *</label>
-                            <input
-                                type={passwordVisible ? 'text' : 'password'}
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e) => handleInputChange('password', e.target.value)}
-                                className={`form-control py-3 input-style   ${getInputClass('password')}`}
-                            />
-                            {/* Icona della visibilità della password */}
-                            {!errors.some((error) => error.field === 'password') && (
-                                <div
-                                    className="position-absolute top-eye end-0 translate-middle-y pe-3"
-                                    onMouseDown={() => setPasswordVisible(true)}
-                                    onMouseUp={() => setPasswordVisible(false)}
-                                    onMouseLeave={() => setPasswordVisible(false)}
-                                >
-                                    {passwordVisible ? (
-                                        <i className="bi bi-eye-slash"></i>
-                                    ) : (
-                                        <i className="bi bi-eye"></i>
+        <div className='d-flex'>
+            <div className='bg-photo py-5 col-12'>
+                <div className="bg-overlay"></div>
+                <div className="bg-content d-flex py-5 px-2 p-md-5 align-items-center">
+                    <div className=' d-none d-md-block col-lg-6 p-5'>
+                        <h2 className='fw-bold text-white'>
+                            Become an host! <br /> Share your space, grow your income...
+                        </h2>
+                        <p className='text-white fw-lighter mt-2'>
+                            Unlock the potential of your space and connect with travelers worldwide
+                        </p>
+                    </div>
+                    <div className="col-12 col-lg-6 bg-white text-black rounded">
+                        <div className="p-5">
+                            <h2>Registration</h2>
+                            <span>Enter your details to register</span>
+                            <form onSubmit={handleRegisterSubmit} className='mt-4'>
+                                {/* Name */}
+                                <div className="mb-3">
+                                    <label htmlFor="name" className="form-label fw-medium ">Name *</label>
+                                    <input
+                                        type="text"
+                                        id='name'
+                                        placeholder="e.g. Mario Rossi"
+                                        value={name}
+                                        onChange={(e) => handleInputChange('name', e.target.value)}
+                                        className={`form-control py-3 input-style ${getInputClass('name')}`}
+                                    />
+                                    {getErrorMessage('name') && (
+                                        <div className="text-danger small mt-1">{getErrorMessage('name')}</div>
                                     )}
                                 </div>
-                            )}
-                            {/* Icona di errore */}
-                            {getErrorMessage('password') && (
-                                <div className="text-danger small mt-1">{getErrorMessage('password')}</div>
-                            )}
-                        </div>
 
-                        {/* Confirm Password */}
-                        <div className="mb-3 position-relative">
-                            <label htmlFor="confirm-password" className="form-label fw-medium ">Confirm Password *</label>
-                            <input
-                                type={confirmPasswordVisible ? 'text' : 'password'}
-                                placeholder="Confirm Password"
-                                value={confirmPassword}
-                                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                                className={`form-control py-3 input-style ${getInputClass('confirmPassword')}`}
-                            />
-                            {/* Icona della visibilità della conferma password */}
-                            {!errors.some((error) => error.field === 'confirmPassword') && (
-                                <div
-                                    className="position-absolute top-eye end-0 translate-middle-y pe-3"
-                                    onMouseDown={() => setConfirmPasswordVisible(true)}
-                                    onMouseUp={() => setConfirmPasswordVisible(false)}
-                                    onMouseLeave={() => setConfirmPasswordVisible(false)}
-                                >
-                                    {confirmPasswordVisible ? (
-                                        <i className="bi bi-eye-slash"></i>
-                                    ) : (
-                                        <i className="bi bi-eye"></i>
+                                {/* Email */}
+                                <div className="mb-3">
+                                    <label htmlFor="email" className="form-label fw-medium ">Email *</label>
+                                    <input
+                                        type="email"
+                                        id='email'
+                                        placeholder="e.g. example@gmail.com"
+                                        value={email}
+                                        onChange={(e) => handleInputChange('email', e.target.value)}
+                                        className={`form-control py-3 input-style ${getInputClass('email')}`}
+                                    />
+                                    {getErrorMessage('email') && (
+                                        <div className="text-danger small mt-1">{getErrorMessage('email')}</div>
                                     )}
                                 </div>
-                            )}
-                            {/* Icona di errore */}
-                            {getErrorMessage('confirmPassword') && (
-                                <div className="text-danger small mt-1">{getErrorMessage('confirmPassword')}</div>
-                            )}
-                        </div>
 
-                        {/* Submit Button */}
-                        <div className="d-flex gap-3">
-                            <button type="submit" className="btn btn-primary w-100 py-3 btn-style">Register</button>
+                                {/* Username */}
+                                <div className="mb-3">
+                                    <label htmlFor="username" className="form-label fw-medium ">Username *</label>
+                                    <input
+                                        type="text"
+                                        id='username'
+                                        placeholder="e.g. Mario18"
+                                        value={username}
+                                        onChange={(e) => handleInputChange('username', e.target.value)}
+                                        className={`form-control py-3 input-style ${getInputClass('username')}`}
+                                    />
+                                    {getErrorMessage('username') && (
+                                        <div className="text-danger small mt-1">{getErrorMessage('username')}</div>
+                                    )}
+                                </div>
+
+                                {/* Password */}
+                                <div className="mb-3 position-relative">
+                                    <label htmlFor="password" className="form-label fw-medium ">Password *</label>
+                                    <input
+                                        type={passwordVisible ? 'text' : 'password'}
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => handleInputChange('password', e.target.value)}
+                                        className={`form-control py-3 input-style ${getInputClass('password')}`}
+                                    />
+                                    {getErrorMessage('password') && (
+                                        <div className="text-danger small mt-1">{getErrorMessage('password')}</div>
+                                    )}
+                                </div>
+
+                                {/* Confirm Password */}
+                                <div className="mb-3 position-relative">
+                                    <label htmlFor="confirm-password" className="form-label fw-medium ">Confirm Password *</label>
+                                    <input
+                                        type={confirmPasswordVisible ? 'text' : 'password'}
+                                        placeholder="Confirm Password"
+                                        value={confirmPassword}
+                                        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                                        className={`form-control py-3 input-style ${getInputClass('confirmPassword')}`}
+                                    />
+                                    {getErrorMessage('confirmPassword') && (
+                                        <div className="text-danger small mt-1">{getErrorMessage('confirmPassword')}</div>
+                                    )}
+                                </div>
+
+                                {/* Terms and Conditions */}
+                                <div className="mb-3">
+                                    <input
+                                        type="checkbox"
+                                        id="acceptTerms"
+                                        checked={acceptTerms}
+                                        onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
+                                        className="me-2"
+                                    />
+                                    <label htmlFor="acceptTerms" className="form-label fw-medium">
+                                        I accept the <a href="/terms" target="_blank" rel="noopener noreferrer">terms and conditions</a>.
+                                    </label>
+                                    {getErrorMessage('acceptTerms') && (
+                                        <div className="text-danger small mt-1">{getErrorMessage('acceptTerms')}</div>
+                                    )}
+                                </div>
+
+                                {/* Submit Button */}
+                                <div className="d-flex flex-column gap-3">
+                                    <button type="submit" className="btn btn-primary w-100 py-3 btn-style">Register</button>
+                                    <span className="text-center">
+                                        Already registered? <a href="/login" className="text-primary">Log in</a>
+                                    </span>
+                                </div>
+
+                                {/* Errori API */}
+                                {getErrorMessage('api') && (
+                                    <div className="text-danger small mt-3">{getErrorMessage('api')}</div>
+                                )}
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-
     );
 }

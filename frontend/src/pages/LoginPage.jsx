@@ -4,92 +4,160 @@ import { useNavigate } from 'react-router-dom';
 export default function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState({ username: '', password: '' });
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
 
-    const handleLoginSubmit = (e) => {
+    // Funzione di validazione del form
+    const validateForm = () => {
+        const validationErrors = [];
+
+        if (!username.trim()) {
+            validationErrors.push({ field: 'username', message: 'Username is required.' });
+        }
+
+        if (!password) {
+            validationErrors.push({ field: 'password', message: 'Password is required.' });
+        }
+
+        return validationErrors;
+    };
+
+    // Gestione del submit del form
+    const handleLoginSubmit = async (e) => {
         e.preventDefault();
 
-        // Reset degli errori all'inizio della validazione
-        setErrors({ username: '', password: '' });
-
-        // Validazione dei campi
-        let formIsValid = true;
-        let newErrors = { username: '', password: '' };
-
-        if (username.trim() === '') {
-            newErrors.username = 'Username is required';
-            formIsValid = false;
-        }
-
-        if (password.trim() === '') {
-            newErrors.password = 'Password is required';
-            formIsValid = false;
-        }
-
-        if (!formIsValid) {
-            setErrors(newErrors);
+        const validationErrors = validateForm();
+        if (validationErrors.length > 0) {
+            setErrors(validationErrors);
             return;
         }
 
-        // Esegui il login solo se la validazione ha successo
-        if (username === 'admin' && password === 'password123') {
-            navigate('/');
-        } else {
-            alert('Invalid credentials');
+        try {
+            // Effettua la chiamata all'API utilizzando fetch
+            const response = await fetch('http://localhost:3002/apartments/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username,
+                    password,
+                }),
+            });
+
+            // Controllo della risposta
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Invalid credentials');
+            }
+
+            const data = await response.json();
+
+            // Gestione della risposta di successo
+            if (data.token) {
+                console.log('Login successful');
+                localStorage.setItem('authToken', data.token); 
+                navigate('/'); 
+            }
+        } catch (error) {
+            // Gestione degli errori dell'API
+            setErrors([{ field: 'api', message: error.message }]);
         }
     };
 
-    // Gestori di cambio per i campi, che rimuovono l'errore quando l'utente inizia a digitare
-    const handleUsernameChange = (e) => {
-        setUsername(e.target.value);
-        if (e.target.value.trim() !== '') {
-            setErrors((prevErrors) => ({ ...prevErrors, username: '' }));
+    // Gestori di input che rimuovono gli errori quando l'utente inizia a digitare
+    const handleInputChange = (field, value) => {
+        switch (field) {
+            case 'username':
+                setUsername(value);
+                break;
+            case 'password':
+                setPassword(value);
+                break;
+            default:
+                break;
         }
+        setErrors((prevErrors) => prevErrors.filter((error) => error.field !== field));
     };
 
-    const handlePasswordChange = (e) => {
-        setPassword(e.target.value);
-        if (e.target.value.trim() !== '') {
-            setErrors((prevErrors) => ({ ...prevErrors, password: '' }));
-        }
+    // Funzione per ottenere la classe di input in base agli errori
+    const getInputClass = (field) => {
+        return errors.some((error) => error.field === field) ? 'is-invalid' : '';
+    };
+
+    // Funzione per ottenere il messaggio di errore
+    const getErrorMessage = (field) => {
+        const error = errors.find((error) => error.field === field);
+        return error ? error.message : '';
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center min-vh-100 login-container">
-            <div className="login-box p-4 shadow-lg rounded-lg">
-                <h2 className="text-center text-white mb-4">Login</h2>
-                <form onSubmit={handleLoginSubmit}>
-                    {/* Input di Username */}
-                    <div className="mb-3">
-                        <input
-                            type="text"
-                            placeholder="Username"
-                            value={username}
-                            onChange={handleUsernameChange}
-                            className="form-control my-3 py-3 input-style"
-                        />
-                        {/* Messaggio di errore sotto il campo */}
-                        {errors.username && <div className="text-danger mt-1">{errors.username}</div>}
-                    </div>
+        <div className='d-flex'>
+            <div className="col-12 bg-photo d-flex">
+                <div className="bg-overlay"></div>
+                <div className="bg-content col-12 d-flex py-5 px-2 p-md-5 justify-content-center align-items-center">
+                    <div className="col-12 col-lg-4 bg-white text-black rounded">
+                        <div className="p-5">
+                            <h2>Login</h2>
+                            <span>Enter your credentials to login</span>
+                            <form onSubmit={handleLoginSubmit} className='mt-4'>
+                                {/* Username */}
+                                <div className="mb-3">
+                                    <label htmlFor="username" className="form-label fw-medium">Username *</label>
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        placeholder="e.g. Mario18"
+                                        value={username}
+                                        onChange={(e) => handleInputChange('username', e.target.value)}
+                                        className={`form-control py-3 input-style ${getInputClass('username')}`}
+                                    />
+                                    {getErrorMessage('username') && (
+                                        <div className="text-danger small mt-1">{getErrorMessage('username')}</div>
+                                    )}
+                                </div>
 
-                    {/* Input di Password */}
-                    <div className="mb-3">
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                            className="form-control my-3 py-3 input-style"
-                        />
-                        {/* Messaggio di errore sotto il campo */}
-                        {errors.password && <div className="text-danger mt-1">{errors.password}</div>}
-                    </div>
+                                {/* Password */}
+                                <div className="mb-3 position-relative">
+                                    <label htmlFor="password" className="form-label fw-medium">Password *</label>
+                                    <input
+                                        type={passwordVisible ? 'text' : 'password'}
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => handleInputChange('password', e.target.value)}
+                                        className={`form-control py-3 input-style ${getInputClass('password')}`}
+                                    />
+                                    {/* Icona della visibilità della password */}
+                                    {!errors.some((error) => error.field === 'password') && (
+                                        <div
+                                            className="position-absolute top-eye end-0 translate-middle-y pe-3"
+                                            onMouseDown={() => setPasswordVisible(true)}
+                                            onMouseUp={() => setPasswordVisible(false)}
+                                            onMouseLeave={() => setPasswordVisible(false)}
+                                        >
+                                            {passwordVisible ? <i className="bi bi-eye-slash"></i> : <i className="bi bi-eye"></i>}
+                                        </div>
+                                    )}
+                                    {getErrorMessage('password') && (
+                                        <div className="text-danger small mt-1">{getErrorMessage('password')}</div>
+                                    )}
+                                </div>
 
-                    <div className="d-flex gap-3">
-                        <button type="submit" className="btn btn-primary w-100 py-3 btn-style">Log in</button>
+
+                                {/* Submit Button */}
+                                <div className="d-flex gap-3">
+                                    <button type="submit" className="btn btn-primary w-100 py-3 btn-style">Log in</button>
+                                </div>
+
+                                {/* Errori API */}
+                                {getErrorMessage('api') && (
+                                    <div className="text-danger small mt-2">{getErrorMessage('api')}</div>
+                                )}
+                            </form>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     );
