@@ -12,7 +12,7 @@ function index(req, res) {
 
 function show(req, res) {
     const slug = req.params.slug;
-    console.log('Slug ricevuto dal client:', slug); // Log dello slug
+    console.log('Slug ricevuto dal client:', slug);
 
     // Assicurati che lo slug non sia undefined o vuoto
     if (!slug) {
@@ -30,7 +30,11 @@ function show(req, res) {
         if (results.length === 0) return res.status(404).json({ err: 'Apartment not found' });
 
         const apartmentId = results[0].id;  // Prendi l'ID dell'appartamento
-
+        let imagePath = results[0].picture_url;
+        if (imagePath) {
+            imagePath = imagePath.replace(/\\/g, '/');  // Sostituire barre rovesciate con barre normali
+            imagePath = `/uploads${imagePath}`;  // Aggiungi il prefisso per il percorso pubblico
+        }
         // Query per le recensioni
         connection.query(reviewsSql, [apartmentId], (err, reviewsResults) => {
             if (err) return res.status(500).json({ err: err });
@@ -43,7 +47,8 @@ function show(req, res) {
                 const apartment = {
                     ...results[0],  // Aggiungi i dettagli dell'appartamento
                     reviews: reviewsResults,  // Aggiungi le recensioni
-                    services: servicesResults  // Aggiungi i servizi
+                    services: servicesResults,
+                    image_path: imagePath  // Aggiungi i servizi
                 };
 
                 res.json(apartment);  // Invia la risposta con l'appartamento completo
@@ -85,6 +90,34 @@ function showAll(req, res) {
                 res.json({ apartments });
             });
         });
+    });
+}
+
+function indexCity(req, res) {
+    connection.query('SELECT DISTINCT city FROM apartments', (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+
+        // Estrai solo i valori delle città
+        const cities = results.map(row => row.city);
+        res.json({ cities });
+    });
+}
+
+function indexService(req, res) {
+    connection.query('SELECT * FROM services', (err, results) => {
+        if (err) {
+            console.error('Database error: ', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (!results || results.length === 0) {
+            return res.status(404).json({ message: 'No services found' });
+        }
+
+        // Estrai solo i nomi dei servizi
+        const serviceNames = results.map(service => service.name_service);
+
+        res.json({ services: serviceNames });
     });
 }
 
@@ -171,49 +204,91 @@ function addReview(req, res) {
 
 /* registered user add an apartment */
 function addApartment(req, res) {
-    const { title, rooms_number, beds, bathrooms, square_meters, address, picture_url, description, services, city, slug } = req.body;
-    const apartmentSlug = slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+    console.log("Received request to add an apartment");
 
-    /* validation data */
-    const errors = validateApartmentData({ title, rooms_number, beds, bathrooms, square_meters, address, description, services });
+    // Se non viene caricato nessun file, imposta picture_url a un valore di default
+    let imageUrl = '';
+    if (req.file) {
+        let imagePath = req.file.path;
+        console.log("Image uploaded to path:", imagePath);
+        imagePath = imagePath.replace(/\\/g, '/');
+        imageUrl = `/uploads/${req.file.filename}`;
+    } else {
+        console.log("No file uploaded, using default image URL.");
+    }
+
+    const { title, rooms_number, beds, bathrooms, square_meters, address, description, services, city, slug, picture_url } = req.body;
+    console.log("Apartment data received:", { title, rooms_number, beds, bathrooms, square_meters, address, description, services, city, slug, picture_url });
+
+    const apartmentSlug = slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+    console.log("Generated apartment slug:", apartmentSlug);
+
+    // Aggiungi controllo per services (se arriva come stringa JSON)
+    let parsedServices = [];
+    try {
+        parsedServices = JSON.parse(services);
+        console.log("Parsed services data:", parsedServices);
+    } catch (e) {
+        console.error("Error parsing services data:", e);
+    }
+
+    console.log("Validating apartment data...");
+    const errors = validateApartmentData({ title, rooms_number, beds, bathrooms, square_meters, address, description, services: parsedServices });
+    console.log("Validation errors:", errors);
+
     if (errors.length > 0) {
+        console.error("Validation errors found:", errors);
         return res.status(400).json({ success: false, errors });
     }
 
 
+
     const owner_id = req.user.userId; 
 
+
+    // Se `picture_url` viene passato nel corpo della richiesta, usalo al posto del percorso del file
+    const finalImageUrl = picture_url || imageUrl || '/path/to/default/image.jpg';  // URL di default se nessuna immagine è fornita
+
+    // Log prima dell'invio della query SQL
     const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, vote, owner_id, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)';
-    const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, owner_id, apartmentSlug];
+    const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, city, finalImageUrl, description, owner_id, apartmentSlug];
+    console.log("SQL Query:", sql);
+    console.log("Apartment Data:", apartmentData);
 
-
-    // add apartment
+    // Esegui la query SQL
     connection.query(sql, apartmentData, (err, result) => {
-        if (err) return res.status(500).json({ error: err });
+        if (err) {
+            console.error("Error inserting apartment into database:", err);
+            return res.status(500).json({ error: err });
+        }
 
         console.log('Apartment insert result:', result);
         const apartmentId = result.insertId;
+        console.log("Apartment inserted with ID:", apartmentId);
 
-        // check if services exist
-        if (services && Array.isArray(services) && services.length > 0) {
+        if (parsedServices && Array.isArray(parsedServices) && parsedServices.length > 0) {
+            console.log("Services to associate with apartment:", parsedServices);
             const bridgeSql = 'INSERT INTO apartment_service (id_apartment, id_service) VALUES ?';
-
-            const bridgeData = services.map(serviceId => [apartmentId, serviceId]);
-
+            const bridgeData = parsedServices.map(serviceId => [apartmentId, serviceId]);
+            console.log("SQL query to insert apartment_service:", bridgeSql);
+            console.log("Bridge data:", bridgeData);
 
             connection.query(bridgeSql, [bridgeData], (bridgeErr) => {
-                if (bridgeErr) return res.status(500).json({ error: bridgeErr });
-                res.status(201).json({ success: true, apartmentId });
+                if (bridgeErr) {
+                    console.error("Error inserting apartment services into database:", bridgeErr);
+                    return res.status(500).json({ error: bridgeErr });
+                }
+                console.log("Services successfully associated with apartment.");
+                res.status(201).json({ success: true, apartmentId, image_path: finalImageUrl });
             });
         } else {
-
-
-            // if there are not the services
-
-            res.status(201).json({ success: true, apartmentId });
+            console.log("No services to associate with apartment.");
+            res.status(201).json({ success: true, apartmentId, image_path: finalImageUrl });
         }
     });
 }
+
+
 
 /* registered user update the apartment */
 function updateApartment(req, res) {
@@ -279,7 +354,7 @@ function voteApartment(req, res) {
 }
 
 
-module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment, showAll }
+module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment, showAll, indexCity, indexService }
 
 
 
