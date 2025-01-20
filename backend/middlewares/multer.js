@@ -4,16 +4,16 @@ const path = require('path');
 // Configurazione di Multer per l'upload delle immagini
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // La cartella dove salvare i file
+        cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`); // Aggiungi un timestamp al nome del file
+        cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
 
 const upload = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // Limite di 5 MB
+    limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const filetypes = /jpeg|jpg|png/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());

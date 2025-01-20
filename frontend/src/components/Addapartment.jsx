@@ -97,7 +97,7 @@ export default function AddApartment() {
         formData.append('square_meters', parseInt(square_meters));
         formData.append('address', address);
         formData.append('city', city);
-        formData.append('picture_file', picture_file);  // Aggiungi il file
+        formData.append('picture_file', picture_file);
         formData.append('description', description);
         formData.append('services', JSON.stringify(selectedServices));
 
@@ -113,11 +113,11 @@ export default function AddApartment() {
                 setIsFormVisible(false);
                 setSuccessMessage('Form submitted successfully!');
                 setPicturePreview('');
-                // Mostra il messaggio di successo per 3 secondi, poi ripristina il form
+
                 setTimeout(() => {
-                    setIsFormVisible(true); // Mostra di nuovo il form
-                    setSuccessMessage(''); // Nascondi il messaggio di successo
-                    resetForm(); // Reset del form
+                    setIsFormVisible(true);
+                    setSuccessMessage('');
+                    resetForm();
                 }, 3000);
             })
             .catch((error) => {
@@ -146,10 +146,10 @@ export default function AddApartment() {
     };
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0]; // Ottieni il file selezionato
-        setPicture_file(file); // Aggiorna lo stato del file
-        const previewUrl = URL.createObjectURL(file); // Crea l'URL per il preview dell'immagine
-        setPicturePreview(previewUrl); // Aggiorna lo stato per la preview
+        const file = e.target.files[0];
+        setPicture_file(file);
+        const previewUrl = URL.createObjectURL(file);
+        setPicturePreview(previewUrl);
     };
 
     return (

@@ -12,7 +12,7 @@ function index(req, res) {
 
 function show(req, res) {
     const slug = req.params.slug;
-    console.log('Slug ricevuto dal client:', slug); // Log dello slug
+    console.log('Slug ricevuto dal client:', slug);
 
     // Assicurati che lo slug non sia undefined o vuoto
     if (!slug) {
@@ -186,9 +186,9 @@ function addApartment(req, res) {
     let imagePath = req.file.path;
     console.log("Image uploaded to path:", imagePath);
 
-    // Modifica il percorso per usare la notazione del percorso URL (sostituendo le barre rovesciate)
-    imagePath = imagePath.replace(/\\/g, '/');  // Perché su Windows il file path ha le barre rovesciate, mentre il URL usa la barra normale
-    const imageUrl = `/uploads/${req.file.filename}`; // URL che può essere usato dal frontend
+
+    imagePath = imagePath.replace(/\\/g, '/');
+    const imageUrl = `/uploads/${req.file.filename}`;
 
     const { title, rooms_number, beds, bathrooms, square_meters, address, description, services, city, slug, picture_url } = req.body;
     console.log("Apartment data received:", { title, rooms_number, beds, bathrooms, square_meters, address, description, services, city, slug, picture_url });
