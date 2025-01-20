@@ -19,9 +19,10 @@ router.get('/:slug', ApartmentsController.show)
 
 router.post('/:id/review', ApartmentsController.addReview)
 
-router.post('/addapartment', /* authenticateToken, */ upload.single('picture_file'), ApartmentsController.addApartment)
 
-router.put('/:id', /* authenticateToken, */ ApartmentsController.updateApartment)
+router.post('/addapartment',  authenticateToken,  upload.single('picture_file'), ApartmentsController.addApartment)
+
+router.put('/:id', authenticateToken, ApartmentsController.updateApartment)
 
 /* users routes */
 

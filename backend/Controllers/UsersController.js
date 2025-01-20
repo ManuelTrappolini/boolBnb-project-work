@@ -43,7 +43,7 @@ function login(req, res) {
       if (!isMatch) return res.status(401).json({ error: 'Invalid username or password' });
 
       // generate temporary token
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '2h' });
       res.json({ token });
     });
   });

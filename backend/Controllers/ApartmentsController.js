@@ -241,8 +241,10 @@ function addApartment(req, res) {
         return res.status(400).json({ success: false, errors });
     }
 
-    const owner_id = 2;
-    console.log("Using owner_id:", owner_id);
+
+
+    const owner_id = req.user.userId; 
+
 
     // Se `picture_url` viene passato nel corpo della richiesta, usalo al posto del percorso del file
     const finalImageUrl = picture_url || imageUrl || '/path/to/default/image.jpg';  // URL di default se nessuna immagine è fornita
@@ -260,6 +262,7 @@ function addApartment(req, res) {
             return res.status(500).json({ error: err });
         }
 
+        console.log('Apartment insert result:', result);
         const apartmentId = result.insertId;
         console.log("Apartment inserted with ID:", apartmentId);
 

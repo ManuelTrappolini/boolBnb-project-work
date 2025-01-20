@@ -14,8 +14,6 @@ server.use(express.json())
 server.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 server.use('/apartments', ApartmentsRouter)
 
-server.use('/users', ApartmentsRouter)
-
 server.get('/', (req, res) => {
     res.send('Server is running')
 })

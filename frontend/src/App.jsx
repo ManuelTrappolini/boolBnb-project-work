@@ -7,13 +7,11 @@ import DetailApartmentPage from './pages/DetailApartmentPage'
 import LoginPage from './pages/LoginPage'
 import RegistrationPage from './pages/RegistrationPage'
 import SearchPage from './pages/SearchPage'
-
+import { AuthProvider } from './context/AuthContext'
 
 function App() {
-
-
   return (
-    <>
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
@@ -26,8 +24,8 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </>
-  )
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
