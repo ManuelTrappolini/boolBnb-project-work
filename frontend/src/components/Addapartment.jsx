@@ -9,12 +9,13 @@ export default function AddApartment() {
     const [square_meters, setSquare_meters] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
-    const [picture_url, setPicture_url] = useState('');
+    const [picture_file, setPicture_file] = useState('');
     const [description, setDescription] = useState('');
     const [selectedServices, setSelectedServices] = useState([]);
     const [errorMessages, setErrorMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const [isFormVisible, setIsFormVisible] = useState(true);
+    const [picturePreview, setPicturePreview] = useState('');
     const maxDescriptionLength = 500;
 
     const servicesList = [
@@ -39,10 +40,11 @@ export default function AddApartment() {
         setSquare_meters('');
         setAddress('');
         setCity('');
-        setPicture_url('');
+        setPicture_file('');
         setDescription('');
         setSelectedServices([]);
         setErrorMessages([]);
+
     };
 
     const handleCheckboxChange = (e) => {
@@ -87,38 +89,35 @@ export default function AddApartment() {
         // Se non ci sono errori, resettiamo gli errori e inviamo il form
         setErrorMessages([]);
 
-        const formData = {
-            title,
-            rooms_number: parseInt(rooms_number),
-            beds: parseInt(beds),
-            bathrooms: parseInt(bathrooms),
-            square_meters: parseInt(square_meters),
-            address,
-            city,
-            picture_url,
-            description,
-            services: selectedServices
-        };
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('rooms_number', parseInt(rooms_number));
+        formData.append('beds', parseInt(beds));
+        formData.append('bathrooms', parseInt(bathrooms));
+        formData.append('square_meters', parseInt(square_meters));
+        formData.append('address', address);
+        formData.append('city', city);
+        formData.append('picture_file', picture_file);
+        formData.append('description', description);
+        formData.append('services', JSON.stringify(selectedServices));
 
         // Simula l'invio dei dati al backend
         fetch('http://localhost:3002/apartments/addapartment', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
+
+            body: formData,
         })
             .then((res) => res.json())
             .then((data) => {
                 // Nascondi il form e mostra il messaggio di successo
                 setIsFormVisible(false);
                 setSuccessMessage('Form submitted successfully!');
+                setPicturePreview('');
 
-                // Mostra il messaggio di successo per 3 secondi, poi ripristina il form
                 setTimeout(() => {
-                    setIsFormVisible(true); // Mostra di nuovo il form
-                    setSuccessMessage(''); // Nascondi il messaggio di successo
-                    resetForm(); // Reset del form
+                    setIsFormVisible(true);
+                    setSuccessMessage('');
+                    resetForm();
                 }, 3000);
             })
             .catch((error) => {
@@ -144,6 +143,13 @@ export default function AddApartment() {
         setErrorMessages((prevErrors) =>
             prevErrors.filter((error) => error.field !== field)
         );
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setPicture_file(file);
+        const previewUrl = URL.createObjectURL(file);
+        setPicturePreview(previewUrl);
     };
 
     return (
@@ -328,20 +334,28 @@ export default function AddApartment() {
                     </div>
 
                     <div className="col-12">
-                        <label htmlFor="picture_url" className="form-label">Insert image of the apartment</label>
+                        <label htmlFor="picture_file" className="form-label">Upload image of the apartment*</label>
                         <input
-                            type="text"
-                            className={`form-control ${getInputClass('picture_url')}`}
-                            id="picture_url"
-                            name="picture_url"
-                            value={picture_url}
-                            onChange={handleChange('picture_url', setPicture_url)}
-                            placeholder="https://example.com/"
+                            type="file"
+                            className={`form-control ${getInputClass('picture_file')}`}
+                            id="picture_file"
+                            name="picture_file"
+                            onChange={handleFileChange}
                         />
-
-                        {getErrorMessage('picture_url') && <div className="text-danger">{getErrorMessage('picture_url')}</div>}
+                        {getErrorMessage('picture_file') && <div className="text-danger">{getErrorMessage('picture_file')}</div>}
                     </div>
-
+                    {/* Preview dell'immagine */}
+                    {picturePreview && (
+                        <div className="mt-3">
+                            <h5>Image Preview:</h5>
+                            <img
+                                src={picturePreview}
+                                alt="Preview"
+                                className="img-fluid"
+                                style={{ maxHeight: '300px', objectFit: 'cover' }}
+                            />
+                        </div>
+                    )}
                     <div className="col-12">
                         <label htmlFor="services" className="form-label">Select Services*</label>
                         <div className="d-flex flex-wrap gap-3">
