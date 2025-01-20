@@ -14,7 +14,7 @@ header {
 
 main {
     flex-grow: 1 !important;
-    margin-top: 100px;
+    margin-top: 3rem;
 }
 
 footer {
@@ -144,6 +144,11 @@ header {
     height: 110%;
 }
 
+.top-eye{
+    top: 68% !important;
+    cursor: pointer;
+}
+
 /* heart */
 .heart-counter {
     display: flex;
@@ -176,6 +181,35 @@ header {
 
 .bi-heart-fill {
     color: red;
+}
+
+/* registration */
+
+.bg-photo {
+    position: relative;
+    background-image: url('/photo-bg.jpg');  
+    background-size: cover;
+    background-position: center; 
+}
+
+.bg-overlay {
+    position: absolute;  
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 1;  
+}
+
+.bg-content {
+    position: relative;
+    z-index: 2;  
+    color: white;  
+
+    h2{
+        font-size: 55px !important;
+    }
 }
 
 
