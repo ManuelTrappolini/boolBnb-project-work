@@ -7,20 +7,10 @@ import { FaFan, FaShower, FaBed, FaAccessibleIcon, FaUtensils, FaParking, FaPaw,
 export default function HomePage() {
     const [cards, setCards] = useState([]);
     const [search, setSearch] = useState('');
-    const [triggerFetch, setTriggerFetch] = useState(false);
     const [minRooms, setMinRooms] = useState('');
     const [minBeds, setMinBeds] = useState('');
-
+    const [selectedServices, setSelectedServices] = useState([]);
     const location = useLocation();
-
-    const getQueryParams = () => {
-        const params = new URLSearchParams(location.search);
-        return {
-            search: params.get('searchInput') || '',
-            minRooms: params.get('minRooms') || '',
-            minBeds: params.get('minBeds') || '',
-        };
-    };
 
     const servicesList = [
         { id: 3, name: 'Air-Conditioner', icon: <FaFan /> },
@@ -35,6 +25,26 @@ export default function HomePage() {
         { id: 7, name: 'Television', icon: <FaTv /> },
         { id: 8, name: 'Wi-Fi', icon: <FaWifi /> },
     ];
+
+    const getQueryParams = () => {
+        const params = new URLSearchParams(location.search);
+        return {
+            search: params.get('searchInput') || '',
+            minRooms: params.get('minRooms') || '',
+            minBeds: params.get('minBeds') || '',
+            selectedServices: params.get('selectedServices') ? params.get('selectedServices').split(',') : [],
+        };
+    };
+
+    // Recupera i parametri di ricerca all'avvio
+    useEffect(() => {
+        const { search, minRooms, minBeds, selectedServices } = getQueryParams();
+        setSearch(search);
+        setMinRooms(minRooms);
+        setMinBeds(minBeds);
+        setSelectedServices(selectedServices);
+
+    }, [location.search]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,128 +64,136 @@ export default function HomePage() {
         };
 
         fetchData();
-    }, [triggerFetch]);
+    }, []);
 
-    useEffect(() => {
-        const { search, minRooms, minBeds } = getQueryParams();
-        setSearch(search);
-        setMinRooms(minRooms);
-        setMinBeds(minBeds);
-    }, [location.search]);
+    const normalizeString = (str) => str.replace(/[-\s]/g, '').toLowerCase();
 
     const filteredCards = cards.filter((card) => {
         if (!card) return false;
+
         const matchesSearch = search ? card.address?.toLowerCase().includes(search.toLowerCase()) || card.city?.toLowerCase().includes(search.toLowerCase()) : true;
         const matchesMinRooms = minRooms ? card.rooms_number >= parseInt(minRooms) : true;
         const matchesMinBeds = minBeds ? card.beds >= parseInt(minBeds) : true;
 
-        return matchesSearch && matchesMinRooms && matchesMinBeds;
+        // Verifica che l'appartamento abbia tutti i servizi selezionati
+        const matchesSelectedServices = selectedServices.length > 0
+            ? selectedServices.every(serviceName =>
+                card.services.some(cardService => {
+                    // Normalizza il nome del servizio selezionato
+                    const normalizedServiceName = normalizeString(serviceName);
+                    // Trova il servizio corrispondente dal nome normalizzato
+                    const matchedService = servicesList.find(service => normalizeString(service.name) === normalizedServiceName);
+                    return matchedService && cardService.id_service === matchedService.id;
+                })
+            )
+            : true;
+
+        return matchesSearch && matchesMinRooms && matchesMinBeds && matchesSelectedServices;
     });
 
 
+
+
+
+
+
     return (
-        <>
-            <div className="container my-5">
-                <SearchBar
-                    search={search}
-                    setSearch={setSearch}
-                    minRooms={minRooms}
-                    setMinRooms={setMinRooms}
-                    minBeds={minBeds}
-                    setMinBeds={setMinBeds}
-                />
+        <div className="container my-5">
+            <SearchBar
+                search={search}
+                setSearch={setSearch}
+                minRooms={minRooms}
+                setMinRooms={setMinRooms}
+                minBeds={minBeds}
+                setMinBeds={setMinBeds}
+            />
 
-                <div className="row">
-                    {filteredCards.length !== 0 ? filteredCards.map((card) => (
-                        <div key={card.id} className="col-md-3 col-12 p-3">
-                            <div className="card h-100">
-                                <Link to={`/apartments/${card.slug}`} className="h-75">
-                                    <img
-                                        src={card.picture_url || "https://www.classcountryhomes.it/wp-content/uploads/2021/07/appartamento-roma-centro-storico-con-terrazzo.jpg"}
-                                        className="card-img-top h-100"
-                                        alt={card.title}
-                                    />
-                                </Link>
-                                <div className="card-body d-flex flex-column justify-content-between">
-                                    <div>
-                                        <Link to={`/apartments/${card.slug}`} className="text-black">
-                                            <h6 className="card-title">{card.title}</h6>
-                                        </Link>
-                                        <p className="mb-0">{card.address}, {card.city}</p>
-                                    </div>
-
+            <div className="row">
+                {filteredCards.length !== 0 ? filteredCards.map((card) => (
+                    <div key={card.id} className="col-md-3 col-12 p-3">
+                        <div className="card h-100">
+                            <Link to={`/apartments/${card.slug}`} className="h-75">
+                                <img
+                                    src={card.picture_url || "https://www.classcountryhomes.it/wp-content/uploads/2021/07/appartamento-roma-centro-storico-con-terrazzo.jpg"}
+                                    className="card-img-top h-100"
+                                    alt={card.title}
+                                />
+                            </Link>
+                            <div className="card-body d-flex flex-column justify-content-between">
+                                <div>
+                                    <Link to={`/apartments/${card.slug}`} className="text-black">
+                                        <h6 className="card-title">{card.title}</h6>
+                                    </Link>
+                                    <p className="mb-0">{card.address}, {card.city}</p>
                                 </div>
-                                <div className="">
-                                    <div className="bg-light px-3 rounded shadow-sm">
-                                        <ul className="list-unstyled">
-                                            <div className='d-flex justify-content-between'>
-
-                                                <li className="mb-2">
-                                                    <i className="bi bi-house-door me-2"></i>
-                                                    {card.rooms_number} Rooms
-                                                </li>
-                                                <li className="mb-2">
-                                                    <i className="bi bi-person-fill me-2"></i>
-                                                    {card.beds} Beds
-                                                </li>
-                                            </div>
-                                            <div className='d-flex justify-content-between'>
-
-                                                <li className="mb-2">
-                                                    <i className="bi bi-droplet me-2"></i>
-                                                    {card.bathrooms} Bathrooms
-                                                </li>
-                                                <li className="mb-2">
-                                                    <i className="bi bi-arrows-fullscreen me-2"></i>
-                                                    {card.square_meters} m²
-                                                </li>
-                                            </div>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div className='ps-2'>
-
-                                    {card.services?.length > 0 ? (
-                                        <div className="d-flex flex-wrap justify-content-start gap-2">
-                                            {card.services.map((service, index) => {
-                                                const matchedService = servicesList.find(item => item.id === service.id_service);
-
-                                                if (matchedService) {
-                                                    return (
-                                                        <div key={index} className="service-icon d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-                                                            {matchedService.icon}
-                                                        </div>
-                                                    );
-                                                } else {
-                                                    return (
-                                                        <div key={index} className="service-icon d-flex align-items-center justify-content-center bg-light  text-muted" style={{ width: '40px', height: '40px' }}>
-                                                            <FaQuestionCircle />
-                                                        </div>
-                                                    );
-                                                }
-                                            })}
+                            </div>
+                            <div className="">
+                                <div className="bg-light px-3 rounded shadow-sm">
+                                    <ul className="list-unstyled">
+                                        <div className='d-flex justify-content-between'>
+                                            <li className="mb-2">
+                                                <i className="bi bi-house-door me-2"></i>
+                                                {card.rooms_number} Rooms
+                                            </li>
+                                            <li className="mb-2">
+                                                <i className="bi bi-person-fill me-2"></i>
+                                                {card.beds} Beds
+                                            </li>
                                         </div>
-                                    ) : (
-                                        <p className="text-muted">No services available for this apartment.</p>
-                                    )}
+                                        <div className='d-flex justify-content-between'>
+                                            <li className="mb-2">
+                                                <i className="bi bi-droplet me-2"></i>
+                                                {card.bathrooms} Bathrooms
+                                            </li>
+                                            <li className="mb-2">
+                                                <i className="bi bi-arrows-fullscreen me-2"></i>
+                                                {card.square_meters} m²
+                                            </li>
+                                        </div>
+                                    </ul>
                                 </div>
-                                <div className='d-flex justify-content-between ps-3 pt-2'>
+                            </div>
+                            <div className='ps-2'>
+                                {card.services?.length > 0 ? (
+                                    <div className="d-flex flex-wrap justify-content-start gap-2">
+                                        {card.services.map((service, index) => {
+                                            const matchedService = servicesList.find(item => item.id === service.id_service);
 
-                                    <div className='pt-1'>
-                                        Recensioni: {card.reviews.length}
+                                            if (matchedService) {
+                                                return (
+                                                    <div key={index} className="service-icon d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                                                        {matchedService.icon}
+                                                    </div>
+                                                );
+                                            } else {
+                                                return (
+                                                    <div key={index} className="service-icon d-flex align-items-center justify-content-center bg-light  text-muted" style={{ width: '40px', height: '40px' }}>
+                                                        <FaQuestionCircle />
+                                                    </div>
+                                                );
+                                            }
+                                        })}
                                     </div>
-                                    <div className="d-flex align-items-center justify-content-end pe-1">
-
-                                        <HeartCounter cardId={card.id} initialVotes={card.vote} />
-                                    </div>
+                                ) : (
+                                    <p className="text-muted">No services available for this apartment.</p>
+                                )}
+                            </div>
+                            <div className='d-flex justify-content-between ps-3 pt-2'>
+                                <div className='pt-1'>
+                                    Recensioni: {card.reviews.length}
+                                </div>
+                                <div className="d-flex align-items-center justify-content-end pe-1">
+                                    <HeartCounter cardId={card.id} initialVotes={card.vote} />
                                 </div>
                             </div>
                         </div>
-                    )) : (
-                        <h1 className='pt-5'>Nessun Appartamento Trovato con questi Requisiti</h1>
-                    )}
-                </div>
+                    </div>
+                )) : (
+                    <div className="col-12 text-center">
+                        <h4>No results found</h4>
+                    </div>
+                )}
             </div>
-        </>
+        </div>
     );
 }

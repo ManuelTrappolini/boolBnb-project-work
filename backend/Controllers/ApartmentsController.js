@@ -98,6 +98,25 @@ function indexCity(req, res) {
     });
 }
 
+function indexService(req, res) {
+    connection.query('SELECT * FROM services', (err, results) => {
+        if (err) {
+            console.error('Database error: ', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (!results || results.length === 0) {
+            return res.status(404).json({ message: 'No services found' });
+        }
+
+        // Estrai solo i nomi dei servizi
+        const serviceNames = results.map(service => service.name_service);
+
+        res.json({ services: serviceNames });
+    });
+}
+
+
 
 /* Validation server side */
 function validateApartmentData(data) {
@@ -288,7 +307,7 @@ function voteApartment(req, res) {
 }
 
 
-module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment, showAll, indexCity }
+module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment, showAll, indexCity, indexService }
 
 
 

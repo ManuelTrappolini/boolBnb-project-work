@@ -2,46 +2,113 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 function SearchForm() {
-    const [cities, setCities] = useState()
+    const [cities, setCities] = useState([]);
+    const [filteredCities, setFilteredCities] = useState([]);
+    const [services, setServices] = useState([]);
+    const [serviceNames, setServiceNames] = useState([]);  // Stato per i nomi dei servizi formattati
+    const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         trendingCity: "",
         searchInput: "",
         minRooms: 0,
-        minBeds: 0
+        minBeds: 0,
+        selectedServices: [] // Stato per i servizi selezionati (array di servizi)
     });
 
+    // Effettuare il fetch per le città
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchCities = async () => {
             try {
                 const response = await fetch('http://localhost:3002/apartments/city');
                 const data = await response.json();
-                console.log(data);
-
                 if (data && data.cities) {
-                    setCities(data.cities);
+                    const filterCities = data.cities.filter((item, index) => data.cities.indexOf(item) === index);
+                    setCities(filterCities);
+                    setFilteredCities(filterCities); // Mostra tutte le città inizialmente
                 } else {
                     console.error('Formato della risposta non valido:', data);
                 }
             } catch (error) {
-                console.error('Errore nel caricamento dei dati:', error);
+                console.error('Errore nel caricamento delle città:', error);
             }
         };
-        console.log(cities);
 
-
-        fetchData();
+        fetchCities();
     }, []);
 
+    // Effettuare il fetch per i servizi
+    useEffect(() => {
+        const fetchServices = async () => {
+            try {
+                const response = await fetch('http://localhost:3002/apartments/indexService');
+                const data = await response.json();
+                if (data && data.services) {
+                    setServices(data.services);
+                } else {
+                    console.error('Formato della risposta non valido per i servizi:', data);
+                }
+            } catch (error) {
+                console.error('Errore nel caricamento dei servizi:', error);
+            }
+        };
+
+        fetchServices();
+    }, []);
+
+    // Formattare i nomi dei servizi
+    useEffect(() => {
+        if (services.length > 0) {
+            const formattedNames = services.map(service => {
+                const name = service; // Fallback nel caso in cui name_service sia undefined
+                return name
+                    .replace(/_/g, " ")  // Rimuove gli underscore
+                    .split(" ")  // Divide in parole
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))  // Capitalizza ogni parola
+                    .join(" ");  // Unisce le parole in una stringa
+            });
+            setServiceNames(formattedNames);
+        }
+    }, [services]);
+
+    // Gestire il cambiamento dell'input nel form
     const handleInputChange = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         const { name, value } = e.target;
+
+        // Aggiorna i dati del form
         setFormData((prev) => ({
             ...prev,
             [name]: value
         }));
+
+        // Filtra le città per il dropdown
+        if (name === "searchInput") {
+            const filtered = cities.filter((city) =>
+                city.toLowerCase().startsWith(value.toLowerCase())
+            );
+            setFilteredCities(filtered);
+        }
     };
 
+    // Gestire il cambiamento dei checkbox dei servizi
+    const handleServiceChange = (e) => {
+        const { value, checked } = e.target;
+        setFormData((prev) => {
+            let selectedServices = [...prev.selectedServices];
+            if (checked) {
+                selectedServices.push(value);
+            } else {
+                selectedServices = selectedServices.filter(service => service !== value);
+            }
+            return {
+                ...prev,
+                selectedServices
+            };
+        });
+    };
+
+    // Invia la ricerca
     const handleSearchSubmit = (e) => {
         e.preventDefault();
 
@@ -49,32 +116,58 @@ function SearchForm() {
         const queryParams = new URLSearchParams({
             searchInput: formData.searchInput,
             minRooms: formData.minRooms,
-            minBeds: formData.minBeds
+            minBeds: formData.minBeds,
+            selectedServices: formData.selectedServices.join(",") // Aggiungi i servizi selezionati alla query
         }).toString();
 
         // Reindirizzamento all'URL con i parametri
-        navigate(`/search?${queryParams}`)
+        navigate(`/search?${queryParams}`);
     };
 
     return (
         <div>
-            <form onSubmit={handleSearchSubmit} className="d-flex gap-4 justify-content-between">
+            <form onSubmit={handleSearchSubmit} className="d-flex gap-4 justify-content-between flex-wrap">
 
                 {/* Sezione per la ricerca per città o indirizzo */}
-                <div className="search-bar">
+                <div className="search-bar position-relative">
                     <label htmlFor="city" className="form-label">🔍 Search by city or address</label>
                     <input
                         type="text"
+                        autoComplete="off"
                         name="searchInput"
                         className="form-control"
                         placeholder="Type Here..."
                         value={formData.searchInput}
+                        onFocus={() => setShowDropdown(true)} // Mostra il dropdown quando l'input è focalizzato
+                        onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // Nasconde il dropdown quando si perde il focus
                         onChange={handleInputChange}
                     />
+
+                    {/* Dropdown delle città */}
+                    {showDropdown && filteredCities.length > 0 && (
+                        <ul className="reviews-scrollable dropdown-menu show position-absolute w-100 shadow" style={{ maxHeight: '150px', overflowY: 'auto', zIndex: 10 }}>
+                            {filteredCities.map((city, index) => (
+                                <li
+                                    key={index}
+                                    className="dropdown-item"
+                                    style={{ cursor: 'pointer' }}
+                                    onMouseDown={() => {
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            searchInput: city
+                                        }));
+                                        setShowDropdown(false);
+                                    }}
+                                >
+                                    {city}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
 
                 {/* Filtro per il numero minimo di stanze */}
-                <div>
+                <div className="col-4 col-md-2">
                     <label htmlFor="minRooms" className="form-label">Min. Rooms:</label>
                     <input
                         type="number"
@@ -88,7 +181,7 @@ function SearchForm() {
                 </div>
 
                 {/* Filtro per il numero minimo di posti letto */}
-                <div>
+                <div className="col-4 col-md-2">
                     <label htmlFor="minBeds" className="form-label">Min. Beds:</label>
                     <input
                         type="number"
@@ -100,14 +193,36 @@ function SearchForm() {
                         onChange={handleInputChange}
                     />
                 </div>
+
+                {/* Checkbox per i servizi */}
+                <div className="col-4 col-md-2">
+                    <label htmlFor="selectedServices" className="form-label">Select Services:</label>
+                    <div>
+                        {serviceNames.length > 0 ? serviceNames.map((service, index) => (
+                            <div key={index} className="form-check">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id={`service-${index}`}
+                                    value={service}
+                                    checked={formData.selectedServices.includes(service)}
+                                    onChange={handleServiceChange}
+                                />
+                                <label className="form-check-label" htmlFor={`service-${index}`}>
+                                    {service}
+                                </label>
+                            </div>
+                        )) : <div>No services found</div>}
+                    </div>
+                </div>
+
                 <button
                     type="submit"
                     value="Invia"
-                    className="btn btn-primary m-2 px-4 py-2 rounded shadow-sm btn-sm"
+                    className="btn btn-primary mt-4 px-4 py-2 rounded shadow-sm btn-sm"
                 >
                     Invia
                 </button>
-
             </form>
         </div>
     );
