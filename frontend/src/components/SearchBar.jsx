@@ -79,11 +79,14 @@ function SearchForm() {
                         onChange={handleInputChange}
                     />
                 </div>
-                <input
+                <button
                     type="submit"
                     value="Invia"
-                    className="btn btn-primary ms-2"
-                />
+                    className="btn btn-primary m-2 px-4 py-2 rounded shadow-sm btn-sm"
+                >
+                    Invia
+                </button>
+
             </form>
         </div>
     );
