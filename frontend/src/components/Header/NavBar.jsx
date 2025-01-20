@@ -53,6 +53,9 @@ const Navbar = () => {
                             <li>
                                 <Link className='text-white' to='/apartments/addapartment'>Add your Apartment</Link>
                             </li>
+                            <li>
+                                <Link className='text-white' to='/search'>Search Apartments</Link>
+                            </li>
                             <hr className='p-0 my-3' />
                             <li>
                                 <Link to="/login" className='text-white'>Login</Link>
