@@ -88,6 +88,15 @@ function showAll(req, res) {
     });
 }
 
+function indexCity(req, res) {
+    connection.query('SELECT DISTINCT city FROM apartments', (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+
+        // Estrai solo i valori delle città
+        const cities = results.map(row => row.city);
+        res.json({ cities });
+    });
+}
 
 
 /* Validation server side */
@@ -279,7 +288,7 @@ function voteApartment(req, res) {
 }
 
 
-module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment, showAll }
+module.exports = { index, show, addReview, addApartment, updateApartment, voteApartment, showAll, indexCity }
 
 
 

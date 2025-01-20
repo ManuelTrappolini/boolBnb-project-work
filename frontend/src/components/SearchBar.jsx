@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 function SearchForm() {
+    const [cities, setCities] = useState()
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         trendingCity: "",
@@ -10,7 +11,27 @@ function SearchForm() {
         minBeds: 0
     });
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3002/apartments/city');
+                const data = await response.json();
+                console.log(data);
 
+                if (data && data.cities) {
+                    setCities(data.cities);
+                } else {
+                    console.error('Formato della risposta non valido:', data);
+                }
+            } catch (error) {
+                console.error('Errore nel caricamento dei dati:', error);
+            }
+        };
+        console.log(cities);
+
+
+        fetchData();
+    }, []);
 
     const handleInputChange = (e) => {
         e.preventDefault()
