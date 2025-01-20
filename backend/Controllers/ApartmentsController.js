@@ -178,17 +178,16 @@ function addReview(req, res) {
 function addApartment(req, res) {
     console.log("Received request to add an apartment");
 
-    if (!req.file) {
-        console.error("No file uploaded.");
-        return res.status(400).json({ success: false, error: "No file uploaded." });
+    // Se non viene caricato nessun file, imposta picture_url a un valore di default
+    let imageUrl = '';
+    if (req.file) {
+        let imagePath = req.file.path;
+        console.log("Image uploaded to path:", imagePath);
+        imagePath = imagePath.replace(/\\/g, '/');
+        imageUrl = `/uploads/${req.file.filename}`;
+    } else {
+        console.log("No file uploaded, using default image URL.");
     }
-
-    let imagePath = req.file.path;
-    console.log("Image uploaded to path:", imagePath);
-
-
-    imagePath = imagePath.replace(/\\/g, '/');
-    const imageUrl = `/uploads/${req.file.filename}`;
 
     const { title, rooms_number, beds, bathrooms, square_meters, address, description, services, city, slug, picture_url } = req.body;
     console.log("Apartment data received:", { title, rooms_number, beds, bathrooms, square_meters, address, description, services, city, slug, picture_url });
@@ -218,7 +217,7 @@ function addApartment(req, res) {
     console.log("Using owner_id:", owner_id);
 
     // Se `picture_url` viene passato nel corpo della richiesta, usalo al posto del percorso del file
-    const finalImageUrl = picture_url ? picture_url : imageUrl;
+    const finalImageUrl = picture_url || imageUrl || '/path/to/default/image.jpg';  // URL di default se nessuna immagine è fornita
 
     // Log prima dell'invio della query SQL
     const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, vote, owner_id, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)';
@@ -257,6 +256,7 @@ function addApartment(req, res) {
         }
     });
 }
+
 
 
 /* registered user update the apartment */
