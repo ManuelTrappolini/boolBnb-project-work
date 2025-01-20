@@ -119,7 +119,7 @@ const FormEmail = forwardRef(({apartmentId}, ref) => {
                             placeholder="e.g. John Smith"
 
                         />
-                        {getErrorMessage('name') && <div className="text-danger">{getErrorMessage('name')}</div>}
+                        {getErrorMessage('name') && <div className="text-danger mt-2">{getErrorMessage('name')}</div>}
                     </div>
 
                     <div className="col-12">
@@ -136,7 +136,7 @@ const FormEmail = forwardRef(({apartmentId}, ref) => {
                             onChange={handleChange('applicantEmail', setApplicantEmail)}
                             placeholder="e.g. example@gmail.com"
                         />
-                        {getErrorMessage('applicantEmail') && <div className="text-danger">{getErrorMessage('applicantEmail')}</div>}
+                        {getErrorMessage('applicantEmail') && <div className="text-danger mt-2">{getErrorMessage('applicantEmail')}</div>}
                     </div>
 
                     <div className="col-12">
@@ -150,7 +150,7 @@ const FormEmail = forwardRef(({apartmentId}, ref) => {
                             onChange={handleChange('subject', setSubject)}
                             placeholder="Enter the subject"
                         />
-                        {getErrorMessage('subject') && <div className="text-danger">{getErrorMessage('subject')}</div>}
+                        {getErrorMessage('subject') && <div className="text-danger mt-2">{getErrorMessage('subject')}</div>}
                     </div>
 
                     <div className="col-12">
@@ -164,7 +164,7 @@ const FormEmail = forwardRef(({apartmentId}, ref) => {
                             placeholder="Enter your message"
                         />
                         <small>{text.length}/{maxTextLength} characters</small>
-                        {getErrorMessage('text') && <div className="text-danger">{getErrorMessage('text')}</div>}
+                        {getErrorMessage('text') && <div className="text-danger mt-2">{getErrorMessage('text')}</div>}
                     </div>
 
                     <div className="col-12">

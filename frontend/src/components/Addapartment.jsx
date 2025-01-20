@@ -128,7 +128,7 @@ export default function AddApartment() {
 
     const getInputClass = (field) => {
         // Verifica se l'input ha errori
-        return errorMessages.some(error => error.field === field) ? 'input-error' : '';
+        return errorMessages.some(error => error.field === field) ? 'is-invalid' : '';
     };
 
     const getErrorMessage = (field) => {
@@ -344,7 +344,7 @@ export default function AddApartment() {
 
                     <div className="col-12">
                         <label htmlFor="services" className="form-label">Select Services*</label>
-                        <div className="d-flex flex-wrap">
+                        <div className="d-flex flex-wrap gap-3">
                             {servicesList.map((service) => (
                                 <div className="form-check me-4" key={service.id}>
                                     <input
@@ -368,7 +368,7 @@ export default function AddApartment() {
                     <div className="col-12">
                         <button type="submit" className="btn btn-primary me-3 col-12 col-md-2">Add Apartment</button>
                         {errorMessages.length > 0 && (
-                            <div className="text-danger">
+                            <div className="text-danger mt-3">
                                 <ul>
                                     {errorMessages.map((msg, index) => <li key={index}>{msg.message}</li>)}
                                 </ul>
