@@ -100,25 +100,35 @@ export default function AddApartment() {
             services: selectedServices
         };
 
+        const token = localStorage.getItem('authToken');  // Assicurati che il token sia salvato correttamente
+
+        // Controlla se il token è presente
+        if (!token) {
+            console.log("No token available!");
+            return;  // Puoi mostrare un messaggio di errore o fare qualcosa se il token manca
+        }
+
         // Simula l'invio dei dati al backend
         fetch('http://localhost:3002/apartments/addapartment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`  // Aggiungi il token come header
             },
             body: JSON.stringify(formData),
         })
             .then((res) => res.json())
             .then((data) => {
+                console.log("Response data: ", data);
                 // Nascondi il form e mostra il messaggio di successo
                 setIsFormVisible(false);
                 setSuccessMessage('Form submitted successfully!');
 
                 // Mostra il messaggio di successo per 3 secondi, poi ripristina il form
                 setTimeout(() => {
-                    setIsFormVisible(true); // Mostra di nuovo il form
-                    setSuccessMessage(''); // Nascondi il messaggio di successo
-                    resetForm(); // Reset del form
+                    setIsFormVisible(true);
+                    setSuccessMessage('');
+                    resetForm();
                 }, 3000);
             })
             .catch((error) => {

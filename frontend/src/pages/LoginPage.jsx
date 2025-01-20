@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
@@ -7,8 +8,8 @@ export default function LoginPage() {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
+    const { login } = useAuth(); // Usa il contesto per la funzione login
 
-    // Funzione di validazione del form
     const validateForm = () => {
         const validationErrors = [];
 
@@ -23,7 +24,6 @@ export default function LoginPage() {
         return validationErrors;
     };
 
-    // Gestione del submit del form
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
 
@@ -34,7 +34,6 @@ export default function LoginPage() {
         }
 
         try {
-            // Effettua la chiamata all'API utilizzando fetch
             const response = await fetch('http://localhost:3002/apartments/login', {
                 method: 'POST',
                 headers: {
@@ -46,27 +45,22 @@ export default function LoginPage() {
                 }),
             });
 
-            // Controllo della risposta
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Invalid credentials');
             }
 
             const data = await response.json();
-
-            // Gestione della risposta di successo
             if (data.token) {
                 console.log('Login successful');
-                localStorage.setItem('authToken', data.token); 
-                navigate('/'); 
+                login(data.token);  // Usa il contesto per il login
+                navigate('/');
             }
         } catch (error) {
-            // Gestione degli errori dell'API
             setErrors([{ field: 'api', message: error.message }]);
         }
     };
 
-    // Gestori di input che rimuovono gli errori quando l'utente inizia a digitare
     const handleInputChange = (field, value) => {
         switch (field) {
             case 'username':
@@ -81,12 +75,10 @@ export default function LoginPage() {
         setErrors((prevErrors) => prevErrors.filter((error) => error.field !== field));
     };
 
-    // Funzione per ottenere la classe di input in base agli errori
     const getInputClass = (field) => {
         return errors.some((error) => error.field === field) ? 'is-invalid' : '';
     };
 
-    // Funzione per ottenere il messaggio di errore
     const getErrorMessage = (field) => {
         const error = errors.find((error) => error.field === field);
         return error ? error.message : '';
@@ -128,7 +120,6 @@ export default function LoginPage() {
                                         onChange={(e) => handleInputChange('password', e.target.value)}
                                         className={`form-control py-3 input-style ${getInputClass('password')}`}
                                     />
-                                    {/* Icona della visibilità della password */}
                                     {!errors.some((error) => error.field === 'password') && (
                                         <div
                                             className="position-absolute top-eye end-0 translate-middle-y pe-3"
@@ -144,13 +135,10 @@ export default function LoginPage() {
                                     )}
                                 </div>
 
-
-                                {/* Submit Button */}
                                 <div className="d-flex gap-3">
                                     <button type="submit" className="btn btn-primary w-100 py-3 btn-style">Log in</button>
                                 </div>
 
-                                {/* Errori API */}
                                 {getErrorMessage('api') && (
                                     <div className="text-danger small mt-2">{getErrorMessage('api')}</div>
                                 )}

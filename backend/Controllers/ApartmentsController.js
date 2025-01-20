@@ -181,8 +181,7 @@ function addApartment(req, res) {
     }
 
 
-    /* const owner_id = req.user.userId; */
-    const owner_id = 2;
+    const owner_id = req.user.userId; 
 
     const sql = 'INSERT INTO apartments (title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, vote, owner_id, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)';
     const apartmentData = [title, rooms_number, beds, bathrooms, square_meters, address, city, picture_url, description, owner_id, apartmentSlug];
@@ -192,6 +191,7 @@ function addApartment(req, res) {
     connection.query(sql, apartmentData, (err, result) => {
         if (err) return res.status(500).json({ error: err });
 
+        console.log('Apartment insert result:', result);
         const apartmentId = result.insertId;
 
         // check if services exist
