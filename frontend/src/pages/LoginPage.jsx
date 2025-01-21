@@ -119,6 +119,7 @@ export default function LoginPage() {
                                         value={password}
                                         onChange={(e) => handleInputChange('password', e.target.value)}
                                         className={`form-control py-3 input-style ${getInputClass('password')}`}
+                                        autoComplete='off'
                                     />
                                     {!errors.some((error) => error.field === 'password') && (
                                         <div

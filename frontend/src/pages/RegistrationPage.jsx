@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function RegistrationPage() {
     const [name, setName] = useState('');
@@ -61,7 +61,6 @@ export default function RegistrationPage() {
         }
 
         try {
-            // Effettua la chiamata all'API utilizzando fetch
             const response = await fetch('http://localhost:3002/apartments/register', {
                 method: 'POST',
                 headers: {
@@ -75,7 +74,6 @@ export default function RegistrationPage() {
                 }),
             });
 
-            // Controllo della risposta
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Registration failed.');
@@ -83,13 +81,11 @@ export default function RegistrationPage() {
 
             const data = await response.json();
 
-            // Gestione della risposta di successo
             if (data.success) {
                 console.log('Registration successful:', data);
-                navigate('/login'); // Reindirizza alla pagina di login
+                navigate('/login');
             }
         } catch (error) {
-            // Gestione degli errori dell'API
             setErrors([{ field: 'api', message: error.message }]);
         }
     };
@@ -173,6 +169,7 @@ export default function RegistrationPage() {
                                         value={email}
                                         onChange={(e) => handleInputChange('email', e.target.value)}
                                         className={`form-control py-3 input-style ${getInputClass('email')}`}
+                                        autoComplete='off'
                                     />
                                     {getErrorMessage('email') && (
                                         <div className="text-danger small mt-1">{getErrorMessage('email')}</div>
@@ -204,7 +201,18 @@ export default function RegistrationPage() {
                                         value={password}
                                         onChange={(e) => handleInputChange('password', e.target.value)}
                                         className={`form-control py-3 input-style ${getInputClass('password')}`}
+                                        autoComplete='off'
                                     />
+                                    {!errors.some((error) => error.field === 'password') && (
+                                        <div
+                                            className="position-absolute top-eye end-0 translate-middle-y pe-3"
+                                            onMouseDown={() => setPasswordVisible(true)}
+                                            onMouseUp={() => setPasswordVisible(false)}
+                                            onMouseLeave={() => setPasswordVisible(false)}
+                                        >
+                                            {passwordVisible ? <i className="bi bi-eye-slash"></i> : <i className="bi bi-eye"></i>}
+                                        </div>
+                                    )}
                                     {getErrorMessage('password') && (
                                         <div className="text-danger small mt-1">{getErrorMessage('password')}</div>
                                     )}
@@ -219,7 +227,18 @@ export default function RegistrationPage() {
                                         value={confirmPassword}
                                         onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                                         className={`form-control py-3 input-style ${getInputClass('confirmPassword')}`}
+                                        autoComplete='off'
                                     />
+                                    {!errors.some((error) => error.field === 'confirmPassword') && (
+                                        <div
+                                            className="position-absolute top-eye end-0 translate-middle-y pe-3"
+                                            onMouseDown={() => setConfirmPasswordVisible(true)}
+                                            onMouseUp={() => setConfirmPasswordVisible(false)}
+                                            onMouseLeave={() => setConfirmPasswordVisible(false)}
+                                        >
+                                            {confirmPasswordVisible ? <i className="bi bi-eye-slash"></i> : <i className="bi bi-eye"></i>}
+                                        </div>
+                                    )}
                                     {getErrorMessage('confirmPassword') && (
                                         <div className="text-danger small mt-1">{getErrorMessage('confirmPassword')}</div>
                                     )}
@@ -246,7 +265,7 @@ export default function RegistrationPage() {
                                 <div className="d-flex flex-column gap-3">
                                     <button type="submit" className="btn btn-primary w-100 py-3 btn-style">Register</button>
                                     <span className="text-center">
-                                        Already registered? <a href="/login" className="text-primary">Log in</a>
+                                        Already registered? <Link to="/login" className="text-primary">Log in</Link>
                                     </span>
                                 </div>
 
