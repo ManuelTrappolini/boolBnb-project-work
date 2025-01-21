@@ -47,7 +47,7 @@ const Navbar = () => {
                                     </>
                                 ) : (
                                     <li>
-                                        <div onClick={logout} className="text-white">Logout</div>
+                                        <span onClick={logout} className="text-white">Logout</span>
                                     </li>
                                 )}
                             </ul>
@@ -82,7 +82,7 @@ const Navbar = () => {
                                 </>
                             ) : (
                                 <li>
-                                    <div onClick={logout} className="text-white">Logout</div>
+                                    <span onClick={logout} className="text-white">Logout</span>
                                 </li>
                             )}
                         </ul>
