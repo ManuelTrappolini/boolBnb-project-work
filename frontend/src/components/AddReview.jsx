@@ -115,6 +115,7 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
                                     onChange={handleInputChange('authorName', setAuthorName)}
                                     aria-invalid={!!fieldErrors.authorName}
                                     aria-describedby="authorNameError"
+                                    autoComplete="off"
                                 />
                                 {fieldErrors.authorName && <div id="authorNameError" className="invalid-feedback">{fieldErrors.authorName}</div>}
                             </div>
@@ -136,7 +137,7 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
                             </div>
 
                             <div className="mb-3 col-12 col-md-2">
-                                <label htmlFor="daysOfStay" className="form-label">Days of Stay</label>
+                                <label htmlFor="daysOfStay" className="form-label">Days of Stay*</label>
                                 <input
                                     className={`form-control ${fieldErrors.daysOfStay ? 'is-invalid' : ''}`}
                                     type="number"
@@ -159,7 +160,7 @@ export default function AddReview({ apartmentId, onReviewSubmit }) {
                                 id="description"
                                 value={description}
                                 rows="3"
-                                placeholder="Describe your stay..."
+                                placeholder="Write your review here, at least 15 characters"
                                 onChange={handleInputChange('description', setDescription)}
                                 aria-invalid={!!fieldErrors.description}
                                 aria-describedby="descriptionError"
