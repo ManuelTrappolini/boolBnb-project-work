@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
-
+import { useNavigate, useLocation } from "react-router-dom";
 
 function SearchForm() {
     const [cities, setCities] = useState([]);
@@ -12,16 +11,14 @@ function SearchForm() {
     const [isMounted, setIsMounted] = useState(false); // Flag per sapere se il componente è montato
 
     const navigate = useNavigate();
+    const location = useLocation(); // Hook per ottenere la location corrente (inclusa la query string)
     const [formData, setFormData] = useState({
         trendingCity: "",
-        searchInput: "",
+        searchInput: "", // Aggiungi il campo searchInput
         minRooms: 0,
         minBeds: 0,
         selectedServices: [] // Stato per i servizi selezionati (array di servizi)
     });
-
-    // Effettuare il fetch per le città
-
 
     // Effettuare il fetch per i servizi
     useEffect(() => {
@@ -57,6 +54,16 @@ function SearchForm() {
         }
     }, [services]);
 
+    // Prelevare il parametro searchInput dalla query string e impostarlo nello stato
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const searchInputFromQuery = params.get('searchInput') || ''; // Ottieni il valore del parametro searchInput, se presente
+        setFormData(prev => ({
+            ...prev,
+            searchInput: searchInputFromQuery
+        }));
+    }, [location.search]); // Ogni volta che cambia la query string
+
     // Gestire il cambiamento dell'input nel form
     const handleInputChange = (e) => {
         e.preventDefault();
@@ -84,7 +91,6 @@ function SearchForm() {
         }
     };
 
-
     useEffect(() => {
         if (isMounted) {  // Solo dopo il primo render
             handleSearchSubmit(new Event('submit'));  // Questo invia il form quando i servizi cambiano
@@ -92,8 +98,6 @@ function SearchForm() {
             setIsMounted(true);  // Impostiamo il flag dopo il primo render
         }
     }, [formData.selectedServices]);
-
-
 
     // Gestire il cambiamento dei checkbox dei servizi
     const handleServiceChange = (e) => {
