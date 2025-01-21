@@ -125,7 +125,7 @@ export default function AddApartment() {
                 console.log("Response data: ", data);
                 // Nascondi il form e mostra il messaggio di successo
                 setIsFormVisible(false);
-                setSuccessMessage('Form submitted successfully!');
+                setSuccessMessage('✅Form submitted successfully!');
                 setPicturePreview('');
 
                 setTimeout(() => {
@@ -405,7 +405,7 @@ export default function AddApartment() {
                     </div>
                 </form>
             ) : (
-                <div className="alert alert-success" role="alert">
+                <div className="alert alert-success fw-bold" role="alert">
                     {successMessage}
                 </div>
             )}

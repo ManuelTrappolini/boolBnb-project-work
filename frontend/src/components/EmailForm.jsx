@@ -1,6 +1,6 @@
 import React, { useState, forwardRef } from 'react';
 
-const FormEmail = forwardRef(({apartmentId}, ref) => {
+const FormEmail = forwardRef(({ apartmentId }, ref) => {
     const [name, setName] = useState('');
     const [applicantEmail, setApplicantEmail] = useState('');
     const [subject, setSubject] = useState('');
@@ -17,7 +17,7 @@ const FormEmail = forwardRef(({apartmentId}, ref) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(id);
-        
+
 
         // Validation data
         const errors = [];
@@ -114,7 +114,7 @@ const FormEmail = forwardRef(({apartmentId}, ref) => {
                             value={name}
                             onChange={handleChange('name', setName)}
 
-                            
+
 
                             placeholder="e.g. John Smith"
 
@@ -131,7 +131,7 @@ const FormEmail = forwardRef(({apartmentId}, ref) => {
                             name="applicantEmail"
                             value={applicantEmail}
 
-                            
+
 
                             onChange={handleChange('applicantEmail', setApplicantEmail)}
                             placeholder="e.g. example@gmail.com"
@@ -161,7 +161,7 @@ const FormEmail = forwardRef(({apartmentId}, ref) => {
                             name="text"
                             value={text}
                             onChange={handleChange('text', setText)}
-                            placeholder="Enter your message"
+                            placeholder="write your message here, it must be at least 15 characters long"
                         />
                         <small>{text.length}/{maxTextLength} characters</small>
                         {getErrorMessage('text') && <div className="text-danger mt-2">{getErrorMessage('text')}</div>}

@@ -75,7 +75,8 @@ export default function DetailApartmentPage() {
                                     <HeartCounter cardId={apartment.id} initialVotes={apartment.vote} />
                                 </div>
                             </div>
-                            <p className="text-muted py-2">{apartment.address}</p>
+                            <p className="text-muted py-2">{apartment.address} , <span>{apartment.city}</span></p>
+
                             <p className="pt-2 mb-5">{apartment.description}</p>
                             <h5 className="fw-semibold mb-3">Services</h5>
                             <ul className="list-unstyled d-flex flex-wrap">
@@ -130,7 +131,7 @@ export default function DetailApartmentPage() {
                             </div>
                         </div>
                     </div>
-
+                    <FormEmail ref={emailFormRef} id="emailForm" apartmentId={apartment.id} />
                     {/* Review Section */}
                     <div className="my-5">
                         <AddReview apartmentId={apartment.id} onReviewSubmit={() => setTriggerFetch(!triggerFetch)} />
@@ -163,7 +164,7 @@ export default function DetailApartmentPage() {
                             )}
                         </div>
                     </div>
-                    <FormEmail ref={emailFormRef} id="emailForm" apartmentId={apartment.id} />
+
 
 
 
