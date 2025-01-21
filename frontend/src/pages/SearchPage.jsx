@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import HeartCounter from '../components/HeartsCounter';
-import { FaFan, FaShower, FaBed, FaAccessibleIcon, FaUtensils, FaParking, FaPaw, FaTree, FaSmoking, FaTv, FaWifi, FaQuestionCircle } from 'react-icons/fa';
+import { FaFan, FaShower, FaBed, FaAccessibleIcon, FaUtensils, FaParking, FaPaw, FaTree, FaSmoking, FaTv, FaWifi } from 'react-icons/fa';
 
-export default function HomePage() {
+export default function SearchPage() {
     const [cards, setCards] = useState([]);
     const [search, setSearch] = useState('');
     const [minRooms, setMinRooms] = useState('');
@@ -36,14 +36,12 @@ export default function HomePage() {
         };
     };
 
-    // Recupera i parametri di ricerca all'avvio
     useEffect(() => {
         const { search, minRooms, minBeds, selectedServices } = getQueryParams();
         setSearch(search);
         setMinRooms(minRooms);
         setMinBeds(minBeds);
-        setSelectedServices(selectedServices);
-
+        setSelectedServices(selectedServices.map(service => normalizeString(service))); // Converto a minuscolo i servizi selezionati
     }, [location.search]);
 
     useEffect(() => {
@@ -51,22 +49,18 @@ export default function HomePage() {
             try {
                 const response = await fetch('http://localhost:3002/apartments/service');
                 const data = await response.json();
-                console.log(data);
-
-                if (data && data.apartments) {
-                    setCards(data.apartments);
-                } else {
-                    console.error('Formato della risposta non valido:', data);
-                }
+                setCards(data.apartments || []);
             } catch (error) {
                 console.error('Errore nel caricamento dei dati:', error);
             }
         };
-
         fetchData();
     }, []);
 
-    const normalizeString = (str) => str.replace(/[-\s]/g, '').toLowerCase();
+    // Funzione di normalizzazione del nome, per rimuovere spazi e trattini
+    const normalizeString = (str) => {
+        return str.replace(/[-\s]/g, '').toLowerCase();
+    };
 
     const filteredCards = cards.filter((card) => {
         if (!card) return false;
@@ -75,14 +69,10 @@ export default function HomePage() {
         const matchesMinRooms = minRooms ? card.rooms_number >= parseInt(minRooms) : true;
         const matchesMinBeds = minBeds ? card.beds >= parseInt(minBeds) : true;
 
-        // Verifica che l'appartamento abbia tutti i servizi selezionati
         const matchesSelectedServices = selectedServices.length > 0
             ? selectedServices.every(serviceName =>
                 card.services.some(cardService => {
-                    // Normalizza il nome del servizio selezionato
-                    const normalizedServiceName = normalizeString(serviceName);
-                    // Trova il servizio corrispondente dal nome normalizzato
-                    const matchedService = servicesList.find(service => normalizeString(service.name) === normalizedServiceName);
+                    const matchedService = servicesList.find(service => normalizeString(service.name) === serviceName);
                     return matchedService && cardService.id_service === matchedService.id;
                 })
             )
@@ -90,12 +80,6 @@ export default function HomePage() {
 
         return matchesSearch && matchesMinRooms && matchesMinBeds && matchesSelectedServices;
     });
-
-
-
-
-
-
 
     return (
         <div className="container my-5">
@@ -117,7 +101,6 @@ export default function HomePage() {
                     <div key={card.id} className="col-md-4 col-12 p-3" style={{ height: '650px' }}>
                         <div className="card h-100">
                             <div className='h-50'>
-                                {/* image */}
                                 <Link to={`/apartments/${card.slug}`}>
                                     <img
                                         src={card.picture_url.startsWith('http') ? card.picture_url : `http://localhost:3002${card.picture_url}`}
@@ -125,23 +108,17 @@ export default function HomePage() {
                                         alt={card.title}
                                     />
                                 </Link>
-
                             </div>
 
                             <div className='d-flex flex-column justify-content-between h-50'>
                                 <div>
-
-                                    {/* info */}
                                     <div className="p-3">
-
                                         <Link to={`/apartments/${card.slug}`} className="text-black">
                                             <h6 className="card-title">{card.title}</h6>
                                         </Link>
                                         <p className="mb-0">{card.address}, {card.city}</p>
-
                                     </div>
 
-                                    {/* Details */}
                                     <div className="px-3 rounded">
                                         <ul className="list-unstyled">
                                             <div className='d-flex justify-content-between'>
@@ -167,37 +144,28 @@ export default function HomePage() {
                                         </ul>
                                     </div>
 
-                                    {/* service */}
                                     <div className='ps-2'>
                                         {card.services?.length > 0 ? (
                                             <div className="d-flex flex-wrap justify-content-start gap-2">
                                                 {card.services.map((service, index) => {
                                                     const matchedService = servicesList.find(item => item.id === service.id_service);
+                                                    const isSelected = selectedServices.includes(normalizeString(matchedService?.name));
 
-                                                    if (matchedService) {
-                                                        return (
-                                                            <div key={index} className="service-icon d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-                                                                {matchedService.icon}
+                                                    return (
+                                                        <div key={index} className="service-icon d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                                                            <div style={{ color: isSelected ? 'green' : 'inherit' }}>
+                                                                {matchedService?.icon}
                                                             </div>
-                                                        );
-                                                    } else {
-                                                        return (
-                                                            <div key={index} className="service-icon d-flex align-items-center justify-content-center bg-light  text-muted" style={{ width: '40px', height: '40px' }}>
-                                                                <FaQuestionCircle />
-                                                            </div>
-                                                        );
-                                                    }
+                                                        </div>
+                                                    );
                                                 })}
                                             </div>
                                         ) : (
                                             <p className="text-muted">No services available for this apartment.</p>
                                         )}
                                     </div>
-
                                 </div>
                                 <div>
-
-                                    {/* review and heart */}
                                     <div className='d-flex justify-content-between ps-3 pt-2 pb-3'>
                                         <div className='pt-1'>
                                             Recensioni: {card.reviews.length}
@@ -206,7 +174,6 @@ export default function HomePage() {
                                             <HeartCounter cardId={card.id} initialVotes={card.vote} />
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
