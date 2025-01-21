@@ -18,19 +18,24 @@ export default function HomePage() {
 
     return (
         <>
+            <div className='jumbtron d-flex justify-content-center align-items-center'>
+                <div className="jumb-overlay"></div>
+                <div className='z-3'>
+                    <h2 className='mb-4 text-white'>Finde Your Perfect Place </h2>
+                    <SearchHome />
+                </div>
+            </div>
             <div className="container my-5">
                 <div className='d-flex'>
-                    <h1 className='mb-4'>Explore Unique Apartments on BoolBnB</h1>
-                    <SearchHome />
-
+                    <h1 className='mb-4'>Top rated </h1>
                 </div>
-                <hr />
+                <hr className='border-primary' />
                 {/* results */}
                 <div className="row">
                     {cards.map((card) => (
-                        <div key={card.id} className="col-md-3 col-12 p-3" style={{ height: '400px' }}>
+                        <div key={card.id} className="col-md-3 col-12 p-3" style={{ height: '380px'}}>
 
-                            <div className="card h-100">
+                            <div className="card h-100 border-primary">
                                 <Link to={`http://localhost:5173/apartments/${card.slug}`} style={{ height: '60%' }}>
                                     <img
                                         src={card.picture_url.startsWith('http') ? card.picture_url : `http://localhost:3002${card.picture_url}`}

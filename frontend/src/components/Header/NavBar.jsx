@@ -18,36 +18,36 @@ const Navbar = () => {
     return (
         <nav>
             <div className="menu">
-                <ul className='d-flex m-0 list-unstyled gap-3'>
+                <ul className='d-flex justify-content-center align-items-center m-0 list-unstyled gap-3'>
                     <li>
-                        <Link className='text-white pe-3' to={'/search'}>Search Appartment</Link>
+                        <Link className='text-white bold border_btm' to={'/search'}>Search Appartment</Link>
                     </li>
                     {isLoggedIn && (
                         <li>
-                            <Link className='text-white' to='/apartments/addapartment'>Add your Apartment</Link>
+                            <Link className='text-white bold border_btm' to='/apartments/addapartment'>Add your Apartment</Link>
                         </li>
                     )}
                     <li onClick={toggleDropdown}>
-                        <Link to="#" className='text-white'>
-                            <i className="bi bi-person"></i>
+                        <Link to="#" className='text-white bold'>
+                            <i className="bi bi-person-circle"></i>
                         </Link>
                     </li>
 
                     {isDropdownOpen && (
-                        <div className="drop rounded">
+                        <div className="drop rounded shadow-lg">
                             <ul className='d-flex flex-column m-0 p-0 list-unstyled'>
                                 {!isLoggedIn ? (
                                     <>
                                         <li>
-                                            <Link to="/login" className='text-white'>Login</Link>
+                                            <Link to="/login" className='text-white bold border_btm'>Login </Link>
                                         </li>
                                         <li>
-                                            <Link to="/register" className='text-white'>Register</Link>
+                                            <Link to="/register" className='text-white bold border_btm'>Register</Link>
                                         </li>
                                     </>
                                 ) : (
                                     <li>
-                                        <span onClick={logout} className="text-white">Logout</span>
+                                        <span onClick={logout} className="text-white bold border_btm">Logout</span>
                                     </li>
                                 )}
                             </ul>
@@ -56,33 +56,33 @@ const Navbar = () => {
                 </ul>
             </div>
 
-            <div className='menu-responsive'>
+            <div className='menu-responsive '>
                 <i className={`bi ${menuOpen ? 'bi-x' : 'bi-list'} text-white`} onClick={HamburgerToggle}></i>
 
                 {menuOpen && (
-                    <div className='d-flex rounded' id='label-menu'>
+                    <div className='d-flex rounded shadow-lg' id='label-menu'>
                         <ul className='d-flex flex-column m-0 p-0 list-unstyled'>
                             {isLoggedIn && (
                                 <li>
-                                    <Link className='text-white' to='/apartments/addapartment'>Add your Apartment</Link>
+                                    <Link className='text-white bold border_btm' to='/apartments/addapartment'>Add your Apartment</Link>
                                 </li>
                             )}
                             <li>
-                                <Link className='text-white' to='/search'>Search Apartments</Link>
+                                <Link className='text-white bold border_btm' to='/search'>Search Apartments</Link>
                             </li>
                             <hr className='p-0 my-3' />
                             {!isLoggedIn ? (
                                 <>
                                     <li>
-                                        <Link to="/login" className='text-white'>Login</Link>
+                                        <Link to="/login" className='text-white bold border_btm'>Login</Link>
                                     </li>
                                     <li>
-                                        <Link to="/register" className='text-white'>Register</Link>
+                                        <Link to="/register" className='text-white bold border_btm'>Register</Link>
                                     </li>
                                 </>
                             ) : (
                                 <li>
-                                    <span onClick={logout} className="text-white">Logout</span>
+                                    <span onClick={logout} className="text-white bold border_btm">Logout</span>
                                 </li>
                             )}
                         </ul>
