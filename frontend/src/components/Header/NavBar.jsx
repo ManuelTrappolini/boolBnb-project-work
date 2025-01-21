@@ -15,16 +15,23 @@ const Navbar = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+    // Funzione per chiudere il menu hamburger
+    const closeMenu = () => {
+        setMenuOpen(false);
+        setIsDropdownOpen(false)
+
+    };
+
     return (
         <nav>
             <div className="menu">
                 <ul className='d-flex justify-content-center align-items-center m-0 list-unstyled gap-3'>
                     <li>
-                        <Link className='text-white bold border_btm' to={'/search'}>Search Appartment</Link>
+                        <Link className='text-white bold border_btm' to={'/search'} onClick={closeMenu}>Search Appartment</Link>
                     </li>
                     {isLoggedIn && (
                         <li>
-                            <Link className='text-white bold border_btm' to='/apartments/addapartment'>Add your Apartment</Link>
+                            <Link className='text-white bold border_btm' to='/apartments/addapartment' onClick={closeMenu}>Add your Apartment</Link>
                         </li>
                     )}
                     <li onClick={toggleDropdown}>
@@ -39,15 +46,15 @@ const Navbar = () => {
                                 {!isLoggedIn ? (
                                     <>
                                         <li>
-                                            <Link to="/login" className='text-white bold border_btm'>Login </Link>
+                                            <Link to="/login" className='text-white bold border_btm' onClick={closeMenu}>Login</Link>
                                         </li>
                                         <li>
-                                            <Link to="/register" className='text-white bold border_btm'>Register</Link>
+                                            <Link to="/register" className='text-white bold border_btm' onClick={closeMenu}>Register</Link>
                                         </li>
                                     </>
                                 ) : (
                                     <li>
-                                        <span onClick={logout} className="text-white bold border_btm">Logout</span>
+                                        <span onClick={() => { logout(); closeMenu(); }} className="text-white bold border_btm">Logout</span>
                                     </li>
                                 )}
                             </ul>
@@ -64,25 +71,25 @@ const Navbar = () => {
                         <ul className='d-flex flex-column m-0 p-0 list-unstyled'>
                             {isLoggedIn && (
                                 <li>
-                                    <Link className='text-white bold border_btm' to='/apartments/addapartment'>Add your Apartment</Link>
+                                    <Link className='text-white bold border_btm' to='/apartments/addapartment' onClick={closeMenu}>Add your Apartment</Link>
                                 </li>
                             )}
                             <li>
-                                <Link className='text-white bold border_btm' to='/search'>Search Apartments</Link>
+                                <Link className='text-white bold border_btm' to='/search' onClick={closeMenu}>Search Apartments</Link>
                             </li>
                             <hr className='p-0 my-3' />
                             {!isLoggedIn ? (
                                 <>
                                     <li>
-                                        <Link to="/login" className='text-white bold border_btm'>Login</Link>
+                                        <Link to="/login" className='text-white bold border_btm' onClick={closeMenu}>Login</Link>
                                     </li>
                                     <li>
-                                        <Link to="/register" className='text-white bold border_btm'>Register</Link>
+                                        <Link to="/register" className='text-white bold border_btm' onClick={closeMenu}>Register</Link>
                                     </li>
                                 </>
                             ) : (
                                 <li>
-                                    <span onClick={logout} className="text-white bold border_btm">Logout</span>
+                                    <span onClick={() => { logout(); closeMenu(); }} className="text-white bold border_btm">Logout</span>
                                 </li>
                             )}
                         </ul>
