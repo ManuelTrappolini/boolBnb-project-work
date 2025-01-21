@@ -99,9 +99,17 @@ function SearchForm() {
         }
     };
 
+    useEffect(() => {
+        // Invia la ricerca ogni volta che i servizi selezionati cambiano
+        handleSearchSubmit(new Event("submit"))
+    }, [formData.selectedServices]);  // Monitoriamo solo i cambiamenti nei servizi selezionati
+
+
     // Gestire il cambiamento dei checkbox dei servizi
     const handleServiceChange = (e) => {
         const { value, checked } = e.target;
+
+        // Aggiornare lo stato con i servizi selezionati
         setFormData((prev) => {
             let selectedServices = [...prev.selectedServices];
             if (checked) {
@@ -209,14 +217,12 @@ function SearchForm() {
 
                 {/* Bottone per mostrare/nascondere i servizi */}
                 <div>
-
                     <button
                         type="button"
                         className="btn btn-secondary mt-4 px-4 py-2 rounded shadow-sm btn-sm"
                         style={{ height: '45px' }}
                         onClick={toggleServicesVisibility}
                     >
-
                         Filter by Service
                     </button>
 
@@ -225,48 +231,44 @@ function SearchForm() {
                         <div
                             className="col-6 col-md-2"
                             style={{
-                                position: 'absolute',  // Posizionamento assoluto rispetto al form
-
-                                top: '100%',  // Posiziona la finestra subito sotto il bottone // Allinea a sinistra del form
-                                backgroundColor: '#f8f9fa',  // Colore di sfondo chiaro
+                                position: 'absolute',
+                                top: '100%',
+                                backgroundColor: '#f8f9fa',
                                 padding: '15px',
                                 borderRadius: '5px',
-                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Ombra per l'effetto finestra
-                                zIndex: 1, // Assicurati che appaia sopra gli altri contenuti
-                                // Assicurati che la larghezza sia quella del form
+                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                                zIndex: 1,
                             }}
                         >
                             <label htmlFor="selectedServices" className="form-label">Select Services:</label>
                             <div>
-                                <div className="">
-                                    {serviceNames.length > 0 ? serviceNames.map((service, index) => (
-                                        <div key={index} className="form-check">
-                                            <input
-                                                type="checkbox"
-                                                className="form-check-input"
-                                                id={`service-${index}`}
-                                                value={service}
-                                                checked={formData.selectedServices.includes(service)}
-                                                onChange={handleServiceChange}
-                                            />
-                                            <label className="form-check-label" htmlFor={`service-${index}`}>
-                                                {service}
-                                            </label>
-                                        </div>
-                                    )) : <div>No services found</div>}
-                                </div>
-
+                                {serviceNames.length > 0 ? serviceNames.map((service, index) => (
+                                    <div key={index} className="form-check">
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            id={`service-${index}`}
+                                            value={service}
+                                            checked={formData.selectedServices.includes(service)}
+                                            onChange={handleServiceChange}  // Modifica per inviare il form ogni volta
+                                        />
+                                        <label className="form-check-label" htmlFor={`service-${index}`}>
+                                            {service}
+                                        </label>
+                                    </div>
+                                )) : <div>No services found</div>}
                             </div>
                         </div>
                     )}
                 </div>
 
+                {/* Bottone per inviare la ricerca */}
                 <button
                     type="submit"
-                    value="Invia"
                     className="btn btn-primary mt-4 px-4 py-2 rounded shadow-sm btn-sm"
+                    style={{ height: '45px' }}
                 >
-                    Check
+                    Search
                 </button>
             </form>
         </div>
