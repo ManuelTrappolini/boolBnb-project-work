@@ -164,28 +164,6 @@ function SearchForm() {
                         onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // Nasconde il dropdown quando si perde il focus
                         onChange={handleInputChange}
                     />
-
-                    {/* Dropdown delle città */}
-                    {showDropdown && filteredCities.length > 0 && (
-                        <ul className="reviews-scrollable dropdown-menu show position-absolute w-100 shadow" style={{ maxHeight: '150px', overflowY: 'auto', zIndex: 10 }}>
-                            {filteredCities.map((city, index) => (
-                                <li
-                                    key={index}
-                                    className="dropdown-item"
-                                    style={{ cursor: 'pointer' }}
-                                    onMouseDown={() => {
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            searchInput: city
-                                        }));
-                                        setShowDropdown(false);
-                                    }}
-                                >
-                                    {city}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
                 </div>
 
                 {/* Filtro per il numero minimo di stanze */}
