@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
+
 function SearchForm() {
     const [cities, setCities] = useState([]);
     const [filteredCities, setFilteredCities] = useState([]);
