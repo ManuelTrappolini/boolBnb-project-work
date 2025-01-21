@@ -9,6 +9,8 @@ function SearchForm() {
     const [serviceNames, setServiceNames] = useState([]); // Stato per i nomi dei servizi formattati
     const [showDropdown, setShowDropdown] = useState(false);
     const [showServices, setShowServices] = useState(false); // Stato per la visibilità dei servizi
+    const [isMounted, setIsMounted] = useState(false); // Flag per sapere se il componente è montato
+
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         trendingCity: "",
@@ -19,25 +21,7 @@ function SearchForm() {
     });
 
     // Effettuare il fetch per le città
-    useEffect(() => {
-        const fetchCities = async () => {
-            try {
-                const response = await fetch('http://localhost:3002/apartments/city');
-                const data = await response.json();
-                if (data && data.cities) {
-                    const filterCities = data.cities.filter((item, index) => data.cities.indexOf(item) === index);
-                    setCities(filterCities);
-                    setFilteredCities(filterCities); // Mostra tutte le città inizialmente
-                } else {
-                    console.error('Formato della risposta non valido:', data);
-                }
-            } catch (error) {
-                console.error('Errore nel caricamento delle città:', error);
-            }
-        };
 
-        fetchCities();
-    }, []);
 
     // Effettuare il fetch per i servizi
     useEffect(() => {
@@ -100,10 +84,15 @@ function SearchForm() {
         }
     };
 
+
     useEffect(() => {
-        // Invia la ricerca ogni volta che i servizi selezionati cambiano
-        handleSearchSubmit(new Event("submit"))
-    }, [formData.selectedServices]);  // Monitoriamo solo i cambiamenti nei servizi selezionati
+        if (isMounted) {  // Solo dopo il primo render
+            handleSearchSubmit(new Event('submit'));  // Questo invia il form quando i servizi cambiano
+        } else {
+            setIsMounted(true);  // Impostiamo il flag dopo il primo render
+        }
+    }, [formData.selectedServices]);
+
 
 
     // Gestire il cambiamento dei checkbox dei servizi
