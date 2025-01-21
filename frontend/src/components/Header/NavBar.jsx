@@ -54,7 +54,7 @@ const Navbar = () => {
                                     </>
                                 ) : (
                                     <li>
-                                        <span onClick={() => { logout(); closeMenu(); }} className="text-white bold border_btm">Logout</span>
+                                        <span onClick={() => { logout(); closeMenu(); }} className="text-white bold border_btm logout">Logout</span>
                                     </li>
                                 )}
                             </ul>

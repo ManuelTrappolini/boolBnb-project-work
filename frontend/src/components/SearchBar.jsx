@@ -2,11 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function SearchForm() {
-    const [cities, setCities] = useState([]);
-    const [filteredCities, setFilteredCities] = useState([]);
     const [services, setServices] = useState([]);
     const [serviceNames, setServiceNames] = useState([]); // Stato per i nomi dei servizi formattati
-    const [showDropdown, setShowDropdown] = useState(false);
     const [showServices, setShowServices] = useState(false); // Stato per la visibilità dei servizi
     const [isMounted, setIsMounted] = useState(false); // Flag per sapere se il componente è montato
 
@@ -82,13 +79,6 @@ function SearchForm() {
             [name]: newValue
         }));
 
-        // Filtra le città per il dropdown
-        if (name === "searchInput") {
-            const filtered = cities.filter((city) =>
-                city.toLowerCase().startsWith(value.toLowerCase())
-            );
-            setFilteredCities(filtered);
-        }
     };
 
     useEffect(() => {
@@ -153,8 +143,6 @@ function SearchForm() {
                         className="form-control"
                         placeholder="Type Here..."
                         value={formData.searchInput}
-                        onFocus={() => setShowDropdown(true)} // Mostra il dropdown quando l'input è focalizzato
-                        onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // Nasconde il dropdown quando si perde il focus
                         onChange={handleInputChange}
                     />
                 </div>

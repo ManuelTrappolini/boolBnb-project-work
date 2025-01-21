@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 function SearchHome() {
-    const [cities, setCities] = useState([]);
-    const [filteredCities, setFilteredCities] = useState([]);
-    const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         searchInput: "", // Solo l'input di ricerca per la città
@@ -22,21 +19,9 @@ function SearchHome() {
             searchInput: value
         }));
 
-        // Filtra le città per il dropdown
-        const filtered = cities.filter((city) =>
-            city.toLowerCase().startsWith(value.toLowerCase())
-        );
-        setFilteredCities(filtered);
     };
 
-    // Gestire la selezione della città dal dropdown
-    const handleCitySelect = (city) => {
-        setFormData((prev) => ({
-            ...prev,
-            searchInput: city
-        }));
-        setShowDropdown(false); // Nascondi il dropdown dopo la selezione
-    };
+
 
     // Invia la ricerca
     const handleSearchSubmit = (e) => {
@@ -71,26 +56,9 @@ function SearchHome() {
                         className="form-control"
                         placeholder="Type Here..."
                         value={formData.searchInput}
-                        onFocus={() => setShowDropdown(true)} // Mostra il dropdown quando l'input è focalizzato
-                        onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // Nasconde il dropdown quando si perde il focus
+
                         onChange={handleInputChange}
                     />
-
-                    {/* Dropdown delle città */}
-                    {showDropdown && filteredCities.length > 0 && (
-                        <ul className="reviews-scrollable dropdown-menu show position-absolute w-100 shadow" style={{ maxHeight: '150px', overflowY: 'auto', zIndex: 10 }}>
-                            {filteredCities.map((city, index) => (
-                                <li
-                                    key={index}
-                                    className="dropdown-item"
-                                    style={{ cursor: 'pointer' }}
-                                    onMouseDown={() => handleCitySelect(city)} // Aggiungi la funzione di selezione della città
-                                >
-                                    {city}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
                 </div>
 
                 {/* Bottone per inviare la ricerca */}
