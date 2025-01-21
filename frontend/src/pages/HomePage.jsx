@@ -19,7 +19,8 @@ export default function HomePage() {
     return (
         <>
             <div className="container my-5">
-
+                <h1 className='mb-4'>Explore Unique Apartments on BoolBnB</h1>
+                <hr />
                 {/* results */}
                 <div className="row">
                     {cards.map((card) => (

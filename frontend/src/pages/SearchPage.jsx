@@ -99,14 +99,18 @@ export default function HomePage() {
 
     return (
         <div className="container my-5">
-            <SearchBar
-                search={search}
-                setSearch={setSearch}
-                minRooms={minRooms}
-                setMinRooms={setMinRooms}
-                minBeds={minBeds}
-                setMinBeds={setMinBeds}
-            />
+            <h1 className='my-4'>Find the Perfect Home</h1>
+            <hr />
+            <div className='mb-3'>
+                <SearchBar
+                    search={search}
+                    setSearch={setSearch}
+                    minRooms={minRooms}
+                    setMinRooms={setMinRooms}
+                    minBeds={minBeds}
+                    setMinBeds={setMinBeds}
+                />
+            </div>
 
             <div className="row">
                 {filteredCards.length !== 0 ? filteredCards.map((card) => (
