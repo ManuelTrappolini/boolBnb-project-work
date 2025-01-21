@@ -27,9 +27,15 @@ export default function HomePage() {
             </div>
             <div className="container my-5">
                 <div className='d-flex'>
+
                     <h1 className='mb-4'>Top rated </h1>
                 </div>
                 <hr className='border-primary' />
+
+                    
+          
+                
+
                 {/* results */}
                 <div className="row">
                     {cards.map((card) => (

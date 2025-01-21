@@ -151,6 +151,7 @@ export default function RegistrationPage() {
                                         id='name'
                                         placeholder="e.g. Mario Rossi"
                                         value={name}
+                                        autoComplete='off'
                                         onChange={(e) => handleInputChange('name', e.target.value)}
                                         className={`form-control py-3 input-style ${getInputClass('name')}`}
                                     />
@@ -184,6 +185,7 @@ export default function RegistrationPage() {
                                         id='username'
                                         placeholder="e.g. Mario18"
                                         value={username}
+                                        autoComplete='off'
                                         onChange={(e) => handleInputChange('username', e.target.value)}
                                         className={`form-control py-3 input-style ${getInputClass('username')}`}
                                     />

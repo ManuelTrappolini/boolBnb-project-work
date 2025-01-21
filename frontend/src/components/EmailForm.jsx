@@ -113,6 +113,7 @@ const FormEmail = forwardRef(({ apartmentId }, ref) => {
                             name="name"
                             value={name}
                             onChange={handleChange('name', setName)}
+                            autoComplete='off'
 
 
 
@@ -129,6 +130,7 @@ const FormEmail = forwardRef(({ apartmentId }, ref) => {
                             className={`form-control ${getInputClass('applicantEmail')}`}
                             id="applicantEmail"
                             name="applicantEmail"
+                            autoComplete='off'
                             value={applicantEmail}
 
 
@@ -149,6 +151,7 @@ const FormEmail = forwardRef(({ apartmentId }, ref) => {
                             value={subject}
                             onChange={handleChange('subject', setSubject)}
                             placeholder="Enter the subject"
+                            autoComplete='off'
                         />
                         {getErrorMessage('subject') && <div className="text-danger mt-2">{getErrorMessage('subject')}</div>}
                     </div>
@@ -162,6 +165,7 @@ const FormEmail = forwardRef(({ apartmentId }, ref) => {
                             value={text}
                             onChange={handleChange('text', setText)}
                             placeholder="write your message here, it must be at least 15 characters long"
+                            autoComplete='off'
                         />
                         <small>{text.length}/{maxTextLength} characters</small>
                         {getErrorMessage('text') && <div className="text-danger mt-2">{getErrorMessage('text')}</div>}

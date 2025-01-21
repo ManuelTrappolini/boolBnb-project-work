@@ -102,6 +102,7 @@ export default function LoginPage() {
                                         id="username"
                                         placeholder="e.g. Mario18"
                                         value={username}
+                                        autoComplete='off'
                                         onChange={(e) => handleInputChange('username', e.target.value)}
                                         className={`form-control py-3 input-style ${getInputClass('username')}`}
                                     />
