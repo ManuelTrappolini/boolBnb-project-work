@@ -41,7 +41,7 @@ export default function SearchPage() {
         setSearch(search);
         setMinRooms(minRooms);
         setMinBeds(minBeds);
-        setSelectedServices(selectedServices.map(service => normalizeString(service))); // Converto a minuscolo i servizi selezionati
+        setSelectedServices(selectedServices.map(service => normalizeString(service)));
     }, [location.search]);
 
     useEffect(() => {
@@ -57,7 +57,6 @@ export default function SearchPage() {
         fetchData();
     }, []);
 
-    // Funzione di normalizzazione del nome, per rimuovere spazi e trattini
     const normalizeString = (str) => {
         return str.replace(/[-\s]/g, '').toLowerCase();
     };
