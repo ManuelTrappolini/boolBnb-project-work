@@ -95,6 +95,10 @@ export default function SearchPage() {
                 />
             </div>
 
+            <div className="mb-4">
+                <h5>{filteredCards.length} Results Found</h5>
+            </div>
+
             <div className="row">
                 {filteredCards.length !== 0 ? filteredCards.map((card) => (
                     <div key={card.id} className="col-md-4 col-12 p-3" style={{ height: '650px' }}>
