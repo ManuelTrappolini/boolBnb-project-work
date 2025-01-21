@@ -130,7 +130,7 @@ export default function RegistrationPage() {
     };
 
     return (
-        <div className='d-flex'>
+        <div className='d-flex h-100'>
             <div className='bg-photo py-5 col-12'>
                 <div className="bg-overlay"></div>
                 <div className="bg-content d-flex py-5 px-2 p-md-5 align-items-center">
@@ -143,7 +143,7 @@ export default function RegistrationPage() {
                         </p>
                     </div>
                     <div className="col-12 col-lg-6 bg-white text-black rounded">
-                        <div className="p-5">
+                        <div className="p-4 p-md-5">
                             <h2>Registration</h2>
                             <span>Enter your details to register</span>
                             <form onSubmit={handleRegisterSubmit} className='mt-4'>

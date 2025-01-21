@@ -88,8 +88,8 @@ export default function LoginPage() {
         <div className='d-flex'>
             <div className="col-12 bg-photo d-flex">
                 <div className="bg-overlay"></div>
-                <div className="bg-content col-12 d-flex py-5 px-2 p-md-5 justify-content-center align-items-center">
-                    <div className="col-12 col-lg-4 bg-white text-black rounded">
+                <div className="bg-content col-12 d-flex py-5 px-2 p-md-5 justify-content-center align-items-center my-5">
+                    <div className="col-12 col-lg-4 bg-white text-black rounded my-5">
                         <div className="p-5">
                             <h2>Login</h2>
                             <span>Enter your credentials to login</span>
