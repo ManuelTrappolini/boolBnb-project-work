@@ -82,7 +82,7 @@ const Navbar = () => {
                                 </>
                             ) : (
                                 <li>
-                                    <button onClick={logout} className="text-white">Logout</button>
+                                    <div onClick={logout} className="text-white">Logout</div>
                                 </li>
                             )}
                         </ul>
