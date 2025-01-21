@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
-import SearchBar from '../components/SearchBar';
+import SearchHome from '../components/SearchHome';
 import HeartCounter from '../components/HeartsCounter';
 export default function HomePage() {
     const [cards, setCards] = useState([]);
@@ -19,22 +19,26 @@ export default function HomePage() {
     return (
         <>
             <div className="container my-5">
-                <h1 className='mb-4'>Explore Unique Apartments on BoolBnB</h1>
+                <div className='d-flex'>
+                    <h1 className='mb-4'>Explore Unique Apartments on BoolBnB</h1>
+                    <SearchHome />
+
+                </div>
                 <hr />
                 {/* results */}
                 <div className="row">
                     {cards.map((card) => (
-                        <div key={card.id} className="col-md-3 col-12 p-3">
+                        <div key={card.id} className="col-md-3 col-12 p-3" style={{ height: '400px' }}>
 
                             <div className="card h-100">
-                                <Link to={`http://localhost:5173/apartments/${card.slug}`} className='h-75'>
+                                <Link to={`http://localhost:5173/apartments/${card.slug}`} style={{ height: '60%' }}>
                                     <img
                                         src={card.picture_url.startsWith('http') ? card.picture_url : `http://localhost:3002${card.picture_url}`}
                                         className="card-img-top h-100"
                                         alt={card.title}
                                     />
                                 </Link>
-                                <div className="card-body d-flex flex-column justify-content-between">
+                                <div className="card-body d-flex flex-column justify-content-between mt-2">
                                     <div>
                                         <Link to={`http://localhost:5173/apartments/${card.slug}`} className='text-black'>
                                             <h6 className="card-title">{card.title}</h6>
