@@ -2,32 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 function SearchHome() {
-    const [cities, setCities] = useState([]);
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         searchInput: "", // Solo l'input di ricerca per la città
     });
 
-    // Effettuare il fetch per le città
-    useEffect(() => {
-        const fetchCities = async () => {
-            try {
-                const response = await fetch('http://localhost:3002/apartments/city');
-                const data = await response.json();
-                if (data && data.cities) {
-                    const filterCities = data.cities.filter((item, index) => data.cities.indexOf(item) === index);
-                    setCities(filterCities);
-                    setFilteredCities(filterCities); // Mostra tutte le città inizialmente
-                } else {
-                    console.error('Formato della risposta non valido:', data);
-                }
-            } catch (error) {
-                console.error('Errore nel caricamento delle città:', error);
-            }
-        };
-
-        fetchCities();
-    }, []);
 
     // Gestire il cambiamento dell'input nel form
     const handleInputChange = (e) => {
@@ -38,12 +17,6 @@ function SearchHome() {
             ...prev,
             searchInput: value
         }));
-
-        // Filtra le città per il dropdown
-        const filtered = cities.filter((city) =>
-            city.toLowerCase().startsWith(value.toLowerCase())
-        );
-        setFilteredCities(filtered);
     };
 
     // Invia la ricerca
@@ -56,9 +29,12 @@ function SearchHome() {
             return;
         }
 
-        // Creazione della query string
+        // Creazione della query string con parametri aggiuntivi
         const queryParams = new URLSearchParams({
             searchInput: formData.searchInput,
+            minRooms: 0,
+            minBeds: 0,
+            selectedServices: ""
         }).toString();
 
         // Reindirizzamento all'URL con i parametri
@@ -78,8 +54,6 @@ function SearchHome() {
                         className="form-control"
                         placeholder="Search destination..."
                         value={formData.searchInput}
-                        onFocus={() => setShowDropdown(true)} 
-                        onBlur={() => setTimeout(() => setShowDropdown(false), 200)} 
                         onChange={handleInputChange}
                     />
                 </div>
