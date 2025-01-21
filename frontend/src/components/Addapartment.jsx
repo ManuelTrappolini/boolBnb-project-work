@@ -395,13 +395,7 @@ export default function AddApartment() {
 
                     <div className="col-12">
                         <button type="submit" className="btn btn-primary me-3 col-12 col-md-2">Add Apartment</button>
-                        {errorMessages.length > 0 && (
-                            <div className="text-danger mt-3">
-                                <ul>
-                                    {errorMessages.map((msg, index) => <li key={index}>{msg.message}</li>)}
-                                </ul>
-                            </div>
-                        )}
+
                     </div>
                 </form>
             ) : (

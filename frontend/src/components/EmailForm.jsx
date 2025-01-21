@@ -175,15 +175,7 @@ const FormEmail = forwardRef(({ apartmentId }, ref) => {
                         <button type="submit" className="btn btn-primary col-12 col-md-2">Send Message</button>
                     </div>
 
-                    {errorMessages.length > 0 && (
-                        <div className="text-danger mt-3">
-                            <ul>
-                                {errorMessages.map((msg, index) => (
-                                    <li key={index}>{msg.message}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
+
 
                     {successMessage && (
                         <div className="alert alert-success mt-3" role="alert">
