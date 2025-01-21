@@ -374,7 +374,7 @@ export default function AddApartment() {
                         <label htmlFor="services" className="form-label">Select Services*</label>
                         <div className="d-flex flex-wrap gap-3">
                             {servicesList.map((service) => (
-                                <div className="form-check me-4" key={service.id}>
+                                <div className="form-check me-4 col-6 col-sm-4 col-md-3 col-lg-2 mb-3" key={service.id}>
                                     <input
                                         type="checkbox"
                                         className="form-check-input"
