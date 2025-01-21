@@ -21,9 +21,11 @@ export default function HomePage() {
             <div className="container my-5">
                 <div className='d-flex'>
                     <h1 className='mb-4'>Explore Unique Apartments on BoolBnB</h1>
-                    <SearchHome />
+
+
 
                 </div>
+                <div><SearchHome /></div>
                 <hr />
                 {/* results */}
                 <div className="row">
