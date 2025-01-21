@@ -62,9 +62,11 @@ const Navbar = () => {
                 {menuOpen && (
                     <div className='d-flex rounded' id='label-menu'>
                         <ul className='d-flex flex-column m-0 p-0 list-unstyled'>
-                            <li>
-                                <Link className='text-white' to='/apartments/addapartment'>Add your Apartment</Link>
-                            </li>
+                            {isLoggedIn && (
+                                <li>
+                                    <Link className='text-white' to='/apartments/addapartment'>Add your Apartment</Link>
+                                </li>
+                            )}
                             <li>
                                 <Link className='text-white' to='/search'>Search Apartments</Link>
                             </li>
