@@ -22,7 +22,7 @@ export default function AppFooter() {
                             </ul>
                         </div>
                         <div className="col-12 col-md-4 ">
-                            <ul className="list-unstyled border-start ps-4 pt-2">
+                            <ul className="list-unstyled p-0 ps-md-4 pt-md-2">
                                 <li>
                                     <h3 className='text-white'>
                                         Site Map
@@ -40,7 +40,7 @@ export default function AppFooter() {
                             </ul>
                         </div>
                         <div className="col-12 col-md-4">
-                            <ul className="list-unstyled border-start ps-4 pt-2">
+                            <ul className="list-unstyled p-0 ps-md-4 pt-md-2">
                                 <li>
                                     <h3 className='text-white'>
                                         Learn More

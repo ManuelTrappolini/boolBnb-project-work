@@ -261,6 +261,11 @@ footer {
         font-weight: 300;
         color: white !important;
     }
+
+    ul{
+        border-left: 1px solid white !important;
+    }
+    
 }
 
 @media screen and (max-width: 992px) {
@@ -285,11 +290,13 @@ footer {
         .logo {
             max-width: 100% !important;
         }
+
+        ul{
+            border-left: 0px solid !important;
+        }
     }
 
 }
-
-
 
 .login-container {
     background: white;
