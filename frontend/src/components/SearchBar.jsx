@@ -266,7 +266,7 @@ function SearchForm() {
                     value="Invia"
                     className="btn btn-primary mt-4 px-4 py-2 rounded shadow-sm btn-sm"
                 >
-                    Invia
+                    Check
                 </button>
             </form>
         </div>
