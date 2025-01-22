@@ -108,6 +108,20 @@ function SearchForm() {
         });
     };
 
+    // Funzione per reimpostare i filtri
+    const resetFilters = () => {
+        setFormData({
+            trendingCity: "",
+            searchInput: "",
+            minRooms: 0,
+            minBeds: 0,
+            selectedServices: []
+        });
+
+        // Reindirizzamento all'URL base senza query string
+        navigate("/search");
+    };
+
     // Invia la ricerca
     const handleSearchSubmit = (e) => {
         e.preventDefault();
@@ -148,7 +162,7 @@ function SearchForm() {
                 </div>
 
                 {/* Filtro per il numero minimo di stanze */}
-                <div className="col-5 col-md-2">
+                <div className="col-5 col-md-1">
                     <label htmlFor="minRooms" className="form-label">Min. Rooms:</label>
                     <input
                         type="number"
@@ -162,7 +176,7 @@ function SearchForm() {
                 </div>
 
                 {/* Filtro per il numero minimo di posti letto */}
-                <div className="col-5 col-md-2">
+                <div className="col-5 col-md-1">
                     <label htmlFor="minBeds" className="form-label">Min. Beds:</label>
                     <input
                         type="number"
@@ -210,7 +224,7 @@ function SearchForm() {
                                             id={`service-${index}`}
                                             value={service}
                                             checked={formData.selectedServices.includes(service)}
-                                            onChange={handleServiceChange}  // Modifica per inviare il form ogni volta
+                                            onChange={handleServiceChange}
                                         />
                                         <label className="form-check-label" htmlFor={`service-${index}`}>
                                             {service}
@@ -222,6 +236,16 @@ function SearchForm() {
                     )}
                 </div>
 
+                {/* Bottone per rimuovere i filtri */}
+                <button
+                    type="button"
+                    className="btn btn-danger mt-4 px-4 py-2 rounded shadow-sm btn-sm"
+                    style={{ height: '45px' }}
+                    onClick={resetFilters}
+                >
+                    Remove Filter
+                </button>
+
                 {/* Bottone per inviare la ricerca */}
                 <button
                     type="submit"
@@ -230,6 +254,7 @@ function SearchForm() {
                 >
                     Search
                 </button>
+
             </form>
         </div>
     );
