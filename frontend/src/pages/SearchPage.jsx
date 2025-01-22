@@ -95,14 +95,14 @@ export default function SearchPage() {
                 />
             </div>
 
-            <div className="mb-4">
-                <h5>{filteredCards.length} Results Found</h5>
+            <div className="mt-4">
+                <h4>{filteredCards.length} Results Found</h4>
             </div>
 
             <div className="row">
                 {filteredCards.length !== 0 ? filteredCards.map((card) => (
-                    <div key={card.id} className="col-md-4 col-12 p-3" style={{ height: '650px' }}>
-                        <div className="card h-100">
+                    <div key={card.id} className="col-md-4 col-12 p-3 " style={{ height: '650px' }}>
+                        <div className="card h-100 border border-primary">
                             <div className='h-50'>
                                 <Link to={`/apartments/${card.slug}`}>
                                     <img

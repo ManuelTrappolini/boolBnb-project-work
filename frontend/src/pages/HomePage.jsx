@@ -20,8 +20,8 @@ export default function HomePage() {
         <>
             <div className='jumbtron d-flex justify-content-center align-items-center'>
                 <div className="jumb-overlay"></div>
-                <div className='z-3'>
-                    <h2 className='mb-4 text-white'>Find Your Perfect Place </h2>
+                <div className='z-3 w-100 d-flex flex-column justify-content-center align-items-center'>
+                    <h2 className='mb-4 text-white fs-1'>Look For Your Perfect Place </h2>
                     <SearchHome />
                 </div>
             </div>

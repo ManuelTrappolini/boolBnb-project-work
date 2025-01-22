@@ -234,7 +234,7 @@ a {
 .jumbtron {
     background-image: url('/jumbtron.jpg');
     background-size: cover;
-    min-height: 600px;
+    min-height: 650px;
     position: relative;
     background-position: center;
 }
@@ -245,7 +245,7 @@ a {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.664);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1;
 }
 
@@ -292,8 +292,8 @@ footer {
             max-width: 100% !important;
         }
 
-        ul {
-            border-left: 0px solid !important;
+        .border-left {
+            border-left: 0px solid white !important;
         }
     }
 
